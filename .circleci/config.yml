@@ -15,11 +15,12 @@ jobs:
           name: create release
           command: |
             set -x
-            mkdir artifacts
             LATEST_VERSION=$(curl --silent "https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
             VERSION=$(echo $LATEST_VERSION | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
             VERSION_NUMBER=$(echo $VERSION | sed 's/^v\(.*\)$/\1/')
             zip -r ami-builder-configs-$VERSION_NUMBER.zip *
+            mkdir artifacts
+            mv ami-builder-configs-$VERSION_NUMBER.zip artifacts
       - persist_to_workspace:
           root: artifacts
           paths:

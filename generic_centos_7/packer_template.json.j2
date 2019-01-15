@@ -15,8 +15,14 @@
       "subnet_id": "{{ event['subnet_id'] }}",
       "ami_name": "{{ event['ami_name'] }}"
     }],
-    "provisioners": [{
-      "type": "{{ event['provisioner_type'] or 'shell' }}",
-      "script": "{{ event['provisioner_script'] or '/tmp/provision.sh' }}"
-    }]
+    {% if event['provisioners'] %}
+    "provisioners": [
+      {% for provisioner in event['provisioners'] %}
+        {
+          "type": "{{ provisioner['type'] or 'shell' }}",
+          "script": "{{ provisioner['script'] }}"
+        },
+      {% endfor %}
+    ]
+    (% endif %}
 }

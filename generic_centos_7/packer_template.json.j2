@@ -14,6 +14,9 @@
       "ssh_username": "{{ event['ssh_username'] or 'centos' }}",
       "subnet_id": "{{ event['subnet_id'] }}",
       "ami_name": "{{ event['ami_name'] }}",
+      {% if 'profile' in event %}
+      "profile": "{{ event['profile'] }}",
+      {% endif %}
       "region": "{{ event['region'] }}"
     }]{% if 'provisioners' in event %},
     "provisioners": [

@@ -17,6 +17,9 @@
       {% if 'profile' in event %}
       "profile": "{{ event['profile'] }}",
       {% endif %}
+      {% if 'security_group' in event %}
+      "security_group": "{{ event['security_group'] }}",
+      {% endif %}
       "region": "{{ event['region'] }}"
     }]{% if 'provisioners' in event %},
     "provisioners": [

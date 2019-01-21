@@ -13,12 +13,18 @@
       "instance_type": "{{ event['instance_type'] or 't2.micro' }}",
       "ssh_username": "{{ event['ssh_username'] or 'centos' }}",
       "subnet_id": "{{ event['subnet_id'] }}",
-      "ami_name": "{{ event['ami_name'] }}",
+      "ami_name": "{{ event['ami_name'] }}-{{ '{{' timestamp '}}' }}",
       {% if 'profile' in event %}
       "profile": "{{ event['profile'] }}",
       {% endif %}
       {% if 'security_group_id' in event %}
       "security_group_id": "{{ event['security_group_id'] }}",
+      {% endif %}
+      {% if 'ami_regions' in event %}
+      "ami_regions": "{{ event['ami_regions'] }}",
+      {% endif %}
+      {% if 'ami_users' in event %}
+      "ami_users": "{{ event['ami_users'] }}",
       {% endif %}
       "region": "{{ event['region'] }}"
     }]{% if 'provisioners' in event %},

@@ -31,30 +31,9 @@
     "provisioners": [
       {% for provisioner in event['provisioners'] %}
         {
-                  "type": "shell",
-                  "inline": [
-                  "sudo yum install -y java-1.8.0-openjdk-devel"
+          "type": "{{ provisioner['type'] or 'shell' }}",
+          "script": "{{ provisioner['script'] }}"
         },
-        {
-              "type": "shell",
-              "script": "//kafka-broker/kafka-broker-install.sh"
-            },
-             {
-                              "type": "shell",
-                              "inline": [
-                              "cp /kafka-broker/rc.local /etc/rc.d"
-                    },
-                     {
-                                                  "type": "shell",
-                                                  "inline":
-                                                  "cp /kafka-broker/server.properties /usr/local/kafka/config"
-                                        },
-                                         {
-                                                                                          "type": "shell",
-                                                                                          "inline":
-                                                                                          "chmod u+x /etc/rc.d/rc.local"
-                                                                                }
-
       {% endfor %}
     ]
     {% endif %}

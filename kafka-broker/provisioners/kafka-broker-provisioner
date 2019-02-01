@@ -1,4 +1,3 @@
-"provisioners": [
        {
            "type": "file",
            "source": "./kafka-broker-install.sh",

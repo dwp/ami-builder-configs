@@ -2,10 +2,10 @@
 "type": "shell",
 "inline":[
 "sudo yum install -y java-1.8.0-openjdk-devel"
-"sudo cp /tmp/zookeeper     /etc/rc.d/init.d"
-"sudo cp /tmp/kafka         /etc/rc.d/init.d"
-"sudo cp /tmp/rc.local      /etc/rc.d/rc.local"
-"sudo cp /tmp/server.properties     /usr/local/kafka/config"
+"sudo cp zookeeper     /etc/rc.d/init.d"
+"sudo cp kafka         /etc/rc.d/init.d"
+"sudo cp rc.local      /etc/rc.d/rc.local"
+"sudo cp server.properties     /usr/local/kafka/config"
 "sudo touch  /var/log/kafka/zookeeper.out /var/log/kafka/zookeeper.err /var/log/kafka/kafka.out /var/log/kafka/kafka.err"
 "sudo chmod u+x             /etc/rc.d/init.d/zookeeper"
 "sudo chmod u+x             /etc/rc.d/init.d/kafka"

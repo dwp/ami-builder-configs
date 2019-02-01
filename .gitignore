@@ -8,8 +8,5 @@
 # .tfvars files
 *.tfvars
 
-
-# JetBrains
-.idea/*
-*.iml
+# CI
 aviator_pipeline.yml

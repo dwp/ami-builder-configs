@@ -9,12 +9,12 @@ cd /usr/local && mkdir kafka
 chown kafka:kafka -R /usr/local/kafka
 curl "http://www-eu.apache.org/dist/kafka/1.0.2/kafka_2.12-1.0.2.tgz" -o /tmp/kafka.tgz
 tar -xvzf /tmp/kafka.tgz --strip 1
-cp /tmp/kafka-broker/kafka /etc/init.d
-cp /tmp/kafka-broker/zookeeper /etc/init.d
+cp kafka-broker/kafka /etc/init.d
+cp kafka-broker/zookeeper /etc/init.d
 yum install -y java-1.8.0-openjdk-devel
-cp /tmp/zookeeper     /etc/rc.d/init.d
-cp /tmp/kafka         /etc/rc.d/init.d
-cp /tmp/server.properties     /usr/local/kafka/config
+cp zookeeper     /etc/rc.d/init.d
+cp kafka         /etc/rc.d/init.d
+cp server.properties     /usr/local/kafka/config
 touch  /var/log/kafka/zookeeper.out /var/log/kafka/zookeeper.err /var/log/kafka/kafka.out /var/log/kafka/kafka.err
 chmod u+x             /etc/rc.d/init.d/zookeeper
 chmod u+x             /etc/rc.d/init.d/kafka

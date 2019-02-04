@@ -1,6 +1,5 @@
 {
 "type": "file",
-"source": "/tmp/kafka-broker-install.sh",
+"source": "kafka-broker-install.sh",
 "destination": "/usr/local/"
 }
-

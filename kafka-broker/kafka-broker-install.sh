@@ -3,7 +3,8 @@
 ## Script to install a kafka & zookeeper broker
 
 # Install Java
-sudo yum update -y
+sudo yum --disablerepo=epel\*
+sudo yum clean all
 sudo yum install -y java-1.8.0-openjdk-devel
 
 # Install kafka & zookeeper

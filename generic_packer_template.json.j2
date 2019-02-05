@@ -27,12 +27,12 @@
       "ami_users": "{{ event['ami_users'] }}",
       {% endif %}
       "region": "{{ event['region'] }}"
-    }]{% if 'provisioners' in event %},
+    }]{% if 'provision_script_keys' in event %},
     "provisioners": [
-      {% for provisioner in event['provisioners'] %}
+      {% for provisioner in event['provision_script_keys'] %}
         {
-          "type": "{{ provisioner['type'] or 'shell' }}",
-          "script": "{{ provisioner['script'] }}"
+          "type": "shell",
+          "script": "{{download_dir}}/{{ provisioner }}"
         },
       {% endfor %}
     ]

@@ -33,7 +33,7 @@
         {
           "type": "shell",
           "script": "{{download_dir}}/{{ provisioner }}"
-        },
+        }{{ "," if not loop.last }}
       {% endfor %}
     ]
     {% endif %}

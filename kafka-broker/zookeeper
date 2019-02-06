@@ -1,17 +1,7 @@
 #!/bin/sh
 #
 # Init file for Apache Zookeeper
-### BEGIN INIT INFO
-# Provides:          kafka
-# Required-Start:    $zookeeper
-# Should-Start:
-# Required-Stop:     $zookeeper
-# Should-Stop:
-# Default-Start:     3 4 5
-# Default-Stop:      0 1 2 6
-# Short-Description: Kafka Broker
-### END INIT INFO
-#
+
 # pidfile: /var/run/zookeeper.pid
 NAME=zookeeper
 PID_FILE=/var/run/$NAME.pid

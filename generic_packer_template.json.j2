@@ -11,8 +11,6 @@
         "most_recent": true
       },
       "instance_type": "{{ event['instance_type'] or 't2.micro' }}",
-      "associate_public_ip_address": "{{ event['associate_public_ip_address'] or 'true' }}",
-      "ssh_private_ip": "{{ event['ssh_private_ip'] or 'true' }}",
       "ssh_username": "{{ event['ssh_username'] or 'centos' }}",
       "subnet_id": "{{ event['subnet_id'] }}",
       "ami_name": "{{ event['ami_name'] }}-{{ '{{' }} timestamp {{ '}}' }}",

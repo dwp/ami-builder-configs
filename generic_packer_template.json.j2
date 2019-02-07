@@ -12,6 +12,8 @@
       },
       "instance_type": "{{ event['instance_type'] or 't2.micro' }}",
       "ssh_username": "{{ event['ssh_username'] or 'centos' }}",
+      "associate_public_ip_address":  "{{ event['associate_public_ip_address'] or 'true' }}",
+      "ssh_interface": "{{ event['sh_interface'] or 'private_ip' }}",
       "subnet_id": "{{ event['subnet_id'] }}",
       "ami_name": "{{ event['ami_name'] }}-{{ '{{' }} timestamp {{ '}}' }}",
       {% if 'profile' in event %}

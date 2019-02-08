@@ -7,32 +7,32 @@
     },
     {
       "type": "file",
-      "source": "zookeeper",
+      "source": "/tmp/ami-builder/kafka-broker/zookeeper",
       "destination": "/etc/init.d/zookeeper"
     },
        {
           "type": "file",
-          "source": "kafka",
+          "source": "/tmp/ami-builder/kafka-broker/kafka",
           "destination": "/etc/init.d/kafka"
         },
            {
               "type": "file",
-              "source": "rc.local",
+              "source": "/tmp/ami-builder/kafka-broker/rc.local",
               "destination": "/etc/init.d/rc.local"
             },
                {
                   "type": "file",
-                  "source": "server.properties",
+                  "source": "/tmp/ami-builder/kafka-broker/server.properties",
                   "destination": "/usr/local/kafka/config/server.properties"
                 },
                    {
                       "type": "file",
-                      "source": "kafka",
+                      "source": "/tmp/ami-builder/kafka-broker/kafka",
                       "destination": "/etc/rc.d/init.d/kafka"
                     },
                        {
                           "type": "file",
-                          "source": "zookeeper",
+                          "source": "/tmp/ami-builder/kafka-broker/zookeeper",
                           "destination": "/etc/rc.d/init.d/zookeeper"
                         },
 

@@ -6,34 +6,40 @@
     },
     {
       "type": "file",
-      "source": "/tmp/ami-builder/kafka-broker/zookeeper",
-      "destination": "/etc/init.d"
+      "source": "tmp/ami-builder/kafka-broker/zookeeper",
+      "destination": "/etc/init.d",
+       "direction": "download"
     },
        {
           "type": "file",
-          "source": "/tmp/ami-builder/kafka-broker/kafka",
-          "destination": "/etc/init.d"
+          "source": "tmp/ami-builder/kafka-broker/kafka",
+          "destination": "/etc/init.d",
+           "direction": "download"
         },
            {
               "type": "file",
-              "source": "/tmp/ami-builder/kafka-broker/rc.local",
-              "destination": "/etc/init.d"
+              "source": "tmp/ami-builder/kafka-broker/rc.local",
+              "destination": "/etc/init.d",
+               "direction": "download"
             },
                {
                   "type": "file",
-                  "source": "/tmp/ami-builder/kafka-broker/server.properties",
-                  "destination": "/usr/local/kafka/config"
+                  "source": "tmp/ami-builder/kafka-broker/server.properties",
+                  "destination": "/usr/local/kafka/config",
+                   "direction": "download"
                 },
                    {
                       "type": "file",
-                      "source": "/tmp/ami-builder/kafka-broker/kafka",
-                      "destination": "/etc/rc.d/init.d"
+                      "source": "tmp/ami-builder/kafka-broker/kafka",
+                      "destination": "/etc/rc.d/init.d",
+                       "direction": "download"
                     },
                        {
                           "type": "file",
-                          "source": "/tmp/ami-builder/kafka-broker/zookeeper",
-                          "destination": "/etc/rc.d/init.d"
-                        },
+                          "source": "tmp/ami-builder/kafka-broker/zookeeper",
+                          "destination": "/etc/rc.d/init.d",
+                          "direction": "download"
+},
 
 {
   "type": "shell",
@@ -45,7 +51,7 @@
 	"chmod u+x             /etc/rc.d/init.d/zookeeper",
 	"chmod u+x             /etc/rc.d/init.d/kafka",
 	"chmod u+x             /usr/local/kafka/bin/zookeeper-server-start.sh",
-	"chmod u+x             /usr/local/kafka/bin/kafka-server-start.sh"
+	"chmod u+x             /usr/local/kafka/bin/kafka-server-start.sh",
 	"service zookeeper start",
     "service kafka     start"
 

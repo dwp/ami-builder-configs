@@ -1,6 +1,35 @@
 {
-"type": "shell",
-"script": "kafka-broker-install.sh",
-"destination": "/usr/local/"
-}
+  "provisioners": [
+    {
+      "type": "shell",
+	"script": "/tmp/ami-builder/kafka-broker/kafka-broker-install.sh",
+	"destination": "/usr/local/“
+    },
+    {
+      "destination": "/etc/rc.d",
+      "source": "./rc.local",
+      "type": "file"
+    },
+    {
+      "inline": [
+	"cp /tmp/ami-builder/kafka-broker/zookeeper     /etc/init.d”,
+	"cp /tmp/ami-builder/kafka-broker/kafka         /etc/init.d”,
+	"cp /tmp/ami-builder/kafka-broker/zookeeper     /etc/rc.d/init.d”,
+	"cp /tmp/ami-builder/kafka-broker/kafka         /etc/rc.d/init.d”,
+	"cp /tmp/ami-builder/kafka-broker/server.properties     /usr/local/kafka/config”,
+	"cp /tmp/ami-builder/kafka-broker/rc.local    /etc/rc.d",
+	"chmod u+x             /etc/rc.d/rc.local",
+	"chmod u+x             /etc/init.d/zookeeper",
+	"chmod u+x             /etc/init.d/kafka",
+	"chmod u+x             /etc/rc.d/init.d/zookeeper",
+	"chmod u+x             /etc/rc.d/init.d/kafka",
+	"chmod u+x             /usr/local/kafka/bin/zookeeper-server-start.sh",
+	"chmod u+x             /usr/local/kafka/bin/kafka-server-start.sh"
 
+      ],
+      "type": "shell"
+      "command": "service zookeeper start",
+                 "service kafka     start"
+    }
+  ]
+}

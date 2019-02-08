@@ -34,5 +34,5 @@ sudo chown kafka:kafka -R  /usr/local/kafka
 sudo chown kafka:kafka -R  /var/log/kafka
 sudo chown kafka:kafka -R  /tmp/zookeeper
 sudo chown kafka:kafka -R  /tmp/kafka-logs
-sudo ls -ltrR /
 sudo tree -a /
+sudo find / -name server.properties -print

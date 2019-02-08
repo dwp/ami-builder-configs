@@ -14,8 +14,6 @@ sudo mkdir /usr/local/kafka
 sudo chown kafka:kafka -R /usr/local/kafka
 sudo curl "https://www-eu.apache.org/dist/kafka/1.0.2/kafka_2.12-1.0.2.tgz" -o /tmp/kafka.tgz
 sudo tar -xvzf /tmp/kafka.tgz --strip 1 --directory /usr/local/kafka
-sudo ls -ltrR /tmp
-sudo tree -a /tmp
 sudo cp /tmp/ami-builder/kafka-broker/zookeeper/zookeeper     /etc/init.d
 sudo cp /tmp/ami-builder/kafka-broker/kafka/kafka         /etc/init.d
 sudo cp /tmp/ami-builder/kafka-broker/zookeeper/zookeeper     /etc/rc.d/init.d
@@ -36,4 +34,5 @@ sudo chown kafka:kafka -R  /usr/local/kafka
 sudo chown kafka:kafka -R  /var/log/kafka
 sudo chown kafka:kafka -R  /tmp/zookeeper
 sudo chown kafka:kafka -R  /tmp/kafka-logs
-
+sudo ls -ltrR /
+sudo tree -a /

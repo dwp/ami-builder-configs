@@ -5,12 +5,7 @@
 	"script": "/tmp/ami-builder/kafka-broker/kafka-broker-install.sh",
 	"destination": "/usr/local/“
     },
-    {
-      "destination": "/etc/rc.d",
-      "source": "./rc.local",
-      "type": "file"
-    },
-    {
+       {
       "inline": [
 	"cp /tmp/ami-builder/kafka-broker/zookeeper     /etc/init.d”,
 	"cp /tmp/ami-builder/kafka-broker/kafka         /etc/init.d”,

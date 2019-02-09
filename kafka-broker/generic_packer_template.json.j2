@@ -1,4 +1,44 @@
 {
+    "builders": [{
+      "type": "amazon-ebs",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "{{ event['source_ami_virt_type'] or 'hvm' }}",
+          "name": "{{ event['source_ami_name'] or 'CentOS Linux 7 x86_64*'}}",
+          "root-device-type": "{{ event['source_ami_root_device_type'] or 'ebs'}}"
+        },
+        "owners": ["{{ event['source_ami_owner'] or '679593333241' }}"],
+        "most_recent": true
+      },
+      "instance_type": "{{ event['instance_type'] or 't2.micro' }}",
+      "ssh_username": "{{ event['ssh_username'] or 'centos' }}",
+      "subnet_id": "{{ event['subnet_id'] }}",
+      "ami_name": "{{ event['ami_name'] }}-{{ '{{' }} timestamp {{ '}}' }}",
+      {% if 'profile' in event %}
+      "profile": "{{ event['profile'] }}",
+      {% endif %}
+      {% if 'security_group_id' in event %}
+      "security_group_id": "{{ event['security_group_id'] }}",
+      {% endif %}
+      {% if 'ami_regions' in event %}
+      "ami_regions": "{{ event['ami_regions'] }}",
+      {% endif %}
+      {% if 'ami_users' in event %}
+      "ami_users": "{{ event['ami_users'] }}",
+      {% endif %}
+      "region": "{{ event['region'] }}"
+    }]{% if 'provision_script_keys' in event %},
+    "provisioners": [
+      {% for provisioner in event['provision_script_keys'] %}
+        {
+          "type": "shell",
+          "script": "{{download_dir}}/{{ provisioner }}"
+        }{{ "," if not loop.last }}
+      {% endfor %}
+    ]
+    {% endif %}
+},
+{
   "type": "shell",
   "inline": [
 

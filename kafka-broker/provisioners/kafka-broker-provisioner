@@ -6,39 +6,39 @@
     },
     {
       "type": "file",
-      "source": "tmp/ami-builder/kafka-broker/zookeeper",
+      "source": "ami-builder/kafka-broker/zookeeper",
       "destination": "/etc/init.d",
        "direction": "download"
     },
        {
           "type": "file",
-          "source": "tmp/ami-builder/kafka-broker/kafka",
+          "source": "ami-builder/kafka-broker/kafka",
           "destination": "/etc/init.d",
            "direction": "download"
         },
            {
               "type": "file",
-              "source": "tmp/ami-builder/kafka-broker/rc.local",
+              "source": "ami-builder/kafka-broker/rc.local",
               "destination": "/etc/init.d",
                "direction": "download"
             },
                {
                   "type": "file",
-                  "source": "tmp/ami-builder/kafka-broker/server.properties",
+                  "source": "ami-builder/kafka-broker/server.properties",
                   "destination": "/usr/local/kafka/config",
                    "direction": "download"
                 },
                    {
                       "type": "file",
-                      "source": "tmp/ami-builder/kafka-broker/kafka",
+                      "source": "ami-builder/kafka-broker/kafka",
                       "destination": "/etc/rc.d/init.d",
                        "direction": "download"
                     },
                        {
                           "type": "file",
-                          "source": "tmp/ami-builder/kafka-broker/zookeeper",
+                          "source": "ami-builder/kafka-broker/zookeeper",
                           "destination": "/etc/rc.d/init.d",
-                          "direction": "download"
+                          "direction": "upload"
 },
 
 {

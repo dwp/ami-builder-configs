@@ -1,0 +1,5 @@
+{
+"type": "shell",
+"script": "kafka-broker-install.sh",
+"destination": "/usr/local/"
+}

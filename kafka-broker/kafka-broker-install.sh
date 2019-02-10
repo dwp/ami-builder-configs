@@ -17,7 +17,7 @@ sudo cp /tmp/ami-builder/kafka-broker/kafka         /etc/init.d
 sudo cp /tmp/ami-builder/kafka-broker/zookeeper     /etc/rc.d/init.d
 sudo cp /tmp/ami-builder/kafka-broker/kafka         /etc/rc.d/init.d
 sudo cp /tmp/ami-builder/kafka-broker/server.properties     /usr/local/kafka/config
-sudo cp /tmp/ami-builder/kafka-broker/rc.local i    /etc/rc.d
+sudo cp /tmp/ami-builder/kafka-broker/rc.local     /etc/rc.d
 sudo mkdir /var/log/kafka
 sudo mkdir /tmp/kafka-logs
 sudo mkdir /tmp/zookeeper

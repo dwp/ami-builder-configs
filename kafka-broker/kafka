@@ -1,5 +1,23 @@
 #!/bin/sh
 #
+# kafka       Start/Stop/Restart the Kafka Broker
+#
+# chkconfig: 345 70 90
+# description: Kafka - Apache Kafka is a distributed streaming platform.  \
+#              Starts at boot time.
+#
+### BEGIN INIT INFO
+# Provides:          kafka
+# Required-Start:    $zookeeper
+# Should-Start:
+# Required-Stop:     $zookeeper
+# Should-Stop:
+# Default-Start:     3 4 5
+# Default-Stop:      0 1 2 6
+# Short-Description: Starts the Kafka Broker
+### END INIT INFO
+
+
 # Init file for Apache Kafka
 
 # pidfile: /var/run/kafka.pid

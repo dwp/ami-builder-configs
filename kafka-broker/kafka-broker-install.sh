@@ -14,10 +14,10 @@ sudo curl "https://www-eu.apache.org/dist/kafka/1.0.2/kafka_2.12-1.0.2.tgz" -o /
 sudo tar -xvzf /tmp/kafka.tgz --strip 1 --directory /usr/local/kafka
 sudo cp /tmp/ami-builder/kafka-broker/zookeeper     /etc/init.d
 sudo cp /tmp/ami-builder/kafka-broker/kafka         /etc/init.d
-sudo cp /tmp/ami-builder/kafka-broker/zookeeper     /etc/rc.d/init.d
-sudo cp /tmp/ami-builder/kafka-broker/kafka         /etc/rc.d/init.d
 sudo cp /tmp/ami-builder/kafka-broker/server.properties     /usr/local/kafka/config
-sudo cp /tmp/ami-builder/kafka-broker/rc.local     /etc/rc.d
+#sudo cp /tmp/ami-builder/kafka-broker/zookeeper     /etc/rc.d/init.d
+#sudo cp /tmp/ami-builder/kafka-broker/kafka         /etc/rc.d/init.d
+#sudo cp /tmp/ami-builder/kafka-broker/rc.local     /etc/rc.d
 sudo mkdir /var/log/kafka
 sudo mkdir /tmp/kafka-logs
 sudo mkdir /tmp/zookeeper
@@ -33,5 +33,7 @@ sudo chown kafka:kafka -R  /usr/local/kafka
 sudo chown kafka:kafka -R  /var/log/kafka
 sudo chown kafka:kafka -R  /tmp/zookeeper
 sudo chown kafka:kafka -R  /tmp/kafka-logs
-service zookeeper start
-service kafka     start
+sudo chkconfig --add zookeeper
+sudo chkconfig --add kafka
+sudo systemctl start zookeeper
+sudo systemctl start kafka

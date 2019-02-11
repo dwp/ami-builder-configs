@@ -12,6 +12,13 @@ sudo mkdir /usr/local/kafka
 sudo chown kafka:kafka -R /usr/local/kafka
 sudo curl "https://www-eu.apache.org/dist/kafka/1.0.2/kafka_2.12-1.0.2.tgz" -o /tmp/kafka.tgz
 sudo tar -xvzf /tmp/kafka.tgz --strip 1 --directory /usr/local/kafka
+echo " Debugging content of /tmp/ami-builder/kafka-broker"
+sudo ls -ltr /tmp/ami-builder
+sudo ls -ltr /tmp/ami-builder/kafka-broker
+echo " printing the heading of /tmp/ami-builder/kafka-broker/kafka"
+sudo head -15 /tmp/ami-builder/kafka-broker/kafka
+echo " printing the heading of /tmp/ami-builder/kafka-broker/zookeper"
+sudo head -15 /tmp/ami-builder/kafka-broker/zookeper
 echo " Starting copy zookeeper to /etc/init.d/"
 sudo cp /tmp/ami-builder/kafka-broker/zookeeper     /etc/init.d
 echo " Starting copy kafka to /etc/init.d/"
@@ -39,9 +46,14 @@ sudo chown kafka:kafka -R  /usr/local/kafka
 sudo chown kafka:kafka -R  /var/log/kafka
 sudo chown kafka:kafka -R  /tmp/zookeeper
 sudo chown kafka:kafka -R  /tmp/kafka-logs
-echo "Printing the head of file /etc/init.d/zookeeper"
+echo "Checking permitions of file /etc/init.d/zookeeper"
 sudo ls -ltr /etc/init.d/zookeeper
+echo "Printing the head of file /etc/init.d/zookeeper"
 sudo  head -15 /etc/init.d/zookeeper
+echo "Checking permitions of file /etc/init.d/kafka"
+sudo ls -ltr /etc/init.d/kafka
+echo "Printing the head of file /etc/init.d/kafka"
+sudo  head -15 /etc/init.d/kafka
 sudo chkconfig --add zookeeper
 sudo chkconfig --add kafka
 sudo systemctl start zookeeper

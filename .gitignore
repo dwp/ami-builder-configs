@@ -10,7 +10,3 @@
 
 # CI
 aviator_pipeline.yml
-
-#IntelliJ
-.idea/
-*.iml

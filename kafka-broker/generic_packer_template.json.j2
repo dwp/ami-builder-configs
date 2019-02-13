@@ -27,13 +27,18 @@
       "ami_users": "{{ event['ami_users'] }}",
       {% endif %}
       "region": "{{ event['region'] }}"
-    }]{% if 'provisioners' in event %},
+    }]{% if 'provision_script_keys' in event %},
     "provisioners": [
-      {% for provisioner in event['provisioners'] %}
         {
-          "type": "{{ provisioner['type'] or 'shell' }}",
-          "script": "{{ provisioner['script'] }}"
+          "type": "file",
+          "source": "{{ event['provisioner_type_file_source'] or '/tmp/ami-builder'}}",
+          "destination": "{{ event['provisioner_type_file_destination'] or '/tmp'}}"
         },
+      {% for provisioner in event['provision_script_keys'] %}
+        {
+          "type": "shell",
+          "script": "{{download_dir}}/{{ provisioner }}"
+        }{{ "," if not loop.last }}
       {% endfor %}
     ]
     {% endif %}

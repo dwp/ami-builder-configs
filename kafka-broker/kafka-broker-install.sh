@@ -2,9 +2,10 @@
 
 ## Script to install a kafka & zookeeper broker
 
-# Install Java
+# Install Java and SSM agent
 sudo yum update -y
 sudo yum install -y java-1.8.0-openjdk-devel
+sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 
 # Install kafka & zookeeper
 sudo useradd kafka -m

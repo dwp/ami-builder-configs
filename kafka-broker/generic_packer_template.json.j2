@@ -27,7 +27,7 @@
       "ami_users": "{{ event['ami_users'] }}",
       {% endif %}
       "region": "{{ event['region'] }}"
-    }]{% if 'provision_script_keys' in event and event['provision_script_keys'] | length > 0 %},
+    }]{% if 'provision_script_keys' in event and event['provision_script_keys']|length > 0 %},
     "provisioners": [
         {
           "type": "file",

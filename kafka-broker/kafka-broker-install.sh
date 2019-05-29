@@ -12,10 +12,12 @@ sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/late
 # pip is not available in CentOS 7 core repositories there is a requirement to enable EPEL repositories prior
 sudo yum --enablerepo=extras install epel-release
 sudo yum install -y python-pip
+# gcc and python-devel are required to enable the twofish indirect dependency -
+# of acm-pca-cert-generator to be built and installed
 sudo yum install -y gcc
 sudo yum install -y python-devel
-sudo pip install -y https://github.com/dwp/acm-pca-cert-generator/releases/download/0.1.0/acm_pca_cert_generator-0.1.0.tar.gz
-
+sudo pip install -y https://github.com/dwp/acm-pca-cert-generator/releases/download/0.3.0/acm_pca_cert_generator-0.3.0.tar.gz
+sudo yum remove -y gcc python-devel
 # Install kafka & zookeeper
 sudo useradd kafka -m
 sudo mkdir /usr/local/kafka

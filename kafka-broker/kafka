@@ -17,6 +17,8 @@
 # Short-Description: Starts the Kafka Broker
 ### END INIT INFO
 
+# Init file for acm certificate generation
+/usr/bin/acm-pca-cert-generator
 
 # Init file for Apache Kafka
 

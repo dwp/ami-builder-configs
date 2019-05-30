@@ -9,7 +9,8 @@ sudo yum install -y java-1.8.0-openjdk-devel
 # Install Amazon SSM agent
 sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 
-# Install python-pip
+# Install github.com/dwp/acm-pca-cert-generator
+acm_pca_cert_generator_version=0.3.0
 # pip is not available in CentOS 7 core repositories there is a requirement to enable EPEL repositories prior
 sudo yum --enablerepo=extras install epel-release
 sudo yum install -y python-pip
@@ -17,8 +18,9 @@ sudo yum install -y python-pip
 # of acm-pca-cert-generator to be built and installed
 sudo yum install -y gcc
 sudo yum install -y python-devel
-sudo pip install -y https://github.com/dwp/acm-pca-cert-generator/releases/download/0.3.0/acm_pca_cert_generator-0.3.0.tar.gz
+sudo pip install -y https://github.com/dwp/acm-pca-cert-generator/releases/download/${acm_pca_cert_generator_version}/acm_pca_cert_generator-${acm_pca_cert_generator_version}.tar.gz
 sudo yum remove -y gcc python-devel
+
 # Install kafka & zookeeper
 sudo useradd kafka -m
 sudo mkdir /usr/local/kafka

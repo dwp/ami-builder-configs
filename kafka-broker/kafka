@@ -17,6 +17,7 @@
 # Short-Description: Starts the Kafka Broker
 ### END INIT INFO
 
+
 # Init file for Apache Kafka
 
 # pidfile: /var/run/kafka.pid

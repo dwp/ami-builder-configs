@@ -17,9 +17,6 @@
 # Short-Description: Starts the Kafka Broker
 ### END INIT INFO
 
-# Init file for acm certificate generation
-/usr/bin/acm-pca-cert-generator --key-type RSA --key-length 2048 --subject-c GB --subject-st 'West Yorkshire' --subject-l Leeds  --subject-o 'Department for Work and Pensions' --subject-ou DataWorks --subject-cn 1 --subject-emailaddress 'dataworks@digital.uc.dwp.gov.uk' --ca-arn '${data.terraform_remote_state.certificate_authority.cert_authority.arn}' --signing-algorithm SHA256WITHECDSA --validity-period 1y --keystore-path '/tmp/truststore.jks' --keystore-password '${random_id.truststore_password.hex}' --private-key-alias '${local.environment}' --truststore-path '/tmp/truststore.jks' --truststore-password '${random_id.truststore_password.hex}' --truststore-aliases '${local.environment}' --truststore-certs '${data.terraform_remote_state.certificate_authority.public_cert_bucket.arn}/ca_certificates/dataworks/ca_bundle.pem'
-
 # Init file for Apache Kafka
 
 # pidfile: /var/run/kafka.pid

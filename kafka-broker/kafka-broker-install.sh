@@ -12,7 +12,7 @@ sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/late
 # Install github.com/dwp/acm-pca-cert-generator
 acm_pca_cert_generator_version=0.3.0
 # pip is not available in CentOS 7 core repositories there is a requirement to enable EPEL repositories prior
-sudo yum --enablerepo=extras install epel-release
+sudo yum --enablerepo=extras install -y epel-release
 sudo yum install -y python-pip
 # gcc and python-devel are required to enable the twofish indirect dependency -
 # of acm-pca-cert-generator to be built and installed

@@ -18,7 +18,7 @@ sudo yum install -y python-pip
 # of acm-pca-cert-generator to be built and installed
 sudo yum install -y gcc
 sudo yum install -y python-devel
-sudo pip install -y https://github.com/dwp/acm-pca-cert-generator/releases/download/${acm_pca_cert_generator_version}/acm_pca_cert_generator-${acm_pca_cert_generator_version}.tar.gz
+sudo pip install https://github.com/dwp/acm-pca-cert-generator/releases/download/${acm_pca_cert_generator_version}/acm_pca_cert_generator-${acm_pca_cert_generator_version}.tar.gz
 sudo yum remove -y gcc python-devel
 
 # Install kafka & zookeeper

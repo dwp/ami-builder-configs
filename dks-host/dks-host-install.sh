@@ -10,12 +10,11 @@ sudo yum install -y java-1.8.0-openjdk-devel
 sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 
 # Download & install latest DKS service artifact
-curl -s https://api.github.com/repos/dwp/data-key-service/releases/latest \
+URL=`curl -s https://api.github.com/repos/dwp/data-key-service/releases/latest \
   | grep browser_download_url \
   | grep data-key-service  \
-  | cut -d '"' -f 4 \
-  | xargs wget --no-check-certificate -O /tmp/dks.jar
-
+  | cut -d '"' -f 4`
+curl "$URL" -L -o /tmp/dks.jar
 sudo useradd dks -m
 
 sudo mkdir /opt/dks

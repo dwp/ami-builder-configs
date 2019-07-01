@@ -29,4 +29,3 @@ sudo chown dks:dks -R  /opt/dks
 sudo chown dks:dks -R  /var/log/dks
 
 sudo chkconfig --add dks
-sudo systemctl start dks

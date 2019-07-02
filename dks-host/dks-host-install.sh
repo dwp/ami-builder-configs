@@ -28,5 +28,7 @@ sudo chown dks:dks -R  /opt/dks
 sudo chown dks:dks -R  /var/log/dks
 sudo chmod u+x         /etc/init.d/dks
 sudo chmod u+x         /opt/dks/dks.sh
-
 sudo chkconfig --add dks
+
+# Setup Logrotate
+sudo cp /tmp/ami-builder/dks-host/dks.logrotate     /etc/logrotate.d/dks

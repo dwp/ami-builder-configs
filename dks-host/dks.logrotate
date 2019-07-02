@@ -1,0 +1,17 @@
+/var/log/dks/dks.out {
+    missingok
+    notifempty
+    maxsize 1024k
+    rotate 10
+    yearly
+    create 0640 dks dks
+}
+
+/var/log/dks/dks.err {
+    missingok
+    notifempty
+    maxsize 1024k
+    rotate 10
+    yearly
+    create 0640 dks dks
+}

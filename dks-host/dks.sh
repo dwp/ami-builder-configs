@@ -1,3 +1,4 @@
 #!/bin/sh -x
 
-java -jar dks.jar
+export SPRING_PROFILES_ACTIVE=AWS,KMS,INSECURE
+java -jar /opt/dks/dks.jar

@@ -13,7 +13,7 @@
       "instance_type": "{{ event['instance_type'] or 't2.micro' }}",
       "ssh_username": "{{ event['ssh_username'] or 'centos' }}",
       "subnet_id": "{{ event['subnet_id'] }}",
-      "ami_name": "{{ event['ami_name'] }}-{{ '{{' }} timestamp {{ '}}' }}",
+      "ami_name": "dks-host-ami-{{ '{{' }} timestamp {{ '}}' }}",
       {% if 'profile' in event %}
       "profile": "{{ event['profile'] }}",
       {% endif %}

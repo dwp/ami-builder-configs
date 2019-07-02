@@ -32,5 +32,3 @@ sudo chkconfig --add dks
 
 # Setup Logrotate
 sudo cp /tmp/ami-builder/dks-host/dks.logrotate     /etc/logrotate.d/dks
-
-

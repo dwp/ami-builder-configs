@@ -44,7 +44,7 @@ start() {
       start
     fi
   else
-    /sbin/runuser $DKS_USER -c $DAEMON $DAEMON_OPTS > /var/log/dks/${NAME}.out 2> /var/log/dks/${NAME}.err &"
+    /sbin/runuser $DKS_USER -c "$DAEMON $DAEMON_OPTS > /var/log/dks/${NAME}.out 2> /var/log/dks/${NAME}.err &"
     sleep 2
     PID=`ps ax | grep -E 'dks.jar' | awk '{print $1}'`
     echo $PID > $PID_FILE;

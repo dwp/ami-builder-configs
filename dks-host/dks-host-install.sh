@@ -25,6 +25,7 @@ curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
 unzip awscli-bundle.zip
 sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
 sudo /usr/local/bin/python2.7 awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+export PATH=/home/ec2-user/.local/bin:$PATH
 
 # Download & install latest DKS service artifact
 URL=`curl -s https://api.github.com/repos/dwp/data-key-service/releases/latest \

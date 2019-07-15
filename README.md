@@ -54,4 +54,4 @@ To trigger these builds manually from your terminal
 ```fly -t concourse check-resource -r aws-crypto/dks-host-ami```
 
 Eg to trigger a check on a pipeline in concourse, use
-```'fly -t concourse check-resource -r pipeline/aim-builder-configs-release```
+```fly -t concourse check-resource -r pipeline/aim-builder-configs-release```

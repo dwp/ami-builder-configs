@@ -22,7 +22,8 @@ https://github.com/dwp/ami-builder/blob/master/ami_builder.py
 In order to configure the behaviour of the Lambda function, e.g. what source AMI to use, a payload file is required.
 Please see link for Packer docs https://www.packer.io/docs/builders/amazon.html
 
-```{
+```
+{
        "packer_template_bucket_region":  "eu-west-1",
        "packer_template_bucket":         "my-bucket-name",
        "packer_template_key":            "packer_template.json.j2",
@@ -37,7 +38,8 @@ Please see link for Packer docs https://www.packer.io/docs/builders/amazon.html
        "ssh_username":                   "centos",
        "subnet_id":                      "subnet-0a00aaa0",
        "ami_name":                       "my-first-ami"
-   }```
+   }
+```
 
 As part of the ami-builder-configs-release Concourse pipeline job the 'ami-builder-configs-release'
 calls the Ami-builder Lambda function which includes the manifest payload file.
@@ -50,8 +52,14 @@ https://github.ucds.io/dip/aws-management-infrastructure/blob/master/packer.tf
 
 To trigger these builds manually from your terminal
 
-```fly -t concourse check-resource -r management/aim-builder-configs-release```
-```fly -t concourse check-resource -r aws-crypto/dks-host-ami```
+```
+fly -t concourse check-resource -r management/aim-builder-configs-release
+```
+```
+fly -t concourse check-resource -r aws-crypto/dks-host-ami
+```
 
 Eg to trigger a check on a pipeline in concourse, use
-```fly -t concourse check-resource -r pipeline/aim-builder-configs-release```
+```
+fly -t concourse check-resource -r pipeline/aim-builder-configs-release
+```

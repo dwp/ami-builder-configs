@@ -13,3 +13,4 @@ aviator_pipeline.yml
 
 .idea
 *.iml
+.DS_Store

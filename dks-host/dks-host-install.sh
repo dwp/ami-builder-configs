@@ -9,7 +9,8 @@ sudo yum install -y java-1.8.0-openjdk-devel
 # Install Amazon SSM agent
 sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 
-# Install github.com/dwp/acm-cert-helper
+# Install acm cert helper
+acm_cert_helper_repo=acm-pca-cert-generator
 acm_cert_helper_version=0.5.0
 
 # pip is not available in CentOS 7 core repositories there is a requirement to enable EPEL repositories prior
@@ -19,7 +20,7 @@ sudo yum install -y python-pip
 # of acm-pca-cert-generator to be built and installed
 sudo yum install -y gcc
 sudo yum install -y python-devel
-sudo pip install https://github.com/dwp/acm-pca-cert-generator/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
+sudo pip install https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
 sudo yum remove -y gcc python-devel
 
 # Download & install AWS-CLI

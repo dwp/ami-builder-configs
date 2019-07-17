@@ -47,6 +47,7 @@ Step 2: Create an AWS Lambda function.
 
 [Packer Lambda Code](https://github.ucds.io/dip/aws-management-infrastructure/blob/master/packer.tf)
 Creating the Lambda function
+The following code is Terraform examples
 
 ```
 resource "aws_lambda_function" "ami_builder" {
@@ -123,7 +124,8 @@ deployable artifacts that those scripts reference (the same bucket can be used
 for both, of course)
 This allows the Lambda itself to be completely generic, and to be used to
 generate arbitrarily complex AMIs, providing, of course, that the build can
-complete within the Lambda's defined execution time.
+complete within the Lambda's defined execution time which is currently set to maximum allowed of 15 minutes.
+
 [S3 bucket creation](https://github.ucds.io/dip/aws-management-infrastructure/blob/master/s3.tf)
 ```
 resource "aws_s3_bucket" "config" {
@@ -173,7 +175,7 @@ Here additional configuration files can be added. The example below is for the D
 Below are some fly command line examples to trigger these builds manually from your terminal
 
 ```
-fly -t concourse check-resource -r management/aim-builder-configs-release
+fly -t concourse check-resource -r management/ami-builder-configs-release
 ```
 ```
 fly -t concourse check-resource -r aws-crypto/dks-host-ami
@@ -181,5 +183,5 @@ fly -t concourse check-resource -r aws-crypto/dks-host-ami
 
 Eg to trigger a check on a pipeline in concourse, use
 ```
-fly -t concourse check-resource -r pipeline/aim-builder-configs-release
+fly -t concourse check-resource -r pipeline/ami-builder-configs-release
 ```

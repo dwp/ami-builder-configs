@@ -11,7 +11,7 @@ sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/late
 
 # Install acm cert helper
 acm_cert_helper_repo=acm-pca-cert-generator
-acm_cert_helper_version=0.6.0
+acm_cert_helper_version=0.8.0
 # pip is not available in CentOS 7 core repositories there is a requirement to enable EPEL repositories prior
 sudo yum --enablerepo=extras install -y epel-release
 sudo yum install -y python-pip

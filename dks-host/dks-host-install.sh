@@ -14,7 +14,7 @@ acm_cert_helper_repo=acm-pca-cert-generator
 acm_cert_helper_version=0.8.0
 
 # Install the AWS CloudHSM Client and Command Line Tools
-sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL6/cloudhsm-client-latest.el6.x86_64.rpm
+sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-latest.el7.x86_64.rpm
 
 # pip is not available in CentOS 7 core repositories there is a requirement to enable EPEL repositories prior
 sudo yum --enablerepo=extras install -y epel-release

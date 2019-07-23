@@ -13,9 +13,13 @@ sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/late
 acm_cert_helper_repo=acm-pca-cert-generator
 acm_cert_helper_version=0.8.0
 
+# Install the AWS CloudHSM Client and Command Line Tools
+sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL6/cloudhsm-client-latest.el6.x86_64.rpm
+
 # pip is not available in CentOS 7 core repositories there is a requirement to enable EPEL repositories prior
 sudo yum --enablerepo=extras install -y epel-release
 sudo yum install -y python-pip
+
 # gcc and python-devel are required to enable the twofish indirect dependency -
 # of acm-pca-cert-generator to be built and installed
 sudo yum install -y gcc

@@ -46,5 +46,6 @@ sudo chown kafka:kafka -R  /tmp/zookeeper
 sudo chown kafka:kafka -R  /tmp/kafka-logs
 sudo chkconfig --add zookeeper
 sudo chkconfig --add kafka
+# Prevent Kafka startup until it's fully configured by userdata script
 sudo systemctl disable zookeeper
 sudo systemctl disable kafka

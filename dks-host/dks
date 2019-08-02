@@ -25,7 +25,6 @@ NAME=dks
 PID_FILE=/var/run/$NAME.pid
 DKS_USER=dks
 DAEMON="/opt/dks/dks.sh"
-DAEMON_OPTS="/opt/dks/server.properties"
 
 start() {
   ulimit -n 65536
@@ -44,7 +43,7 @@ start() {
       start
     fi
   else
-    /sbin/runuser $DKS_USER -c "$DAEMON $DAEMON_OPTS > /var/log/dks/${NAME}.out 2> /var/log/dks/${NAME}.err &"
+    /sbin/runuser $DKS_USER -c "$DAEMON > /var/log/dks/${NAME}.out 2> /var/log/dks/${NAME}.err &"
     sleep 2
     PID=`ps ax | grep -E '[d]ks.jar' | awk '{print $1}'`
     echo $PID > $PID_FILE;

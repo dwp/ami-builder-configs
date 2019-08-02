@@ -20,6 +20,9 @@ sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/
 sudo yum --enablerepo=extras install -y epel-release
 sudo yum install -y python-pip
 
+# Spring Boot 2.0 using TomCat 8.5 requires tomcat-native.x86_64 installed to enable HTTP/2
+sudo yum install tomcat-native.x86_64
+
 # gcc and python-devel are required to enable the twofish indirect dependency -
 # of acm-pca-cert-generator to be built and installed
 sudo yum install -y gcc

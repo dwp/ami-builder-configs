@@ -8,3 +8,4 @@
     # --hbase.zookeeper.quorum=$HBASE_MASTER_URL \
     # --output.batch.size.max 100000-source.table.name=?? \
     # --file.output=/tmp/hbase-export
+    

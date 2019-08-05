@@ -25,13 +25,7 @@ sudo pip install https://github.com/dwp/${acm_cert_helper_repo}/releases/downloa
 sudo yum remove -y gcc python-devel
 
 # Download & install AWS-CLI
-sudo yum install -y unzip
-curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-unzip awscli-bundle.zip
-sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
-sudo /usr/local/bin/python2.7 awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
-sudo echo "PATH=/usr/local/aws/bin:$PATH" > /etc/profile.d/aws.sh
-sudo chmod +x /etc/profile.d/aws.sh
+sudo pip install awscli
 
 # Download & install latest hbase-to-mongo-export service artifact
 URL=`curl -s https://api.github.com/repos/dwp/hbase-to-mongo-export/releases/latest \

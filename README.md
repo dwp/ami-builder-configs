@@ -185,3 +185,38 @@ Eg to trigger a check on a pipeline in concourse, use
 ```
 fly -t concourse check-resource -r pipeline/ami-builder-configs-release
 ```
+
+
+# AMI Building Notes
+------------------
+
+The general pattern for creating a new AMI and having it available for use is:
+* Create `aws-management-infrastructure` configuration (yml file, see below) and update groups.yml
+* From root of `aws-management-infrastructure` repo, run:
+  * fly -t concourse login -c https://concourse.service.dw/ -k -n dataworks
+  * aviator
+* Create `ami-builder-config` configuration (Packer config and install scripts, any other files etc)
+* Commit `ami-builder-config` repo and raise PR for approval / merge
+* Commit `aws-management-infrastructure` repo and raise PR for approval / merge
+
+
+## Create `aws-management-infrastructure` configuration
+* A file is required at https://github.ucds.io/dip/aws-management-infrastructure/tree/master/ci/jobs/build_amis eg `appname-ami.yml`
+  * Contains the CI config for creating the AMI
+  * The files in the /ami-builder-configs/ repo are referenced here relative to their uploaded bucket (see later for files and bucket info)
+    * `PACKER_TEMPLATE_KEY` is the generic_packer_template.json.j2 file
+    * `PROVISION_SCRIPT_KEYS` is the installation file, eg `appname-host-install.sh`
+    * `PROVISION_FILE_KEYS` is all other files required, eg the `appname.servicefile`, `appname.logrotate` etc
+* You then need to update https://github.ucds.io/dip/aws-management-infrastructure/blob/master/ci/groups.yml to include a reference to the new AMI config
+
+## Create `ami-builder-config` configuration
+* Copy existing config folder for AMI that most closely matches pattern (eg, dks-host for htme-host as both JAR on GitHub)
+* Modify the files, as and where required, using find/replace with your app name:
+  * generic_packer_template.json.j2 - this file contains a generic Packer config template. Values in this file will be used if they do not exist in the `appname-ami.yml` file in https://github.ucds.io/dip/aws-management-infrastructure/tree/master/ci/jobs/build_amis and matches `PACKER_TEMPLATE_KEY`
+* `appname-host-install.sh` - installation script, bash, for the steps to be carried out by Packer. Matches `PROVISION_SCRIPT_KEYS`
+* `appname.logrotate` - optional but recommended if app has output logs. Used in `PROVISION_KEY_FILES`
+* `appname.servicefile` - optional but recommended if deploying an application. init.d script. Used in `PROVISION_KEY_FILES`
+* `appname.sh` - optional, part of the servicefile config. Used in `PROVISION_KEY_FILES`
+
+## Deployment within EC2
+* Use `userdata` to overwrite any files that require Terraform-based values - eg, `htme` uses `userdata` to replace the `appname.sh` file as it requires eg `dataKeyServiceUrl`, `hbase.zookeeper.quorum` which are Terraform outputs from different repos

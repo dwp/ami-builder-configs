@@ -24,6 +24,9 @@ sudo yum install -y python-devel
 sudo pip install https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
 sudo yum remove -y gcc python-devel
 
+# Adding in netcat and jq for troubleshooting
+sudo yum install nmap-ncat jq
+
 # Download & install AWS-CLI
 sudo pip install awscli
 

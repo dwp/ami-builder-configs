@@ -1,6 +1,6 @@
 #!/bin/sh -x
 
-## Script to install shoveler service
+## Script to install snapshot-sender service
 
 # Install Java
 sudo yum update -y
@@ -30,26 +30,26 @@ sudo yum install nmap-ncat jq
 # Download & install AWS-CLI
 sudo pip install awscli
 
-# Download & install latest crown shoveler service artifact
-#URL=`curl -s https://api.github.com/repos/dwp/crown-shoveler/releases/latest \
+# Download & install latest crown snapshot-sender service artifact
+#URL=`curl -s https://api.github.com/repos/dwp/snapshot-sender/releases/latest \
 #  | grep browser_download_url \
-#  | grep crown-shoveler \
+#  | grep snapshot-sender \
 #  | cut -d '"' -f 4`
-#curl "$URL" -L -o /tmp/shoveler.jar
+#curl "$URL" -L -o /tmp/snapshot-sender.jar
 
-sudo mkdir /opt/shoveler
-sudo mkdir /var/log/shoveler
-#sudo mv /tmp/shoveler.jar /opt/shoveler/
-#sudo cp /tmp/ami-builder/crown-shoveler/shoveler.sh              /opt/shoveler/
-#sudo cp /tmp/ami-builder/crown-shoveler/shoveler                 /etc/init.d/
+sudo mkdir /opt/snapshot-sender
+sudo mkdir /var/log/snapshot-sender
+#sudo mv /tmp/snapshot-sender.jar /opt/snapshot-sender/
+#sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender.sh              /opt/snapshot-sender/
+#sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender                 /etc/init.d/
 
-sudo useradd shoveler -m
-sudo chown shoveler:shoveler -R  /opt/shoveler
-sudo chown shoveler:shoveler -R  /var/log/shoveler
-#sudo chmod u+x         /etc/init.d/shoveler
-#sudo chmod u+x         /opt/shoveler/shoveler.sh
-#sudo chkconfig --add shoveler
-#sudo systemctl disable shoveler
+sudo useradd snapshot-sender -m
+sudo chown snapshot-sender:snapshot-sender -R  /opt/snapshot-sender
+sudo chown snapshot-sender:snapshot-sender -R  /var/log/snapshot-sender
+#sudo chmod u+x         /etc/init.d/snapshot-sender
+#sudo chmod u+x         /opt/snapshot-sender/snapshot-sender.sh
+#sudo chkconfig --add snapshot-sender
+#sudo systemctl disable snapshot-sender
 
 # Setup Logrotate
-sudo cp /tmp/ami-builder/crown-shoveler/shoveler.logrotate     /etc/logrotate.d/shoveler
+sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender.logrotate     /etc/logrotate.d/snapshot-sender

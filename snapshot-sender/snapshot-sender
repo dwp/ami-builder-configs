@@ -1,30 +1,30 @@
 #!/bin/sh
 #
-# shoveler       Start/Stop/Restart the shoveler application
+# snapshot-sender       Start/Stop/Restart the snapshot-sender application
 #
 # chkconfig: 345 70 90
-# description: shoveler - Data Key Service  \
+# description: snapshot-sender \
 #              Starts at boot time.
 #
 ### BEGIN INIT INFO
-# Provides:          shoveler
+# Provides:          snapshot-sender
 # Required-Start:
 # Should-Start:
 # Required-Stop:
 # Should-Stop:
 # Default-Start:     3 4 5
 # Default-Stop:      0 1 2 6
-# Short-Description: Starts the Data Key Service
+# Short-Description: Starts the Snapshot Sender service
 ### END INIT INFO
 
 
-# Init file for shoveler
+# Init file for snapshot-sender
 
-# pidfile: /var/run/shoveler.pid
-NAME=shoveler
+# pidfile: /var/run/snapshot-sender.pid
+NAME=snapshot-sender
 PID_FILE=/var/run/$NAME.pid
-shoveler_USER=shoveler
-DAEMON="/opt/shoveler/shoveler.sh"
+snapshot-sender_USER=snapshot-sender
+DAEMON="/opt/snapshot-sender/snapshot-sender.sh"
 
 start() {
   ulimit -n 65536
@@ -43,7 +43,7 @@ start() {
       start
     fi
   else
-    /sbin/runuser $shoveler_USER -c "$DAEMON > /var/log/shoveler/${NAME}.out 2> /var/log/shoveler/${NAME}.err &"
+    /sbin/runuser $snapshot-sender_USER -c "$DAEMON > /var/log/snapshot-sender/${NAME}.out 2> /var/log/snapshot-sender/${NAME}.err &"
     sleep 2
     PID=`ps ax | grep -E '[h]tme.jar' | awk '{print $1}'`
     echo $PID > $PID_FILE;

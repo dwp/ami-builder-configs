@@ -1,0 +1,17 @@
+/var/log/shoveler/shoveler.out {
+    missingok
+    notifempty
+    maxsize 1024k
+    rotate 10
+    yearly
+    create 0640 shoveler shoveler
+}
+
+/var/log/shoveler/shoveler.err {
+    missingok
+    notifempty
+    maxsize 1024k
+    rotate 10
+    yearly
+    create 0640 shoveler shoveler
+}

@@ -1,0 +1,104 @@
+#!/bin/sh
+#
+# snapshot-sender       Start/Stop/Restart the snapshot-sender application
+#
+# chkconfig: 345 70 90
+# description: snapshot-sender \
+#              Starts at boot time.
+#
+### BEGIN INIT INFO
+# Provides:          snapshot-sender
+# Required-Start:
+# Should-Start:
+# Required-Stop:
+# Should-Stop:
+# Default-Start:     3 4 5
+# Default-Stop:      0 1 2 6
+# Short-Description: Starts the Snapshot Sender service
+### END INIT INFO
+
+
+# Init file for snapshot-sender
+
+# pidfile: /var/run/snapshot-sender.pid
+NAME=snapshot-sender
+PID_FILE=/var/run/$NAME.pid
+snapshot-sender_USER=snapshot-sender
+DAEMON="/opt/snapshot-sender/snapshot-sender.sh"
+
+start() {
+  ulimit -n 65536
+  ulimit -s 10240
+  ulimit -c unlimited
+  if [ -f $PID_FILE ]
+  then
+    PID=`cat $PID_FILE`
+    if [ ! -z "`ps -ef | awk '{print $2}' | grep "^$PID$"`" ]
+    then
+      echo "$PID_FILE exists, process is already running"
+      exit 0
+    else
+      echo "$PID_FILE exists but the process is not running. Deleting $PID_FILE and re-trying"
+      rm -f $PID_FILE
+      start
+    fi
+  else
+    /sbin/runuser $snapshot-sender_USER -c "$DAEMON > /var/log/snapshot-sender/${NAME}.out 2> /var/log/snapshot-sender/${NAME}.err &"
+    sleep 2
+    PID=`ps ax | grep -E '[h]tme.jar' | awk '{print $1}'`
+    echo $PID > $PID_FILE;
+    echo "$NAME started"
+  fi
+}
+stop() {
+  if [ ! -f $PID_FILE ]
+  then
+    echo "$PID_FILE does not exist, process is not running"
+    return 1
+  else
+    kill `cat $PID_FILE`;
+    rm -f $PID_FILE;
+    echo "$NAME stopped"
+    return 0
+  fi
+}
+status() {
+  if [ -f $PID_FILE ]
+  then
+    PID=`cat $PID_FILE`
+    if [ -z "`ps -ef | awk '{print $2}' | grep "^$PID$"`" ]
+    then
+      echo "$NAME stopped but pid file exists"
+      exit 1
+    else
+      echo "$NAME running with pid $PID"
+      exit 0
+    fi
+  else
+    echo "$NAME stopped"
+    exit 1
+  fi
+}
+case "$1" in
+  status)
+    status
+	;;
+  start)
+    echo "Starting daemon: "$NAME
+    start
+	;;
+  stop)
+    echo "Stopping daemon: "$NAME
+    stop
+	;;
+  restart)
+    echo "Restarting daemon: "$NAME
+	  stop
+    sleep 5
+    start
+	;;
+  *)
+	echo "Usage: "$1" {status|start|stop|restart}"
+	exit 1
+esac
+exit 0

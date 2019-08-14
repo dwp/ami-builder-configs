@@ -48,8 +48,6 @@ sudo chown htme:htme -R  /opt/htme
 sudo chown htme:htme -R  /var/log/htme
 sudo chmod u+x         /etc/init.d/htme
 sudo chmod u+x         /opt/htme/htme.sh
-sudo chkconfig --add htme
-sudo systemctl disable htme
 
 # Setup Logrotate
 sudo cp /tmp/ami-builder/hbase-to-mongo-export/htme.logrotate     /etc/logrotate.d/htme

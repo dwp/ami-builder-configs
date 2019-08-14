@@ -34,7 +34,8 @@ sudo yum remove -y gcc python-devel
 sudo pip install awscli
 
 # Download & install latest DKS service artifact
-URL=`curl -s https://api.github.com/repos/dwp/data-key-service/releases/latest \
+VERSION=`curl -s https://api.github.com/repos/dwp/data-key-service/releases/latest | grep browser_download_url |grep data-key-service | cut -d '/' -f 8`
+URL=`curl -s https://api.github.com/repos/dwp/data-key-service/releases/${VERSION} \
   | grep browser_download_url \
   | grep data-key-service  \
   | cut -d '"' -f 4`
@@ -59,5 +60,4 @@ sudo systemctl disable dks
 sudo cp /tmp/ami-builder/dks-host/dks.logrotate     /etc/logrotate.d/dks
 
 # Obtain version and output to a text file at /opt/dks/version
-VERSION=`curl -s https://api.github.com/repos/dwp/data-key-service/releases/latest | grep browser_download_url |grep data-key-service | cut -d '/' -f 8`
-echo $VERSION > /opt/dks/version
+sudo /bin/bash -c "echo $VERSION > /opt/dks/version"

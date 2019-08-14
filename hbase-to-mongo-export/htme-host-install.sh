@@ -31,7 +31,8 @@ sudo yum install -y nmap-ncat jq
 sudo pip install awscli
 
 # Download & install latest hbase-to-mongo-export service artifact
-URL=`curl -s https://api.github.com/repos/dwp/hbase-to-mongo-export/releases/latest \
+VERSION=`curl -s https://api.github.com/repos/dwp/hbase-to-mongo-export/releases/latest | grep browser_download_url |grep hbase-to-mongo-export | cut -d '/' -f 8`
+URL=`curl -s https://api.github.com/repos/dwp/hbase-to-mongo-export/releases/${VERSION} \
   | grep browser_download_url \
   | grep hbase-to-mongo-export  \
   | cut -d '"' -f 4`
@@ -53,5 +54,4 @@ sudo chmod u+x         /opt/htme/htme.sh
 sudo cp /tmp/ami-builder/hbase-to-mongo-export/htme.logrotate     /etc/logrotate.d/htme
 
 # Obtain version and output to a text file at /opt/htme/version
-VERSION=`curl -s https://api.github.com/repos/dwp/hbase-to-mongo-export/releases/latest | grep browser_download_url |grep hbase-to-mongo-export | cut -d '/' -f 8`
-echo $VERSION > /opt/htme/version
+sudo /bin/bash -c "echo $VERSION > /opt/htme/version"

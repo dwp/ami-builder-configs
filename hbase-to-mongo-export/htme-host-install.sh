@@ -52,6 +52,3 @@ sudo chmod u+x         /opt/htme/htme.sh
 
 # Setup Logrotate
 sudo cp /tmp/ami-builder/hbase-to-mongo-export/htme.logrotate     /etc/logrotate.d/htme
-
-# Obtain version and output to a text file at /opt/htme/version
-sudo /bin/bash -c "echo $VERSION > /opt/htme/version"

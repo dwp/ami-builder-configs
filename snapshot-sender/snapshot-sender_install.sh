@@ -54,6 +54,3 @@ sudo chown snapshot-sender:snapshot-sender -R  /var/log/snapshot-sender
 
 # Setup Logrotate
 sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender.logrotate     /etc/logrotate.d/snapshot-sender
-
-# Obtain version and output to a text file at /opt/snapshot-sender/version
-# sudo /bin/bash -c "echo $VERSION > /opt/snapshot-sender/version"

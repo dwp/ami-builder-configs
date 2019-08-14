@@ -31,7 +31,8 @@ sudo yum install -y nmap-ncat jq
 sudo pip install awscli
 
 # Download & install latest crown snapshot-sender service artifact
-#URL=`curl -s https://api.github.com/repos/dwp/snapshot-sender/releases/latest \
+#VERSION=`curl -s https://api.github.com/repos/dwp/snapshot-sender/releases/latest | grep browser_download_url |grep snapshot-sender | cut -d '/' -f 8`
+#URL=`curl -s https://api.github.com/repos/dwp/snapshot-sender/releases/${VERSION} \
 #  | grep browser_download_url \
 #  | grep snapshot-sender \
 #  | cut -d '"' -f 4`
@@ -55,5 +56,4 @@ sudo chown snapshot-sender:snapshot-sender -R  /var/log/snapshot-sender
 sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender.logrotate     /etc/logrotate.d/snapshot-sender
 
 # Obtain version and output to a text file at /opt/snapshot-sender/version
-# VERSION=`curl -s https://api.github.com/repos/dwp/snapshot-sender/releases/latest | grep browser_download_url |grep snapshot-sender | cut -d '/' -f 8`
-# echo $VERSION > /opt/snapshot-sender/version
+# sudo echo $VERSION > /opt/snapshot-sender/version

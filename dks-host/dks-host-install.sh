@@ -57,3 +57,7 @@ sudo systemctl disable dks
 
 # Setup Logrotate
 sudo cp /tmp/ami-builder/dks-host/dks.logrotate     /etc/logrotate.d/dks
+
+# Obtain version and output to a text file at /opt/dks/version
+VERSION=`curl -s https://api.github.com/repos/dwp/data-key-service/releases/latest | grep browser_download_url |grep data-key-service | cut -d '/' -f 8`
+echo $VERSION > /opt/dks/version

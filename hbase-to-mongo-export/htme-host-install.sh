@@ -53,3 +53,7 @@ sudo systemctl disable htme
 
 # Setup Logrotate
 sudo cp /tmp/ami-builder/hbase-to-mongo-export/htme.logrotate     /etc/logrotate.d/htme
+
+# Obtain version and output to a text file at /opt/htme/version
+VERSION=`curl -s https://api.github.com/repos/dwp/hbase-to-mongo-export/releases/latest | grep browser_download_url |grep hbase-to-mongo-export | cut -d '/' -f 8`
+echo $VERSION > /opt/htme/version

@@ -30,16 +30,16 @@ sudo yum install -y nmap-ncat jq
 # Download & install AWS-CLI
 sudo pip install awscli
 
-# Download & install latest crown snapshot-sender service artifact
-#VERSION=`curl -s https://api.github.com/repos/dwp/snapshot-sender/releases/latest | grep browser_download_url |grep snapshot-sender | cut -d '/' -f 8`
-#URL=`curl -s https://api.github.com/repos/dwp/snapshot-sender/releases/${VERSION} \
-#  | grep browser_download_url \
-#  | grep snapshot-sender \
-#  | cut -d '"' -f 4`
-#curl "$URL" -L -o /tmp/snapshot-sender.jar
-
 sudo mkdir /opt/snapshot-sender
 sudo mkdir /var/log/snapshot-sender
+
+# Download & install latest crown snapshot-sender service artifact
+# VERSION=$(curl -s https://api.github.com/repos/dwp/snapshot-sender/releases/latest | grep browser_download_url |grep snapshot-sender | cut -d '/' -f 8)
+# URL="https://github.com/dwp/snapshot-sender/releases/download/${VERSION}/snapshot-sender-${VERSION}.jar"
+# echo "JAR_VERSION: $VERSION"
+# echo "JAR_DOWNLOAD_URL: $URL"
+# curl "$URL" -L -o /tmp/snapshot-sender.jar
+
 #sudo mv /tmp/snapshot-sender.jar /opt/snapshot-sender/
 #sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender.sh              /opt/snapshot-sender/
 #sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender                 /etc/init.d/

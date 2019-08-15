@@ -33,17 +33,17 @@ sudo yum remove -y gcc python-devel
 # Download & install AWS-CLI
 sudo pip install awscli
 
+sudo mkdir /opt/dks
+sudo mkdir /var/log/dks
+
 # Download & install latest DKS service artifact
-VERSION=`curl -s https://api.github.com/repos/dwp/data-key-service/releases/latest | grep browser_download_url |grep data-key-service | cut -d '/' -f 8`
-URL=`curl -s https://api.github.com/repos/dwp/data-key-service/releases/${VERSION} \
-  | grep browser_download_url \
-  | grep data-key-service  \
-  | cut -d '"' -f 4`
+VERSION=$(curl -s https://api.github.com/repos/dwp/data-key-service/releases/latest | grep browser_download_url |grep data-key-service | cut -d '/' -f 8)
+URL="https://github.com/dwp/data-key-service/releases/download/${VERSION}/data-key-service-${VERSION}.jar"
+echo "JAR_VERSION: $VERSION"
+echo "JAR_DOWNLOAD_URL: $URL"
 curl "$URL" -L -o /tmp/dks.jar
 sudo useradd dks -m
 
-sudo mkdir /opt/dks
-sudo mkdir /var/log/dks
 sudo mv /tmp/dks.jar /opt/dks/
 sudo cp /tmp/ami-builder/dks-host/server.properties   /opt/dks/
 sudo cp /tmp/ami-builder/dks-host/dks.sh              /opt/dks/

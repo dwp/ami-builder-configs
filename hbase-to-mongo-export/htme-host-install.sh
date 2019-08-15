@@ -30,17 +30,17 @@ sudo yum install -y nmap-ncat jq
 # Download & install AWS-CLI
 sudo pip install awscli
 
+sudo mkdir /opt/htme
+sudo mkdir /var/log/htme
+
 # Download & install latest hbase-to-mongo-export service artifact
-VERSION=`curl -s https://api.github.com/repos/dwp/hbase-to-mongo-export/releases/latest | grep browser_download_url |grep hbase-to-mongo-export | cut -d '/' -f 8`
-URL=`curl -s https://api.github.com/repos/dwp/hbase-to-mongo-export/releases/${VERSION} \
-  | grep browser_download_url \
-  | grep hbase-to-mongo-export  \
-  | cut -d '"' -f 4`
+VERSION=$(curl -s https://api.github.com/repos/dwp/hbase-to-mongo-export/releases/latest | grep browser_download_url |grep hbase-to-mongo-export | cut -d '/' -f 8)
+URL="https://github.com/dwp/hbase-to-mongo-export/releases/download/${VERSION}/hbase-to-mongo-export-${VERSION}.jar"
+echo "JAR_VERSION: $VERSION"
+echo "JAR_DOWNLOAD_URL: $URL"
 curl "$URL" -L -o /tmp/htme.jar
 sudo useradd htme -m
 
-sudo mkdir /opt/htme
-sudo mkdir /var/log/htme
 sudo mv /tmp/htme.jar /opt/htme/
 sudo cp /tmp/ami-builder/hbase-to-mongo-export/htme.sh              /opt/htme/
 sudo cp /tmp/ami-builder/hbase-to-mongo-export/htme                 /etc/init.d/
@@ -52,3 +52,4 @@ sudo chmod u+x         /opt/htme/htme.sh
 
 # Setup Logrotate
 sudo cp /tmp/ami-builder/hbase-to-mongo-export/htme.logrotate     /etc/logrotate.d/htme
+ 

@@ -44,7 +44,7 @@ echo "JAR_DOWNLOAD_URL: $URL"
 curl "$URL" -L -o /tmp/dks.jar
 sudo useradd dks -m
 
-sudo sh -c 'echo ${VERSION} > /opt/dks/version'
+sudo sh -c "echo ${VERSION} > /opt/dks/version"
 
 sudo mv /tmp/dks.jar /opt/dks/
 sudo cp /tmp/ami-builder/dks-host/server.properties   /opt/dks/

@@ -44,6 +44,8 @@ sudo mkdir /var/log/snapshot-sender
 #sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender.sh              /opt/snapshot-sender/
 #sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender                 /etc/init.d/
 
+# sudo sh -c "echo ${VERSION} > /opt/snapshot-sender/version"
+
 sudo useradd snapshot-sender -m
 sudo chown snapshot-sender:snapshot-sender -R  /opt/snapshot-sender
 sudo chown snapshot-sender:snapshot-sender -R  /var/log/snapshot-sender

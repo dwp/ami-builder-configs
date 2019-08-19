@@ -17,12 +17,10 @@ sudo pip install awscli
 
 # Install HSM client, the SDK and dependencies
 sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-latest.el7.x86_64.rpm
-sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-pkcs11-latest.el7.x86_64.rpm
-sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-dyn-latest.el7.x86_64.rpm
 sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-jce-latest.el7.x86_64.rpm
 
-sudo mkdir /opt/hsm-client
-sudo mkdir /var/log/hsm-client
+# Disable the service from starting at startup
+systemctl disable cloudhsm-client
 
 # Setup Logrotate
 sudo cp /tmp/ami-builder/hsm-client/hsm-client.logrotate     /etc/logrotate.d/hsm-client

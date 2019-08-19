@@ -1,0 +1,17 @@
+/var/log/hsm-client/hsm-client.out {
+    missingok
+    notifempty
+    maxsize 1024k
+    rotate 10
+    yearly
+    create 0640 hsm-client hsm-client
+}
+
+/var/log/hsm-client/hsm-client.err {
+    missingok
+    notifempty
+    maxsize 1024k
+    rotate 10
+    yearly
+    create 0640 hsm-client hsm-client
+}

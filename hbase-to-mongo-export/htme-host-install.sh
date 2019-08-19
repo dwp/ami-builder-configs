@@ -41,6 +41,8 @@ echo "JAR_DOWNLOAD_URL: $URL"
 curl "$URL" -L -o /tmp/htme.jar
 sudo useradd htme -m
 
+sudo echo ${VERSION} > /opt/htme/version
+
 sudo mv /tmp/htme.jar /opt/htme/
 sudo cp /tmp/ami-builder/hbase-to-mongo-export/htme.sh              /opt/htme/
 sudo cp /tmp/ami-builder/hbase-to-mongo-export/htme                 /etc/init.d/

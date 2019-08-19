@@ -20,7 +20,7 @@ sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/
 sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-jce-latest.el7.x86_64.rpm
 
 # Disable the service from starting at startup
-service cloudhsm-client disable
+systemctl disable cloudhsm-client
 
 # Setup Logrotate
 sudo cp /tmp/ami-builder/hsm-client/hsm-client.logrotate     /etc/logrotate.d/hsm-client

@@ -15,6 +15,7 @@ acm_cert_helper_version=0.8.0
 
 # Install the AWS CloudHSM Client and Command Line Tools
 sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-latest.el7.x86_64.rpm
+sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-jce-latest.el7.x86_64.rpm
 
 # pip is not available in CentOS 7 core repositories there is a requirement to enable EPEL repositories prior
 sudo yum --enablerepo=extras install -y epel-release
@@ -57,6 +58,9 @@ sudo chmod u+x         /etc/init.d/dks
 sudo chmod u+x         /opt/dks/dks.sh
 sudo chkconfig --add dks
 sudo systemctl disable dks
+
+# Disable the CloudHSM service from starting at startup so userdata has to enable it if needed
+systemctl disable cloudhsm-client
 
 # Setup Logrotate
 sudo cp /tmp/ami-builder/dks-host/dks.logrotate     /etc/logrotate.d/dks

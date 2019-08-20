@@ -60,7 +60,7 @@ sudo chkconfig --add dks
 sudo systemctl disable dks
 
 # Disable the CloudHSM service from starting at startup so userdata has to enable it if needed
-systemctl disable cloudhsm-client
+sudo systemctl disable cloudhsm-client
 
 # Setup Logrotate
 sudo cp /tmp/ami-builder/dks-host/dks.logrotate     /etc/logrotate.d/dks

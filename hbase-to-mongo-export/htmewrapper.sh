@@ -18,7 +18,7 @@ while [[ $RUNNING -eq 1 ]]; do
 done
 
 # TODO: parse log and check exit status (invert res value)
-res=`/bin/aws s3 ls s3://$S3_BUCKET/$S3_FOLDER/ | grep -c $TODAY`
+res=`grep -cP "(ERROR|FAILED)" /var/log/htme/htme.log`
 if [[ $res -eq 1 ]]; then
   STATUS="Export successful"
 else

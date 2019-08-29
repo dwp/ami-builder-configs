@@ -7,9 +7,9 @@ SQS_URL=$3
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -d'"' -f4)
 
 TODAY=$(date +"%Y-%m-%d")
-S3_FULL_FOLDER="${S3_FOLDER}/${TODAY}"
+S3_FULL_FOLDER="$S3_FOLDER/$TODAY"
 
-/opt/htme/htme.sh "${S3_BUCKET}" "${S3_FULL_FOLDER}" 2>&1 > /var/log/htme/htme.log &
+/opt/htme/htme.sh "$S3_BUCKET" "$S3_FULL_FOLDER" 2>&1 > /var/log/htme/htme.log &
 PID=$!
 RUNNING=1
 while [[ $RUNNING -eq 1 ]]; do
@@ -18,7 +18,7 @@ while [[ $RUNNING -eq 1 ]]; do
 done
 
 # TODO: parse log and check exit status (invert res value)
-res=`/bin/aws s3 ls s3://${S3_BUCKET}/${S3_FOLDER}/ | grep -c $TODAY`
+res=`/bin/aws s3 ls s3://$S3_BUCKET/$S3_FOLDER/ | grep -c $TODAY`
 if [[ $res -eq 1 ]]; then
   STATUS="Export successful"
 else
@@ -29,7 +29,7 @@ TIMESTAMP=`date "+%Y-%m-%dT%H:%M:%S.%3N"`
 SENDER_TYPE="HTME"
 SENDER_NAME=`hostname -f`
 
-/bin/aws sqs send-message --queue-url "${SQS_URL}" --message-body "{ \
+/bin/aws sqs send-message --queue-url "$SQS_URL" --message-body "{ \
   \"Message\": { \
     \"Timestamp\": \"$TIMESTAMP\", \
     \"SenderType\": \"$SENDER_TYPE\", \

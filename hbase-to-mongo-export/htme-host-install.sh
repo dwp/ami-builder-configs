@@ -46,12 +46,13 @@ sudo sh -c "echo ${VERSION} > /opt/htme/version"
 sudo mv /tmp/htme.jar /opt/htme/
 sudo cp /tmp/ami-builder/hbase-to-mongo-export/htme.sh              /opt/htme/
 sudo cp /tmp/ami-builder/hbase-to-mongo-export/htme                 /etc/init.d/
+sudo cp /tmp/ami-builder/hbase-to-mongo-export/htmewrapper.sh       /opt/htme/
 
 sudo chown htme:htme -R  /opt/htme
 sudo chown htme:htme -R  /var/log/htme
 sudo chmod u+x         /etc/init.d/htme
 sudo chmod u+x         /opt/htme/htme.sh
+sudo chmod u+x         /opt/htme/htmewrapper.sh
 
 # Setup Logrotate
 sudo cp /tmp/ami-builder/hbase-to-mongo-export/htme.logrotate     /etc/logrotate.d/htme
- 

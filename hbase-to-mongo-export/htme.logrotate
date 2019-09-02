@@ -15,3 +15,12 @@
     yearly
     create 0640 htme htme
 }
+
+/var/log/htme/nohup.out {
+    missingok
+    notifempty
+    maxsize 1024k
+    rotate 10
+    yearly
+    create 0640 htme htme
+}

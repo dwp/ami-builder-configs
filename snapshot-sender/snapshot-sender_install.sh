@@ -43,14 +43,14 @@ sudo useradd sender -m
 
 sudo sh -c "echo ${VERSION} > /opt/snapshot-sender/version"
 
-sudo mv /tmp/snapshot-sender.jar /opt/snapshot-sender/
-sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender.sh     /opt/snapshot-sender/
-sudo cp /tmp/ami-builder/snapshot-sender/senderwrapper.sh       /opt/snapshot-sender/
+sudo mv /tmp/snapshot-sender.jar                                         /opt/snapshot-sender/
+sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender.sh              /opt/snapshot-sender/
+sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender-wrapper.sh      /opt/snapshot-sender/
 
-sudo chown sender:sender -R  /opt/snapshot-sender
 sudo chown sender:sender -R  /var/log/snapshot-sender
-sudo chmod u+x         /opt/snapshot-sender/snapshot-sender.sh
-sudo chmod u+x         /opt/snapshot-sender/snapshot-sender-wrapper.sh
+sudo chown sender:sender -R  /opt/snapshot-sender
+sudo chmod u+x               /opt/snapshot-sender/snapshot-sender.sh
+sudo chmod u+x               /opt/snapshot-sender/snapshot-sender-wrapper.sh
 
 # Setup Logrotate
 sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender.logrotate     /etc/logrotate.d/snapshot-sender

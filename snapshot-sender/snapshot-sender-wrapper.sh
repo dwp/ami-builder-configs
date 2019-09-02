@@ -30,8 +30,9 @@ while [ $i -lt 300 ]; do
        RUNNING=`ps --no-headers $PID | awk '{print $1}' | grep -c $PID`
        /bin/aws sqs change-message-visibility --queue-url "$SQS_URL" --receipt-handle "$ReceiptHandle"  --visibility-timeout 30
        sleep 25
-     echo "Sending process done"
      #TODO: check sender logs
+     echo "Sending process done, deleting message from SQS"
+     /bin/aws sqs delete-message --queue-url $SQS_URL --receipt-handle "$ReceiptHandle"
      done
   else
     # Unknown status - wait and recheck messages

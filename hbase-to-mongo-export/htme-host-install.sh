@@ -33,7 +33,7 @@ sudo pip install awscli
 sudo mkdir /opt/htme
 sudo mkdir /var/log/htme
 
-# rndg is required to generate some entropy without a long wait
+# rngd is required to generate some entropy without a long wait
 sudo yum install -y rng-tools
 sudo systemctl enable rngd
 

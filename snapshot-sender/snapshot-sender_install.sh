@@ -33,26 +33,24 @@ sudo pip install awscli
 sudo mkdir /opt/snapshot-sender
 sudo mkdir /var/log/snapshot-sender
 
-# Download & install latest crown snapshot-sender service artifact
-# VERSION=$(curl -s https://api.github.com/repos/dwp/snapshot-sender/releases/latest | grep browser_download_url |grep snapshot-sender | cut -d '/' -f 8)
-# URL="https://github.com/dwp/snapshot-sender/releases/download/${VERSION}/snapshot-sender-${VERSION}.jar"
-# echo "JAR_VERSION: $VERSION"
-# echo "JAR_DOWNLOAD_URL: $URL"
-# curl "$URL" -L -o /tmp/snapshot-sender.jar
+Download & install latest crown snapshot-sender service artifact
+VERSION=$(curl -s https://api.github.com/repos/dwp/snapshot-sender/releases/latest | grep browser_download_url |grep snapshot-sender | cut -d '/' -f 8)
+URL="https://github.com/dwp/snapshot-sender/releases/download/${VERSION}/snapshot-sender-${VERSION}.jar"
+echo "JAR_VERSION: $VERSION"
+echo "JAR_DOWNLOAD_URL: $URL"
+curl "$URL" -L -o /tmp/snapshot-sender.jar
+sudo useradd sender -m
 
-#sudo mv /tmp/snapshot-sender.jar /opt/snapshot-sender/
-#sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender.sh              /opt/snapshot-sender/
-#sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender                 /etc/init.d/
+sudo sh -c "echo ${VERSION} > /opt/snapshot-sender/version"
 
-# sudo sh -c "echo ${VERSION} > /opt/snapshot-sender/version"
+sudo mv /tmp/snapshot-sender.jar /opt/snapshot-sender/
+sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender.sh     /opt/snapshot-sender/
+sudo cp /tmp/ami-builder/snapshot-sender/senderwrapper.sh       /opt/snapshot-sender/
 
-sudo useradd snapshot-sender -m
-sudo chown snapshot-sender:snapshot-sender -R  /opt/snapshot-sender
-sudo chown snapshot-sender:snapshot-sender -R  /var/log/snapshot-sender
-#sudo chmod u+x         /etc/init.d/snapshot-sender
-#sudo chmod u+x         /opt/snapshot-sender/snapshot-sender.sh
-#sudo chkconfig --add snapshot-sender
-#sudo systemctl disable snapshot-sender
+sudo chown sender:sender -R  /opt/snapshot-sender
+sudo chown sender:sender -R  /var/log/snapshot-sender
+sudo chmod u+x         /opt/snapshot-sender/snapshot-sender.sh
+sudo chmod u+x         /opt/snapshot-sender/snapshot-sender-wrapper.sh
 
 # Setup Logrotate
 sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender.logrotate     /etc/logrotate.d/snapshot-sender

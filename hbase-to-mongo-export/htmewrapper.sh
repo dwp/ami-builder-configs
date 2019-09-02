@@ -9,17 +9,10 @@ export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instan
 TODAY=$(date +"%Y-%m-%d")
 S3_FULL_FOLDER="$S3_FOLDER/$TODAY"
 
-/opt/htme/htme.sh "$S3_BUCKET" "$S3_FULL_FOLDER" 2>&1 > /var/log/htme/htme.log &
-PID=$!
-RUNNING=1
-while [[ $RUNNING -eq 1 ]]; do
-  sleep 5
-  RUNNING=`ps --no-headers $PID | awk '{print $1}' | grep -c $PID`
-done
-
-# TODO: parse log and check exit status (invert res value)
-res=`grep -cP "(ERROR|FAILED)" /var/log/htme/htme.log`
-if [[ $res -eq 1 ]]; then
+/opt/htme/htme.sh "$S3_BUCKET" "$S3_FULL_FOLDER" 2>&1 > /var/log/htme/htme.log
+exitcode=$?
+errcount=`grep -cP "(ERROR|FAILED)" /var/log/htme/htme.log`
+if [[ $errcount -lt 1 ]] && [[ $exitcode == 0 ]]; then
   STATUS="Export successful"
 else
   STATUS="Export failed"
@@ -29,16 +22,8 @@ TIMESTAMP=`date "+%Y-%m-%dT%H:%M:%S.%3N"`
 SENDER_TYPE="HTME"
 SENDER_NAME=`hostname -f`
 
-/bin/aws sqs send-message --queue-url "$SQS_URL" --message-body "{ \
-  \"Message\": { \
-    \"Timestamp\": \"$TIMESTAMP\", \
-    \"SenderType\": \"$SENDER_TYPE\", \
-    \"SenderName\": \"$SENDER_NAME\", \
-    \"Bucket\": \"$S3_BUCKET\", \
-    \"Folder\": \"$S3_FULL_FOLDER\", \
-    \"Status\": \"$STATUS\" \
-  } \
-}"
+json=`jq -n --arg Timestamp "$TIMESTAMP" --arg SenderType "$SENDER_TYPE" --arg SenderName "$SENDER_NAME" --arg Bucket "$S3_BUCKET" --arg Folder "$S3_FULL_FOLDER" --arg Status "$STATUS" '{Timestamp: $Timestamp, SenderType: $SenderType, SenderName: $SenderName, Bucket: $Bucket, Folder: $Folder, Status: $Status}'`
+/bin/aws sqs send-message --queue-url "$SQS_URL" --message-body "$json"
 
 # TODO: Resize ASG on end
 #  /bin/aws lambda invoke --function-name asg_resizer --invocation-type Event --payload "{

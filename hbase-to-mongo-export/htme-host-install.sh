@@ -33,6 +33,10 @@ sudo pip install awscli
 sudo mkdir /opt/htme
 sudo mkdir /var/log/htme
 
+# rngd is required to generate some entropy without a long wait
+sudo yum install -y rng-tools
+sudo systemctl enable rngd
+
 # Download & install latest hbase-to-mongo-export service artifact
 VERSION=$(curl -s https://api.github.com/repos/dwp/hbase-to-mongo-export/releases/latest | grep browser_download_url |grep hbase-to-mongo-export | cut -d '/' -f 8)
 URL="https://github.com/dwp/hbase-to-mongo-export/releases/download/${VERSION}/hbase-to-mongo-export-${VERSION}.jar"

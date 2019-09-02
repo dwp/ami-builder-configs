@@ -38,10 +38,10 @@ VERSION=$(curl -s https://api.github.com/repos/dwp/snapshot-sender/releases/late
 URL="https://github.com/dwp/snapshot-sender/releases/download/${VERSION}/snapshot-sender-${VERSION}.jar"
 echo "JAR_VERSION: $VERSION"
 echo "JAR_DOWNLOAD_URL: $URL"
-curl "$URL" -L -o /tmp/sender.jar
+curl "$URL" -L -o /tmp/snapshot-sender.jar
 sudo useradd sender -m
 
-sudo sh -c "echo ${VERSION} > /opt/sender/version"
+sudo sh -c "echo ${VERSION} > /opt/snapshot-sender/version"
 
 sudo mv /tmp/snapshot-sender.jar /opt/snapshot-sender/
 sudo cp /tmp/ami-builder/snapshot-sender/snapshot-sender.sh     /opt/snapshot-sender/

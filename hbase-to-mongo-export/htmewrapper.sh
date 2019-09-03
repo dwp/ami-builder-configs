@@ -25,8 +25,9 @@ SENDER_NAME=`hostname -f`
 json=`jq -n --arg Timestamp "$TIMESTAMP" --arg SenderType "$SENDER_TYPE" --arg SenderName "$SENDER_NAME" --arg Bucket "$S3_BUCKET" --arg Folder "$S3_FULL_FOLDER" --arg Status "$STATUS" '{Timestamp: $Timestamp, SenderType: $SenderType, SenderName: $SenderName, Bucket: $Bucket, Folder: $Folder, Status: $Status}'`
 /bin/aws sqs send-message --queue-url "$SQS_URL" --message-body "$json"
 
-# TODO: Resize ASG on end
-#  /bin/aws lambda invoke --function-name asg_resizer --invocation-type Event --payload "{
-#  \"asg_prefix\": \"htme_\", \
-#  \"asg_size\": \"0\" \
-#}"
+#logstamp=`date "+%Y-%m-%dT%H-%M-%S-%3N"`
+#/bin/aws s3 cp /var/log/htme/htme.log s3://$S3_BUCKET/$logstamp-htme.log
+#/bin/aws s3 cp /var/log/htme/nohup.log s3://$S3_BUCKET/$logstamp-nohup.log
+
+# Self-destruct
+#/bin/aws autoscaling set-desired-capacity --auto-scaling-group-name htme_ --desired-capacity 0

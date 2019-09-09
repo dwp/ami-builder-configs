@@ -3,6 +3,7 @@
 S3_BUCKET=$1
 S3_FOLDER=$2
 SQS_URL=$3
+SNS_ARN=$4
 
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -d'"' -f4)
 
@@ -25,9 +26,6 @@ SENDER_NAME=`hostname -f`
 json=`jq -n --arg Timestamp "$TIMESTAMP" --arg SenderType "$SENDER_TYPE" --arg SenderName "$SENDER_NAME" --arg Bucket "$S3_BUCKET" --arg Folder "$S3_FULL_FOLDER" --arg Status "$STATUS" '{Timestamp: $Timestamp, SenderType: $SenderType, SenderName: $SenderName, Bucket: $Bucket, Folder: $Folder, Status: $Status}'`
 /bin/aws sqs send-message --queue-url "$SQS_URL" --message-body "$json"
 
-#logstamp=`date "+%Y-%m-%dT%H-%M-%S-%3N"`
-#/bin/aws s3 cp /var/log/htme/htme.log s3://$S3_BUCKET/$logstamp-htme.log
-#/bin/aws s3 cp /var/log/htme/nohup.log s3://$S3_BUCKET/$logstamp-nohup.log
-
 # Self-destruct
-#/bin/aws autoscaling set-desired-capacity --auto-scaling-group-name htme_ --desired-capacity 0
+json=`jq -n --arg asg_prefix "htme_" --arg asg_size "0" '{asg_prefix: $asg_prefix, asg_size: $asg_size}'`
+/bin/aws sns publish --topic-arn "$SNS_ARN" --message "$json"

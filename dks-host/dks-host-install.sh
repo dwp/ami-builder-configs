@@ -49,13 +49,11 @@ sudo sh -c "echo ${VERSION} > /opt/dks/version"
 
 sudo mv /tmp/dks.jar /opt/dks/
 sudo cp /tmp/ami-builder/dks-host/server.properties   /opt/dks/
-sudo cp /tmp/ami-builder/dks-host/dks.sh              /opt/dks/
 sudo cp /tmp/ami-builder/dks-host/dks                 /etc/init.d/
 
 sudo chown dks:dks -R  /opt/dks
 sudo chown dks:dks -R  /var/log/dks
 sudo chmod u+x         /etc/init.d/dks
-sudo chmod u+x         /opt/dks/dks.sh
 sudo chkconfig --add dks
 sudo systemctl disable dks
 

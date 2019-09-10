@@ -8,8 +8,6 @@ i=0
 while true; do
   message=`aws sqs receive-message --queue-url $SQS_URL`
   Status=`echo $message | jq -r '.Messages[].Body' | jq '.Status'`
-  echo "Message received:"
-  echo "$message"
   if [[ z"$Status" == "" ]]; then
     sleep 2
 #    ((i++))

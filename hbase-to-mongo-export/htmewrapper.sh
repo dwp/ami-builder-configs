@@ -17,10 +17,11 @@ while true; do
         RECEIPT_HANDLE=`echo $MESSAGE | jq -r '.Messages[].ReceiptHandle'`
         echo "Message received from SQS with body of $BODY"
         
-        RUN=`echo $BODY | jq '.run-export' | tr [:lower:]`
-        SHUTDOWN_HTME=`echo $BODY | jq '.htme-shutdown-on-completion' | tr [:lower:]`
-        SHUTDOWN_SS=`echo $BODY | jq '.ss-shutdown-on-completion' | tr [:lower:]`
-        
+        RUN=`echo $BODY | jq -r '."run-export"'`
+        SHUTDOWN_HTME=`echo $BODY | jq -r '."htme-shutdown-on-completion"'`
+        SHUTDOWN_SS=`echo $BODY | jq -r '."ss-shutdown-on-completion"'`
+        echo "Message interpreted as run = '$RUN', shutdown-htme = '$SHUTDOWN_HTME' and shutdown-ss = '$SHUTDOWN_SS'"
+
         if [[ "$RUN" == "true" ]]; then
             TODAY=$(date +"%Y-%m-%d")
             S3_FULL_FOLDER="$S3_FOLDER/$TODAY"
@@ -50,12 +51,12 @@ while true; do
             SENDER_TYPE="HTME"
             SENDER_NAME=`hostname -f`
 
-            json=`jq -n --arg Timestamp "$TIMESTAMP" --arg SenderType "$SENDER_TYPE" --arg SenderName "$SENDER_NAME" --arg Bucket "$S3_BUCKET" --arg Folder "$S3_FULL_FOLDER" --arg Status "$STATUS" --arg Shutdown "$SHUTDOWN_SS" '{Timestamp: $Timestamp, SenderType: $SenderType, SenderName: $SenderName, Bucket: $Bucket, Folder: $Folder, Status: $Status, ShutdownFlag: $Shutdown_ss}'`
-            /bin/aws sqs send-message --queue-url "$SQS_URL" --message-body "$json"
+            SQS_OUTGOING_MESSAGE=`jq -n --arg Timestamp "$TIMESTAMP" --arg SenderType "$SENDER_TYPE" --arg SenderName "$SENDER_NAME" --arg Bucket "$S3_BUCKET" --arg Folder "$S3_FULL_FOLDER" --arg Status "$STATUS" --arg Shutdown "$SHUTDOWN_SS" '{Timestamp: $Timestamp, SenderType: $SenderType, SenderName: $SenderName, Bucket: $Bucket, Folder: $Folder, Status: $Status, ShutdownFlag: $SHUTDOWN_SS}'`
+            /bin/aws sqs send-message --queue-url "$SQS_URL" --message-body "$SQS_OUTGOING_MESSAGE"
 
             if [[ "$SHUTDOWN_HTME" == "true" ]]; then
-                json=`jq -n --arg asg_prefix "htme_" --arg asg_size "0" '{asg_prefix: $asg_prefix, asg_size: $asg_size}'`
-                /bin/aws sns publish --topic-arn "$SNS_ARN" --message "$json"
+                SNS_OUTGOING_MESSAGE=`jq -n --arg asg_prefix "htme_" --arg asg_size "0" '{asg_prefix: $asg_prefix, asg_size: $asg_size}'`
+                /bin/aws sns publish --topic-arn "$SNS_ARN" --message "$SNS_OUTGOING_MESSAGE"
             fi
         fi
     fi

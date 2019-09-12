@@ -7,37 +7,36 @@ export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instan
 
 i=0
 while true; do
-  message=`aws sqs receive-message --queue-url $SQS_URL`
-  Status=`echo $message | jq -r '.Messages[].Body' | jq '.Status'`
-  if [[ z"$Status" == "" ]]; then
+  MESSAGE=`aws sqs receive-message --queue-url $SQS_URL`
+  STATUS=`echo $MESSAGE | jq -r '.Messages[].Body' | jq '.Status'`
+  RECEIPT_HANDLE=`echo $MESSAGE | jq -r '.Messages[].ReceiptHandle'`
+  if [[ z"$STATUS" == "" ]]; then
     sleep 2
 #    ((i++))
-  elif [[ $Status == *"Export failed"* ]]; then
+  elif [[ $STATUS == *"Export failed"* ]]; then
     echo "Deleting message with status failed"
-    ReceiptHandle=`echo $message | jq -r '.Messages[].ReceiptHandle'`
-    /bin/aws sqs delete-message --queue-url $SQS_URL --receipt-handle "$ReceiptHandle"
+    /bin/aws sqs delete-message --queue-url $SQS_URL --receipt-handle "$RECEIPT_HANDLE"
     sleep 2
-  elif [[ $Status == *"Export successful"* ]]; then
+  elif [[ $STATUS == *"Export successful"* ]]; then
 #     i=300
-     ReceiptHandle=`echo $message | jq -r '.Messages[].ReceiptHandle'`
-     S3_FULL_FOLDER=`echo $message | jq -r '.Messages[].Body' | jq '.Folder'`
-     ShutdownFlag=`echo $message | jq -r '.Messages[].Body' | jq '.ShutdownFlag'`  
+     S3_FULL_FOLDER=`echo $MESSAGE | jq -r '.Messages[].Body' | jq '.Folder'`
+     SHUTDOWN_FLAG=`echo $MESSAGE | jq -r '.Messages[].Body' | jq '.ShutdownFlag'`  
      echo "Starting snapshot sender for $S3_FULL_FOLDER"
      /opt/snapshot-sender/snapshot-sender.sh $S3_FULL_FOLDER 2>&1 > /var/log/snapshot-sender/snapshot-sender.log &
      PID=$!
      RUNNING=1
      while [[ $RUNNING -eq 1 ]]; do
        RUNNING=`ps --no-headers $PID | awk '{print $1}' | grep -c $PID`
-       /bin/aws sqs change-message-visibility --queue-url "$SQS_URL" --receipt-handle "$ReceiptHandle"  --visibility-timeout 30
+       /bin/aws sqs change-message-visibility --queue-url "$SQS_URL" --receipt-handle "$RECEIPT_HANDLE"  --visibility-timeout 30
        sleep 25
      #TODO: check sender logs
      done
      echo "Sending process done, deleting message from SQS"
-     /bin/aws sqs delete-message --queue-url $SQS_URL --receipt-handle "$ReceiptHandle"
-     if [[ "$ShutdownFlag" == "true" ]]; then
+     /bin/aws sqs delete-message --queue-url $SQS_URL --receipt-handle "$RECEIPT_HANDLE"
+     if [[ "$SHUTDOWN_FLAG" == "true" ]]; then
         # Self-destruct
-        json=`jq -n --arg asg_prefix "snapshot-sender_" --arg asg_size "0" '{asg_prefix: $asg_prefix, asg_size: $asg_size}'`
-        /bin/aws sns publish --topic-arn "$SNS_ARN" --message "$json"
+        JSON=`jq -n --arg asg_prefix "snapshot-sender_" --arg asg_size "0" '{asg_prefix: $asg_prefix, asg_size: $asg_size}'`
+        /bin/aws sns publish --topic-arn "$SNS_ARN" --message "$JSON"
       fi
   else
     # Unknown status - wait and recheck messages

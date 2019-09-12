@@ -10,18 +10,18 @@ export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instan
 
 i=0
 while true; do
-    message=`aws sqs receive-message --queue-url $SQS_INCOMING_URL`
+    MESSAGE=`aws sqs receive-message --queue-url $SQS_INCOMING_URL`
 
-    if [[ ! -z "$message" ]]; then
-        Body=`echo $message | jq -r '.Messages[].Body'`
-        ReceiptHandle=`echo $message | jq -r '.Messages[].ReceiptHandle'`
-        echo "Message received from SQS with body of $Body"
+    if [[ ! -z "$MESSAGE" ]]; then
+        BODY=`echo $MESSAGE | jq -r '.Messages[].Body'`
+        RECEIPT_HANDLE=`echo $MESSAGE | jq -r '.Messages[].ReceiptHandle'`
+        echo "Message received from SQS with body of $BODY"
         
-        Run=`echo $Body | jq '.run-export' | tr [:lower:]`
-        Shutdown_htme=`echo $Body | jq '.htme-shutdown-on-completion' | tr [:lower:]`
-        Shutdown_ss=`echo $Body | jq '.snapshot-sender-shutdown-on-completion' | tr [:lower:]`
+        RUN=`echo $BODY | jq '.run-export' | tr [:lower:]`
+        SHUTDOWN_HTME=`echo $BODY | jq '.htme-shutdown-on-completion' | tr [:lower:]`
+        SHUTDOWN_SS=`echo $BODY | jq '.ss-shutdown-on-completion' | tr [:lower:]`
         
-        if [[ "$Run" == "true" ]]; then
+        if [[ "$RUN" == "true" ]]; then
             TODAY=$(date +"%Y-%m-%d")
             S3_FULL_FOLDER="$S3_FOLDER/$TODAY"
 
@@ -31,16 +31,16 @@ while true; do
             RUNNING=1
             while [[ $RUNNING -eq 1 ]]; do
                 RUNNING=`ps --no-headers $PID | awk '{print $1}' | grep -c $PID`
-                /bin/aws sqs change-message-visibility --queue-url "$SQS_INCOMING_URL" --receipt-handle "$ReceiptHandle"  --visibility-timeout 10
+                /bin/aws sqs change-message-visibility --queue-url "$SQS_INCOMING_URL" --receipt-handle "$RECEIPT_HANDLE"  --visibility-timeout 10
                 sleep 5
             done
-            exitcode=$?
-            errcount=`grep -cP "(ERROR|FAILED)" /var/log/htme/htme.log`
+            EXITCODE=$?
+            ERRCOUNT=`grep -cP "(ERROR|FAILED)" /var/log/htme/htme.log`
 
             echo "Sending process done, deleting message from SQS"
-            /bin/aws sqs delete-message --queue-url $SQS_INCOMING_URL --receipt-handle "$ReceiptHandle"
+            /bin/aws sqs delete-message --queue-url $SQS_INCOMING_URL --receipt-handle "$RECEIPT_HANDLE"
 
-            if [[ $errcount -lt 1 ]] && [[ $exitcode == 0 ]]; then
+            if [[ $ERRCOUNT -lt 1 ]] && [[ $EXITCODE == 0 ]]; then
                 STATUS="Export successful"
             else
                 STATUS="Export failed"
@@ -50,10 +50,10 @@ while true; do
             SENDER_TYPE="HTME"
             SENDER_NAME=`hostname -f`
 
-            json=`jq -n --arg Timestamp "$TIMESTAMP" --arg SenderType "$SENDER_TYPE" --arg SenderName "$SENDER_NAME" --arg Bucket "$S3_BUCKET" --arg Folder "$S3_FULL_FOLDER" --arg Status "$STATUS" --arg Shutdown "$Shutdown_ss" '{Timestamp: $Timestamp, SenderType: $SenderType, SenderName: $SenderName, Bucket: $Bucket, Folder: $Folder, Status: $Status, snapshot-sender-shutdown-on-completion: $Shutdown}'`
+            json=`jq -n --arg Timestamp "$TIMESTAMP" --arg SenderType "$SENDER_TYPE" --arg SenderName "$SENDER_NAME" --arg Bucket "$S3_BUCKET" --arg Folder "$S3_FULL_FOLDER" --arg Status "$STATUS" --arg Shutdown "$SHUTDOWN_SS" '{Timestamp: $Timestamp, SenderType: $SenderType, SenderName: $SenderName, Bucket: $Bucket, Folder: $Folder, Status: $Status, ShutdownFlag: $Shutdown_ss}'`
             /bin/aws sqs send-message --queue-url "$SQS_URL" --message-body "$json"
 
-            if [[ "$Shutdown_htme" == "true" ]]; then
+            if [[ "$SHUTDOWN_HTME" == "true" ]]; then
                 json=`jq -n --arg asg_prefix "htme_" --arg asg_size "0" '{asg_prefix: $asg_prefix, asg_size: $asg_size}'`
                 /bin/aws sns publish --topic-arn "$SNS_ARN" --message "$json"
             fi

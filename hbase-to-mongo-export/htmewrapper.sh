@@ -51,12 +51,12 @@ while true; do
             SENDER_TYPE="HTME"
             SENDER_NAME=`hostname -f`
 
-            json=`jq -n --arg Timestamp "$TIMESTAMP" --arg SenderType "$SENDER_TYPE" --arg SenderName "$SENDER_NAME" --arg Bucket "$S3_BUCKET" --arg Folder "$S3_FULL_FOLDER" --arg Status "$STATUS" --arg Shutdown "$SHUTDOWN_SS" '{Timestamp: $Timestamp, SenderType: $SenderType, SenderName: $SenderName, Bucket: $Bucket, Folder: $Folder, Status: $Status, ShutdownFlag: $SHUTDOWN_SS}'`
-            /bin/aws sqs send-message --queue-url "$SQS_URL" --message-body "$json"
+            SQS_OUTGOING_MESSAGE=`jq -n --arg Timestamp "$TIMESTAMP" --arg SenderType "$SENDER_TYPE" --arg SenderName "$SENDER_NAME" --arg Bucket "$S3_BUCKET" --arg Folder "$S3_FULL_FOLDER" --arg Status "$STATUS" --arg Shutdown "$SHUTDOWN_SS" '{Timestamp: $Timestamp, SenderType: $SenderType, SenderName: $SenderName, Bucket: $Bucket, Folder: $Folder, Status: $Status, ShutdownFlag: $SHUTDOWN_SS}'`
+            /bin/aws sqs send-message --queue-url "$SQS_URL" --message-body "$SQS_OUTGOING_MESSAGE"
 
             if [[ "$SHUTDOWN_HTME" == "true" ]]; then
-                json=`jq -n --arg asg_prefix "htme_" --arg asg_size "0" '{asg_prefix: $asg_prefix, asg_size: $asg_size}'`
-                /bin/aws sns publish --topic-arn "$SNS_ARN" --message "$json"
+                SNS_OUTGOING_MESSAGE=`jq -n --arg asg_prefix "htme_" --arg asg_size "0" '{asg_prefix: $asg_prefix, asg_size: $asg_size}'`
+                /bin/aws sns publish --topic-arn "$SNS_ARN" --message "$SNS_OUTGOING_MESSAGE"
             fi
         fi
     fi

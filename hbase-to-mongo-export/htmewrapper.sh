@@ -63,5 +63,3 @@ while true; do
 
     sleep 2
 done
-
-echo '{"run-export": "true","htme-shutdown-on-completion": "false"}' | jq -r '."run-export"'

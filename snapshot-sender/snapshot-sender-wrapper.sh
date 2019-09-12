@@ -1,6 +1,7 @@
 #!/bin/bash
 
 SQS_URL=$1
+SNS_ARN=$2
 
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -d'"' -f4)
 
@@ -20,6 +21,7 @@ while true; do
 #     i=300
      ReceiptHandle=`echo $message | jq -r '.Messages[].ReceiptHandle'`
      S3_FULL_FOLDER=`echo $message | jq -r '.Messages[].Body' | jq '.Folder'`
+     ShutdownFlag=`echo $message | jq -r '.Messages[].Body' | jq '.ShutdownFlag'`  
      echo "Starting snapshot sender for $S3_FULL_FOLDER"
      /opt/snapshot-sender/snapshot-sender.sh $S3_FULL_FOLDER 2>&1 > /var/log/snapshot-sender/snapshot-sender.log &
      PID=$!
@@ -29,9 +31,14 @@ while true; do
        /bin/aws sqs change-message-visibility --queue-url "$SQS_URL" --receipt-handle "$ReceiptHandle"  --visibility-timeout 30
        sleep 25
      #TODO: check sender logs
+     done
      echo "Sending process done, deleting message from SQS"
      /bin/aws sqs delete-message --queue-url $SQS_URL --receipt-handle "$ReceiptHandle"
-     done
+     if [[ "$ShutdownFlag" == "true" ]]; then
+        # Self-destruct
+        json=`jq -n --arg asg_prefix "snapshot-sender_" --arg asg_size "0" '{asg_prefix: $asg_prefix, asg_size: $asg_size}'`
+        /bin/aws sns publish --topic-arn "$SNS_ARN" --message "$json"
+      fi
   else
     # Unknown status - wait and recheck messages
     sleep 2

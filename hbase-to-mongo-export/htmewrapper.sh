@@ -51,7 +51,7 @@ while true; do
             SENDER_TYPE="HTME"
             SENDER_NAME=`hostname -f`
 
-            SQS_OUTGOING_MESSAGE=`jq -n --arg Timestamp "$TIMESTAMP" --arg SenderType "$SENDER_TYPE" --arg SenderName "$SENDER_NAME" --arg Bucket "$S3_BUCKET" --arg Folder "$S3_FULL_FOLDER" --arg Status "$STATUS" --arg Shutdown "$SHUTDOWN_SS" '{Timestamp: $Timestamp, SenderType: $SenderType, SenderName: $SenderName, Bucket: $Bucket, Folder: $Folder, Status: $Status, ShutdownFlag: $SHUTDOWN_SS}'`
+            SQS_OUTGOING_MESSAGE=`jq -n --arg Timestamp "$TIMESTAMP" --arg SenderType "$SENDER_TYPE" --arg SenderName "$SENDER_NAME" --arg Bucket "$S3_BUCKET" --arg Folder "$S3_FULL_FOLDER" --arg Status "$STATUS" --arg Shutdown "$SHUTDOWN_SS" '{Timestamp: $Timestamp, SenderType: $SenderType, SenderName: $SenderName, Bucket: $Bucket, Folder: $Folder, Status: $Status, ShutdownFlag: $Shutdown}'`
             /bin/aws sqs send-message --queue-url "$SQS_URL" --message-body "$SQS_OUTGOING_MESSAGE"
 
             if [[ "$SHUTDOWN_HTME" == "true" ]]; then

@@ -16,7 +16,11 @@ while true; do
   elif [[ $STATUS == *"Export failed"* ]]; then
     echo "Deleting message with status failed"
     /bin/aws sqs delete-message --queue-url $SQS_URL --receipt-handle "$RECEIPT_HANDLE"
-    sleep 2
+    if [[ "$SHUTDOWN_FLAG" == "true" ]]; then
+        # Self-destruct
+        JSON=`jq -n --arg asg_prefix "snapshot-sender_" --arg asg_size "0" '{asg_prefix: $asg_prefix, asg_size: $asg_size}'`
+        /bin/aws sns publish --topic-arn "$SNS_ARN" --message "$JSON"
+    fi
   elif [[ $STATUS == *"Export successful"* ]]; then
 #     i=300
      S3_FULL_FOLDER=`echo $MESSAGE | jq -r '.Messages[].Body' | jq '.Folder'`

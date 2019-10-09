@@ -25,7 +25,7 @@ while true; do
         if [[ "$RUN" == "true" ]]; then
             TODAY=$(date +"%Y-%m-%d")
             S3_SUFFIX=`echo $BODY | jq -r '."s3-suffix"'`
-            if [[ -z "$S3_SUFFIX" ]]; then
+            if [[ -z "$S3_SUFFIX" ]] || [[ "$S3_SUFFIX" == "null" ]]; then
               S3_FULL_FOLDER="$S3_FOLDER/$TODAY"
             else
               S3_FULL_FOLDER="$S3_FOLDER/$S3_SUFFIX/$TODAY"

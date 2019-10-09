@@ -32,7 +32,7 @@ while true; do
             fi
 
             TOPICS=`echo $BODY | jq -r '."active-topics-override"'`
-            if [[ -z "$TOPICS" ]]; then
+            if [[ -z "$TOPICS" ]] || [[ "$TOPICS" == "null" ]]; then
               TOPICS_FILE="/opt/htme/topics-active.csv"
               echo "List of topics is from default file $TOPICS_FILE"
             else

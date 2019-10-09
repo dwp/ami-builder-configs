@@ -24,10 +24,26 @@ while true; do
 
         if [[ "$RUN" == "true" ]]; then
             TODAY=$(date +"%Y-%m-%d")
-            S3_FULL_FOLDER="$S3_FOLDER/$TODAY"
+            S3_SUFFIX=`echo $BODY | jq -r '."s3-suffix"'`
+            if [[ -z "$S3_SUFFIX" ]]; then
+              S3_FULL_FOLDER="$S3_FOLDER/$TODAY"
+            else
+              S3_FULL_FOLDER="$S3_FOLDER/$S3_SUFFIX/$TODAY"
+            fi
 
-            echo "Starting export process"
-            /opt/htme/htme.sh "$S3_BUCKET" "$S3_FULL_FOLDER" 2>&1 > /var/log/htme/htme.log &
+            TOPICS=`echo $BODY | jq -r '."active-topics-override"'`
+            if [[ -z "$TOPICS" ]]; then
+              TOPICS_FILE="/opt/htme/topics-active.csv"
+              echo "List of topics is from default file $TOPICS_FILE"
+            else
+              DATESTAMP=$(date +"%Y-%m-%d-%H-%M-%S")
+              TOPICS_FILE="/opt/htme/$DATESTAMP.csv"
+              echo $TOPICS | sed -E 's/,/\n/g' > $TOPICS_FILE
+              echo "List of topics from sqs message is $TOPICS"
+            fi
+
+            echo "Starting export process from $TOPICS_FILE into S3 at s3://$S3_BUCKET/$S3_FULL_FOLDER"
+            /opt/htme/htme.sh "$S3_BUCKET" "$S3_FULL_FOLDER" "$TOPICS_FILE" 2>&1 > /var/log/htme/htme.log &
             PID=$!
             RUNNING=1
             while [[ $RUNNING -eq 1 ]]; do

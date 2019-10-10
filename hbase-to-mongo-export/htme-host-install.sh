@@ -38,7 +38,7 @@ sudo yum install -y rng-tools
 sudo systemctl enable rngd
 
 # Download & install latest hbase-to-mongo-export service artifact
-VERSION=$(curl -s https://api.github.com/repos/dwp/hbase-to-mongo-export/releases/latest | grep browser_download_url |grep hbase-to-mongo-export | cut -d '/' -f 8)
+VERSION="0.0.39"
 URL="https://github.com/dwp/hbase-to-mongo-export/releases/download/${VERSION}/hbase-to-mongo-export-${VERSION}.jar"
 echo "JAR_VERSION: $VERSION"
 echo "JAR_DOWNLOAD_URL: $URL"

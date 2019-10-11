@@ -29,3 +29,7 @@ sudo yum install -y nmap-ncat jq
 
 # Download & install AWS-CLI
 sudo pip install awscli
+
+# rngd is required to generate some entropy without a long wait
+sudo yum install -y rng-tools
+sudo systemctl enable rngd

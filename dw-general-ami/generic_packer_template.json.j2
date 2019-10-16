@@ -38,7 +38,7 @@
         {
           "type": "shell",
           "script": "{{download_dir}}/{{ provisioner }}"
-        }{{ "," if not loop.last }}
+        },
       {% endfor %},
       {% for provisioner_script in event['provision_scripts'] %}
         {

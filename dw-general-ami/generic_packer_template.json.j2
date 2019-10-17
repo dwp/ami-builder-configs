@@ -29,26 +29,40 @@
       "region": "{{ event['region'] }}"
     }],
     "provisioners": [
-    {% if 'provision_scripts' in event and event['provision_scripts']|length > 0 %}
-        {% for provisioner_script in event['provision_scripts'] %}
+    {% if 'set_proxy' in event and event['set_proxy'] == true %}
         {
           "type": "shell",
+          "inline": "echo \"export HTTP_PROXY={% raw %}{{ env `HTTP_PROXY` }}{% endraw %} \" >> /etc/profile"
+        },
+        {
+          "type": "shell",
+          "inline": "echo \"export HTTPS_PROXY={% raw %}{{ env `HTTPS_PROXY` }}{% endraw %} \" >> /etc/profile"
+        }
+    {% else %}
+        {
+          "type": "shell",
+          "inline": "echo \"proxy settings not set\""
+        }
+    {% endif %}
+    {% if 'provision_scripts' in event and event['provision_scripts']|length > 0 %}
+        {% for provisioner_script in event['provision_scripts'] %}
+        ,{
+          "type": "shell",
           "inline": "{{ provisioner_script }}"
-        }{{ "," if not loop.last }}
+        }
       {% endfor %}
-      {% if 'provision_script_keys' in event and event['provision_script_keys']|length > 0 %},{% endif %}
     {% endif %}
     {% if 'provision_script_keys' in event and event['provision_script_keys']|length > 0 %}
-        {
+        ,{
           "type": "file",
-          "source": "{{ event['provisioner_type_file_source'] or '/tmp/ami-builder'}}",
+          "source": "{{ event['provisioner_type_file_source'] or './tmp/ami-builder'}}",
           "destination": "{{ event['provisioner_type_file_destination'] or '/tmp'}}"
         },
         {% for provisioner in event['provision_script_keys'] %}
         {
           "type": "shell",
           "script": "{{download_dir}}/{{ provisioner }}"
-        }{{ "," if not loop.last }}
+        }
         {% endfor %}
     {% endif %}
     ]

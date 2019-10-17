@@ -39,11 +39,15 @@
           "type": "shell",
           "script": "{{download_dir}}/{{ provisioner }}"
         }{{ "," if not loop.last }}
-      {% endfor %},
-      {% for provisioner_script in event['provision_scripts'] %}
+      {% endfor %}
+    ]
+    {% endif %}
+    {% if 'provision_scripts' in event and event['provision_scripts']|length > 0 %},
+    "provisioners": [
+        {% for provisioner_script in event['provision_scripts'] %}
         {
           "type": "shell",
-          "script": "{{ provisioner_script }}"
+          "inline": "{{ provisioner_script }}"
         }{{ "," if not loop.last }}
       {% endfor %}
     ]

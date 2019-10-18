@@ -1,4 +1,8 @@
 {
+    "variables": {
+        "http_proxy": "{% raw %}{{ env `HTTP_PROXY` }}{% endraw %}",
+        "https_proxy": "{% raw %}{{ env `HTTPS_PROXY` }}{% endraw %}"
+    },
     "builders": [{
       "type": "amazon-ebs",
       "source_ami_filter": {
@@ -32,11 +36,11 @@
     {% if 'set_proxy' in event and event['set_proxy'] == true %}
         {
           "type": "shell",
-          "inline": "echo \"export HTTP_PROXY={% raw %}{{ env `HTTP_PROXY` }}{% endraw %} \" >> /etc/profile"
+          "inline": "echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/profile"
         },
         {
           "type": "shell",
-          "inline": "echo \"export HTTPS_PROXY={% raw %}{{ env `HTTPS_PROXY` }}{% endraw %} \" >> /etc/profile"
+          "inline": "echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/profile"
         }
     {% else %}
         {

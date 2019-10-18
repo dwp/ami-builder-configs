@@ -2,6 +2,8 @@
 
 ## Script to prepare general Dataworks AMI
 
+[ ! -z $HTTP_PROXY ] && pip_http_proxy=" --proxy $(echo $HTTP_PROXY | sed -e 's/^http:\/\///g' -e 's/^https:\/\///g')"
+
 # Install Java
 sudo yum update -y
 sudo yum install -y java-1.8.0-openjdk-devel
@@ -21,14 +23,14 @@ sudo yum install -y python-pip
 # of acm-pca-cert-generator to be built and installed
 sudo yum install -y gcc
 sudo yum install -y python-devel
-sudo pip install https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
+sudo pip install$pip_http_proxy https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
 sudo yum remove -y gcc python-devel
 
 # Adding in netcat and jq for troubleshooting
 sudo yum install -y nmap-ncat jq
 
 # Download & install AWS-CLI
-sudo pip install awscli
+sudo pip install$pip_http_proxy awscli
 
 # rngd is required to generate some entropy without a long wait
 sudo yum install -y rng-tools

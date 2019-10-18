@@ -36,11 +36,11 @@
     {% if 'set_proxy' in event and event['set_proxy'] == true %}
         {
           "type": "shell",
-          "inline": "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/environment'"
+          "inline": "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'"
         },
         {
           "type": "shell",
-          "inline": "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/environment'"
+          "inline": "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'"
         }
     {% else %}
         {

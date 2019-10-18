@@ -34,7 +34,7 @@ sudo mkdir /opt/snapshot-sender
 sudo mkdir /var/log/snapshot-sender
 
 Download & install latest crown snapshot-sender service artifact
-VERSION="0.0.19"
+VERSION="0.0.20"
 URL="https://github.com/dwp/snapshot-sender/releases/download/${VERSION}/snapshot-sender-${VERSION}.jar"
 echo "JAR_VERSION: $VERSION"
 echo "JAR_DOWNLOAD_URL: $URL"

@@ -41,6 +41,10 @@
         {
           "type": "shell",
           "inline": "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'"
+        },
+        {
+          "type": "shell",
+          "inline": "sudo sh -c 'echo \"proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/yum.conf'"
         }
     {% else %}
         {

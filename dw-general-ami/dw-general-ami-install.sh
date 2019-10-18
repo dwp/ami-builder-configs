@@ -21,7 +21,15 @@ sudo yum install -y python-pip
 # of acm-pca-cert-generator to be built and installed
 sudo yum install -y gcc
 sudo yum install -y python-devel
-sudo pip install https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
+
+# Check for proxy env var for pip
+if [ -z "$HTTP_PROXY" ]
+then
+  sudo pip install https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
+else
+  sudo pip --proxy $HTTP_PROXY install https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
+fi
+
 sudo yum remove -y gcc python-devel
 
 # Adding in netcat and jq for troubleshooting

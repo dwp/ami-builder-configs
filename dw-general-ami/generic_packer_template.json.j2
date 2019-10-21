@@ -93,7 +93,8 @@
         {% for provisioner in event['provision_script_keys'] %}
         {
           "type": "shell",
-          "script": "{{download_dir}}/{{ provisioner }}"
+          "script": "{{download_dir}}/{{ provisioner }}",
+          "execute_command": "sudo -E su -eux -c '{% raw %}{{ .path }}{% endraw %}'"
         }
         {% endfor %}
     {% endif %}

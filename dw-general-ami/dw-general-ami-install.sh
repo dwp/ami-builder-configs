@@ -22,7 +22,7 @@ yum install -y python-pip
 # of acm-pca-cert-generator to be built and installed
 yum install -y gcc
 yum install -y python-devel
-pip -vvv install https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
+pip install https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
 yum remove -y gcc python-devel
 
 # Adding in netcat and jq for troubleshooting

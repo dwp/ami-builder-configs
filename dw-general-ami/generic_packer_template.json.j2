@@ -94,7 +94,7 @@
         {
           "type": "shell",
           "script": "{{download_dir}}/{{ provisioner }}",
-          "execute_command": "sudo -E su -eux -c '{% raw %}{{ .path }}{% endraw %}'"
+          "execute_command": "sudo -E su -eux -c '{% raw %}{{ .Path }}{% endraw %}'"
         }
         {% endfor %}
     {% endif %}

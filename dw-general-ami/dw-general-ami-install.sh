@@ -10,7 +10,7 @@
 
 # Install Amazon SSM agent
 sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
-
+exit 1
 # Install acm cert helper
 acm_cert_helper_repo=acm-pca-cert-generator
 acm_cert_helper_version=0.10.0

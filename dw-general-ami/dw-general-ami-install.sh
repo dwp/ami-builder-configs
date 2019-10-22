@@ -1,13 +1,11 @@
 #!/bin/sh
 set -eEuo pipefail
-printenv
 
 ## Script to prepare general Dataworks AMI
 
 # Install Amazon SSM agent
 yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 
-echo "proxy=${HTTPS_PROXY}" >> /etc/yum.conf
 yum --enablerepo=extras install -y epel-release
 
 # Install Java

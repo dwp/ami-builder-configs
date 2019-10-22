@@ -2,6 +2,7 @@
 set -eEuo pipefail
 
 ## Script to prepare general Dataworks AMI
+echo "proxy=${HTTPS_PROXY}" >> /etc/yum.conf
 yum --enablerepo=extras install -y epel-release
 
 # Install Java

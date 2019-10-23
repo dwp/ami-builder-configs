@@ -1,9 +1,9 @@
 {
     "variables": {
-        "http_proxy": "{% raw %}{{ env `HTTP_PROXY` }}{% endraw %}",
-        "https_proxy": "{% raw %}{{ env `HTTPS_PROXY` }}{% endraw %}",
-        "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}"
-        "ebs_kms_key_id": "{% raw %}{{ env `EBS_KMS_KEY_ID` }}{% endraw %}"
+        "http_proxy": "{% raw %}{{ env `HTTP_PROXY` or 'NOT_SET'}}{% endraw %}",
+        "https_proxy": "{% raw %}{{ env `HTTPS_PROXY` or 'NOT_SET'}}{% endraw %}",
+        "no_proxy": "{% raw %}{{ env `NO_PROXY` or 'NOT_SET'}}{% endraw %}"
+        "ebs_kms_key_id": "{% raw %}{{ env `EBS_KMS_KEY_ID` or 'NOT_SET' }}{% endraw %}"
     },
     "builders": [{
       "type": "amazon-ebs",

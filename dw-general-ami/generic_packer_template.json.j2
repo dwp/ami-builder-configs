@@ -25,6 +25,7 @@
       {% endif %}
       {% if 'ami_users' in event %}
       "ami_users": "{{ event['ami_users'] }}",
+      "snapshot_users": "{{ even['ami_users'] }}",
       {% endif %}
       "region": "{{ event['region'] }}"
     }]{% if 'provision_script_keys' in event and event['provision_script_keys']|length > 0 %},

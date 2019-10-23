@@ -1,9 +1,9 @@
 {
     "variables": {
-        "http_proxy": "{% raw %}{{ env `HTTP_PROXY` or 'NOT_SET'}}{% endraw %}",
-        "https_proxy": "{% raw %}{{ env `HTTPS_PROXY` or 'NOT_SET'}}{% endraw %}",
-        "no_proxy": "{% raw %}{{ env `NO_PROXY` or 'NOT_SET'}}{% endraw %}"
-        "ebs_kms_key_id": "{% raw %}{{ env `EBS_KMS_KEY_ID` or 'NOT_SET' }}{% endraw %}"
+        "http_proxy": "{% raw %}{{ env `HTTP_PROXY`}}{% endraw %}",
+        "https_proxy": "{% raw %}{{ env `HTTPS_PROXY`}}{% endraw %}",
+        "no_proxy": "{% raw %}{{ env `NO_PROXY`}}{% endraw %}"
+        "ebs_kms_key_id": "{% raw %}{{ env `EBS_KMS_KEY_ID`}}{% endraw %}"
     },
     "builders": [{
       "type": "amazon-ebs",
@@ -45,15 +45,15 @@
         {
           "type": "shell",
           "inline": [
-            "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
-            "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
-            "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/environment'",
-            "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/environment'",
-            "sudo sh -c 'echo \"export http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
-            "sudo sh -c 'echo \"export https_proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
-            "sudo sh -c 'echo \"export http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/environment'",
-            "sudo sh -c 'echo \"export https_proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/environment'",
-            "sudo sh -c 'echo \"proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/yum.conf'"
+            "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` or 'NOT_SET' }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` or 'NOT_SET' }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` or 'NOT_SET' }}{% endraw %} \" >> /etc/environment'",
+            "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` or 'NOT_SET' }}{% endraw %} \" >> /etc/environment'",
+            "sudo sh -c 'echo \"export http_proxy={% raw %}{{ user `http_proxy` or 'NOT_SET' }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export https_proxy={% raw %}{{ user `https_proxy` or 'NOT_SET' }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export http_proxy={% raw %}{{ user `http_proxy` or 'NOT_SET' }}{% endraw %} \" >> /etc/environment'",
+            "sudo sh -c 'echo \"export https_proxy={% raw %}{{ user `https_proxy` or 'NOT_SET' }}{% endraw %} \" >> /etc/environment'",
+            "sudo sh -c 'echo \"proxy={% raw %}{{ user `https_proxy` or 'NOT_SET' }}{% endraw %} \" >> /etc/yum.conf'"
           ]
         }
     {% else %}
@@ -71,12 +71,12 @@
           {% if 'set_proxy' in event and event['set_proxy'] == true %}
           ,
           "environment_vars": [
-            "HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %}",
-            "HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %}",
-            "http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
-            "https_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
-            "NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %}",
-            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}"
+            "HTTP_PROXY={% raw %}{{ user `http_proxy` or 'NOT_SET' }}{% endraw %}",
+            "HTTPS_PROXY={% raw %}{{ user `https_proxy` or 'NOT_SET' }}{% endraw %}",
+            "http_proxy={% raw %}{{ user `http_proxy` or 'NOT_SET' }}{% endraw %}",
+            "https_proxy={% raw %}{{ user `http_proxy` or 'NOT_SET' }}{% endraw %}",
+            "NO_PROXY={% raw %}{{ user `no_proxy` or 'NOT_SET' }}{% endraw %}",
+            "no_proxy={% raw %}{{ user `no_proxy` or 'NOT_SET' }}{% endraw %}"
           ]
           {% endif %}
         }
@@ -97,12 +97,12 @@
           {% if 'set_proxy' in event and event['set_proxy'] == true %}
           ,
           "environment_vars": [
-            "HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %}",
-            "HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %}",
-            "http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
-            "https_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
-            "NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %}",
-            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}"
+            "HTTP_PROXY={% raw %}{{ user `http_proxy` or 'NOT_SET' }}{% endraw %}",
+            "HTTPS_PROXY={% raw %}{{ user `https_proxy` or 'NOT_SET' }}{% endraw %}",
+            "http_proxy={% raw %}{{ user `http_proxy` or 'NOT_SET' }}{% endraw %}",
+            "https_proxy={% raw %}{{ user `http_proxy` or 'NOT_SET' }}{% endraw %}",
+            "NO_PROXY={% raw %}{{ user `no_proxy` or 'NOT_SET' }}{% endraw %}",
+            "no_proxy={% raw %}{{ user `no_proxy` or 'NOT_SET' }}{% endraw %}"
           ]
           {% endif %}
         }

@@ -114,7 +114,7 @@
           "type": "shell",
           "inline": [
             "sudo sh -c 'sed -i \"'/^proxy/d\" /etc/yum.conf'",
-            "sudo sh -c 'echo \"\" > /etc/environment'",
+            "sudo sh -c '> /etc/environment'",
             "sudo sh -c 'rm -fr /etc/profile.d/http_proxy'"
           ]
         }

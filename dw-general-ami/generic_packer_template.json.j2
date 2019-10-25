@@ -45,6 +45,7 @@
         {
           "type": "shell",
           "inline": [
+            "sudo sh -c 'yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm'",
             "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
             "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
             "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/environment'",
@@ -59,7 +60,10 @@
     {% else %}
         {
           "type": "shell",
-          "inline": "echo \"proxy settings not set\""
+          "inline": [
+            "sudo sh -c 'yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm'",
+            "echo \"proxy settings not set\""
+          ]
         }
     {% endif %}
     {% if 'provision_scripts' in event and event['provision_scripts']|length > 0 %}

@@ -4,9 +4,12 @@ set -eEuo pipefail
 ## Script to prepare general Dataworks AMI
 
 # Install Amazon SSM agent - need to disable proxy first
+cat /etc/yum.conf
 sed -i '/^proxy=/s/^/#/' /etc/yum.conf
+cat /etc/yum.conf
 yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 sed -i '/^#proxy=/s/#//' /etc/yum.conf
+cat /etc/yum.conf
 
 yum --enablerepo=extras install -y epel-release
 

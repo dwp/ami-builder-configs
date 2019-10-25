@@ -9,7 +9,7 @@ yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/li
 yum --enablerepo=extras install -y epel-release
 
 # Install Java
-#yum update -y
+yum update -y
 yum install -y java-1.8.0-openjdk-devel python-pip gcc python-devel nmap-ncat jq rng-tools
 
 # Install acm cert helper

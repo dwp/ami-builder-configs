@@ -46,13 +46,17 @@
           "type": "shell",
           "inline": [
             "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
-            "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
-            "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/environment'",
-            "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/environment'",
             "sudo sh -c 'echo \"export http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
             "sudo sh -c 'echo \"export https_proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/environment'",
             "sudo sh -c 'echo \"export http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/environment'",
+            "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/environment'",
             "sudo sh -c 'echo \"export https_proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/environment'",
+            "sudo sh -c 'echo \"export NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %} \" >> /etc/environment'",
+            "sudo sh -c 'echo \"export no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %} \" >> /etc/environment'",
             "sudo sh -c 'echo \"proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/yum.conf'"
           ]
         }
@@ -117,7 +121,7 @@
           "inline": [
             "sudo sh -c 'sed -i \"/^proxy/d\" /etc/yum.conf'",
             "sudo sh -c '> /etc/environment'",
-            "sudo sh -c 'rm -fr /etc/profile.d/http_proxy'"
+            "sudo sh -c 'rm -fr /etc/profile.d/http_proxy.sh'"
           ]
         }
     {% endif %}

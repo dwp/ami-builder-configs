@@ -10,9 +10,7 @@ echo "http_proxy=$http_proxy"
 echo "https_proxy=$https_proxy"
 echo "NO_PROXY=$NO_PROXY"
 echo "no_proxy=$no_proxy"
-curl -vvv --noproxy "s3.amazonaws.com" -O https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
-yum install -y amazon-ssm-agent.rpm
-rm -f amazon-ssm-agent.rpm
+yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 
 yum --enablerepo=extras install -y epel-release
 

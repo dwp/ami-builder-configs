@@ -11,7 +11,7 @@ sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/late
 
 # Install acm cert helper
 acm_cert_helper_repo=acm-pca-cert-generator
-acm_cert_helper_version=0.10.0
+acm_cert_helper_version=0.11.0
 
 # pip is not available in CentOS 7 core repositories there is a requirement to enable EPEL repositories prior
 sudo yum --enablerepo=extras install -y epel-release
@@ -34,7 +34,7 @@ sudo mkdir /opt/snapshot-sender
 sudo mkdir /var/log/snapshot-sender
 
 Download & install latest crown snapshot-sender service artifact
-VERSION="0.0.19"
+VERSION="0.0.21"
 URL="https://github.com/dwp/snapshot-sender/releases/download/${VERSION}/snapshot-sender-${VERSION}.jar"
 echo "JAR_VERSION: $VERSION"
 echo "JAR_DOWNLOAD_URL: $URL"

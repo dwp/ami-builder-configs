@@ -10,6 +10,10 @@
         "owners": ["{{ event['source_ami_owner'] or '679593333241' }}"],
         "most_recent": true
       },
+      "launch_block_device_mappings": [{
+        "device_name": "/dev/sda1",
+        "encrypted": false
+      }],
       "instance_type": "{{ event['instance_type'] or 't2.micro' }}",
       "ssh_username": "{{ event['ssh_username'] or 'centos' }}",
       "subnet_id": "{{ event['subnet_id'] }}",

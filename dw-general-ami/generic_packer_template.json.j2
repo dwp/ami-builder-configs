@@ -37,7 +37,9 @@
       "ami_users": "{{ event['ami_users'] }}",
       "snapshot_users": "{{ event['ami_users'] }}",
       {% endif %}
-      "region": "{{ event['region'] }}"
+      "region": "{{ event['region'] }}",
+      "encrypt_boot": false
+
     }],
     "provisioners": [
     {% if 'set_proxy' in event and event['set_proxy'] == true %}

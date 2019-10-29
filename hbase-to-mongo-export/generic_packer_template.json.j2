@@ -1,4 +1,10 @@
 {
+    "variables": {
+        "http_proxy": "{% raw %}{{ env `HTTP_PROXY` }}{% endraw %}",
+        "https_proxy": "{% raw %}{{ env `HTTPS_PROXY` }}{% endraw %}",
+        "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}",
+        "ebs_kms_key_id": "{% raw %}{{ env `EBS_KMS_KEY_ID` }}{% endraw %}"
+    },
     "builders": [{
       "type": "amazon-ebs",
       "source_ami_filter": {
@@ -12,7 +18,7 @@
       },
       "launch_block_device_mappings": [{
         "device_name": "/dev/sda1",
-        "encrypted": false,
+        "encrypted": false
       }],
       "instance_type": "{{ event['instance_type'] or 't2.micro' }}",
       "ssh_username": "{{ event['ssh_username'] or 'centos' }}",
@@ -29,21 +35,95 @@
       {% endif %}
       {% if 'ami_users' in event %}
       "ami_users": "{{ event['ami_users'] }}",
+      "snapshot_users": "{{ event['ami_users'] }}",
       {% endif %}
       "region": "{{ event['region'] }}"
-    }]{% if 'provision_script_keys' in event and event['provision_script_keys']|length > 0 %},
+    }],
     "provisioners": [
+    {% if 'set_proxy' in event and event['set_proxy'] == true %}
+        {
+          "type": "shell",
+          "inline": [
+            "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export https_proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/environment'",
+            "sudo sh -c 'echo \"export http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/environment'",
+            "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/environment'",
+            "sudo sh -c 'echo \"export https_proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/environment'",
+            "sudo sh -c 'echo \"export NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %} \" >> /etc/environment'",
+            "sudo sh -c 'echo \"export no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %} \" >> /etc/environment'",
+            "sudo sh -c 'echo \"proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/yum.conf'"
+          ]
+        }
+    {% else %}
+        {
+          "type": "shell",
+          "inline": [
+            "echo \"proxy settings not set\""
+          ]
+        }
+    {% endif %}
+    {% if 'provision_scripts' in event and event['provision_scripts']|length > 0 %}
+        {% for provisioner_script in event['provision_scripts'] %}
+        ,
+        {
+          "type": "shell",
+          "inline": "{{ provisioner_script }}"
+          {% if 'set_proxy' in event and event['set_proxy'] == true %}
+          ,
+          "environment_vars": [
+            "HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %}",
+            "HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %}",
+            "http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
+            "https_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
+            "NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %}",
+            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}"
+          ]
+          {% endif %}
+        }
+      {% endfor %}
+    {% endif %}
+    {% if 'provision_script_keys' in event and event['provision_script_keys']|length > 0 %}
+        ,
         {
           "type": "file",
           "source": "{{ event['provisioner_type_file_source'] or '/tmp/ami-builder'}}",
           "destination": "{{ event['provisioner_type_file_destination'] or '/tmp'}}"
-        },
-      {% for provisioner in event['provision_script_keys'] %}
+        }
+        {% for provisioner in event['provision_script_keys'] %}
+        ,
         {
           "type": "shell",
-          "script": "{{download_dir}}/{{ provisioner }}"
-        }{{ "," if not loop.last }}
-      {% endfor %}
-    ]
+          "script": "{{download_dir}}/{{ provisioner }}",
+          "execute_command": "sudo -E sh -eux -c '{% raw %}{{ .Path }}{% endraw %}'"
+          {% if 'set_proxy' in event and event['set_proxy'] == true %}
+          ,
+          "environment_vars": [
+            "HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %}",
+            "HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %}",
+            "http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
+            "https_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
+            "NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %}",
+            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}"
+          ]
+          {% endif %}
+        }
+        {% endfor %}
     {% endif %}
+    {% if 'set_proxy' in event and event['set_proxy'] == true %}
+        ,
+        {
+          "type": "shell",
+          "inline": [
+            "sudo sh -c 'sed -i \"/^proxy/d\" /etc/yum.conf'",
+            "sudo sh -c '> /etc/environment'",
+            "sudo sh -c 'rm -fr /etc/profile.d/http_proxy.sh'"
+          ]
+        }
+    {% endif %}
+    ]
 }

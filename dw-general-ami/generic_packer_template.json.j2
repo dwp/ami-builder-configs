@@ -95,7 +95,8 @@
           "destination": "{{ event['provisioner_type_file_destination'] or '/tmp'}}"
         }
         {% for provisioner in event['provision_script_keys'] %}
-        ,{
+        ,
+        {
           "type": "shell",
           "script": "{{download_dir}}/{{ provisioner }}",
           "execute_command": "sudo -E sh -eux -c '{% raw %}{{ .Path }}{% endraw %}'"

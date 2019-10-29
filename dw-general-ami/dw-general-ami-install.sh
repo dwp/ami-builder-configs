@@ -19,7 +19,7 @@ yum --enablerepo=extras install -y epel-release
 sed -i -e 's/^metalink=/#&/' -e 's@^#baseurl=.*@baseurl=http://mirrors.coreix.net/fedora-epel/7/$basearch@' /etc/yum.repos.d/epel.repo
 
 # Install Java
-yum update -y
+# yum update -y
 yum install -y java-1.8.0-openjdk-devel python-pip gcc python-devel nmap-ncat jq rng-tools
 
 # Install acm cert helper

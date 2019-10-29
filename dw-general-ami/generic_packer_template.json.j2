@@ -2,8 +2,7 @@
     "variables": {
         "http_proxy": "{% raw %}{{ env `HTTP_PROXY` }}{% endraw %}",
         "https_proxy": "{% raw %}{{ env `HTTPS_PROXY` }}{% endraw %}",
-        "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}",
-        "ebs_kms_key_id": "{% raw %}{{ env `EBS_KMS_KEY_ID` }}{% endraw %}"
+        "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}"
     },
     "builders": [{
       "type": "amazon-ebs",
@@ -37,7 +36,9 @@
       "ami_users": "{{ event['ami_users'] }}",
       "snapshot_users": "{{ event['ami_users'] }}",
       {% endif %}
-      "region": "{{ event['region'] }}"
+      "region": "{{ event['region'] }}",
+      "encrypt_boot": false
+
     }],
     "provisioners": [
     {% if 'set_proxy' in event and event['set_proxy'] == true %}

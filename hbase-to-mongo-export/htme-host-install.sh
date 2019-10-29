@@ -2,40 +2,40 @@
 
 ## Script to install htme service
 
-# Install Java
-sudo yum update -y
-sudo yum install -y java-1.8.0-openjdk-devel
+echo "HTTP_PROXY=$HTTP_PROXY"
+echo "HTTPS_PROXY=$HTTPS_PROXY"
+echo "http_proxy=$http_proxy"
+echo "https_proxy=$https_proxy"
+echo "NO_PROXY=$NO_PROXY"
+echo "no_proxy=$no_proxy"
 
-# Install Amazon SSM agent
-sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+# Install Amazon SSM agent - download 1st to avoid YUM proxy issues
+yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+
+# Configure YUM repos to point at fixed mirrors so requests through the proxy will work
+sed -i -e 's/^mirrorlist=/#&/' -e 's/^#baseurl=/baseurl=/' /etc/yum.repos.d/CentOS-Base.repo
+yum --enablerepo=extras install -y epel-release
+sed -i -e 's/^metalink=/#&/' -e 's@^#baseurl=.*@baseurl=http://mirrors.coreix.net/fedora-epel/7/$basearch@' /etc/yum.repos.d/epel.repo
+
+# Install Java
+# yum update -y
+yum install -y java-1.8.0-openjdk-devel python-pip gcc python-devel nmap-ncat jq rng-tools
 
 # Install acm cert helper
 acm_cert_helper_repo=acm-pca-cert-generator
 acm_cert_helper_version=0.11.0
+pip install https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
+pip install awscli
 
-# pip is not available in CentOS 7 core repositories there is a requirement to enable EPEL repositories prior
-sudo yum --enablerepo=extras install -y epel-release
-sudo yum install -y python-pip
+yum remove -y gcc python-devel
 
-# gcc and python-devel are required to enable the twofish indirect dependency -
-# of acm-pca-cert-generator to be built and installed
-sudo yum install -y gcc
-sudo yum install -y python-devel
-sudo pip install https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
-sudo yum remove -y gcc python-devel
-
-# Adding in netcat and jq for troubleshooting
-sudo yum install -y nmap-ncat jq
+systemctl enable rngd
 
 # Download & install AWS-CLI
 sudo pip install awscli
 
 sudo mkdir /opt/htme
 sudo mkdir /var/log/htme
-
-# rngd is required to generate some entropy without a long wait
-sudo yum install -y rng-tools
-sudo systemctl enable rngd
 
 # Download & install latest hbase-to-mongo-export service artifact
 VERSION="0.0.44"

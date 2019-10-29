@@ -3,13 +3,14 @@ set -eEuo pipefail
 
 ## Script to prepare general Dataworks AMI
 
-# Install Amazon SSM agent - download 1st to avoid YUM proxy issues
 echo "HTTP_PROXY=$HTTP_PROXY"
 echo "HTTPS_PROXY=$HTTPS_PROXY"
 echo "http_proxy=$http_proxy"
 echo "https_proxy=$https_proxy"
 echo "NO_PROXY=$NO_PROXY"
 echo "no_proxy=$no_proxy"
+
+# Install Amazon SSM agent - download 1st to avoid YUM proxy issues
 yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 
 # Configure YUM repos to point at fixed mirrors so requests through the proxy will work

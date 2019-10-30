@@ -8,7 +8,7 @@ echo "http_proxy=$http_proxy"
 echo "https_proxy=$https_proxy"
 echo "NO_PROXY=$NO_PROXY"
 echo "no_proxy=$no_proxy"
-if [ ! -z $http_proxy ]; then CURL_PROXY=" -x $http_proxy"; else CURL_PROXY=""; fi
+if [ -n $http_proxy ]; then CURL_PROXY=" -x $http_proxy"; else CURL_PROXY=""; fi
 
 # Install Amazon SSM agent - download 1st to avoid YUM proxy issues
 yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm

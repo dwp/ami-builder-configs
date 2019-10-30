@@ -43,7 +43,7 @@ sudo mkdir /opt/dks
 sudo mkdir /var/log/dks
 
 # Download & install latest DKS service artifact
-VERSION="0.0.45"
+VERSION="0.0.46"
 URL="https://github.com/dwp/data-key-service/releases/download/${VERSION}/data-key-service-${VERSION}.jar"
 echo "JAR_VERSION: $VERSION"
 echo "JAR_DOWNLOAD_URL: $URL"

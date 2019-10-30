@@ -14,8 +14,13 @@ if [ -n $http_proxy ]; then CURL_PROXY=" -x $http_proxy"; else CURL_PROXY=""; fi
 yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 
 # Install the AWS CloudHSM Client and Command Line Tools
-sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-latest.el7.x86_64.rpm
-sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-jce-latest.el7.x86_64.rpm
+# See https://docs.aws.amazon.com/cloudhsm/latest/userguide/client-history.html
+# Versions here must match those used in https://github.com/dwp/data-key-service
+# CLOUDHSM_CLIENT_VERSION="latest" # When this changes version, dks jar will break.
+# CLOUDHSM_CLIENT_VERSION="2.0.4-1" # for dks up to v "0.0.45"
+CLOUDHSM_CLIENT_VERSION="3.0.0-2" # for dks v "0.0.46" upwards
+sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-${CLOUDHSM_CLIENT_VERSION}.el7.x86_64.rpm
+sudo yum install -y https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-jce-${CLOUDHSM_CLIENT_VERSION}.el7.x86_64.rpm
 
 # Configure YUM repos to point at fixed mirrors so requests through the proxy will work
 sed -i -e 's/^mirrorlist=/#&/' -e 's/^#baseurl=/baseurl=/' /etc/yum.repos.d/CentOS-Base.repo

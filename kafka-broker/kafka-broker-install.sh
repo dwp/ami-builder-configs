@@ -8,6 +8,8 @@ echo "http_proxy=$http_proxy"
 echo "https_proxy=$https_proxy"
 echo "NO_PROXY=$NO_PROXY"
 echo "no_proxy=$no_proxy"
+if [ -n $http_proxy ]; then CURL_PROXY=" -x $http_proxy"; else CURL_PROXY=""; fi
+
 
 # Install Amazon SSM agent - download 1st to avoid YUM proxy issues
 yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
@@ -35,7 +37,7 @@ systemctl enable rngd
 sudo useradd kafka -m
 sudo mkdir /usr/local/kafka
 sudo chown kafka:kafka -R /usr/local/kafka
-sudo curl "https://archive.apache.org/dist/kafka/2.2.1/kafka_2.12-2.2.1.tgz" -o /tmp/kafka.tgz
+sudo curl $CURL_PROXY "https://archive.apache.org/dist/kafka/2.2.1/kafka_2.12-2.2.1.tgz" -o /tmp/kafka.tgz
 sudo tar -xvzf /tmp/kafka.tgz --strip 1 --directory /usr/local/kafka
 sudo cp /tmp/ami-builder/kafka-broker/zookeeper     /etc/init.d
 sudo cp /tmp/ami-builder/kafka-broker/kafka         /etc/init.d

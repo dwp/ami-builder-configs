@@ -36,7 +36,7 @@ systemctl enable rngd
 sudo mkdir /opt/snapshot-sender
 sudo mkdir /var/log/snapshot-sender
 
-Download & install latest crown snapshot-sender service artifact
+# Download & install latest crown snapshot-sender service artifact
 VERSION="0.0.21"
 URL="https://github.com/dwp/snapshot-sender/releases/download/${VERSION}/snapshot-sender-${VERSION}.jar"
 echo "JAR_VERSION: $VERSION"

@@ -8,10 +8,10 @@
       "type": "amazon-ebs",
       "source_ami_filter": {
         "filters": {
-          "virtualization-type": "{{ event['source_ami_virt_type'] or 'hvm' }}",
+          "virtualization-type": "hvm",
           "name": "amzn-ami-hvm-*",
-          "root-device-type": "{{ event['source_ami_root_device_type'] or 'ebs'}}",
-          "architecture": "{{ event['source_ami_architecture'] or 'x86_64'}}"
+          "root-device-type": "ebs",
+          "architecture": "x86_64"
         },
         "owners": ["{{ event['source_ami_owner'] or '679593333241' }}"],
         "most_recent": true

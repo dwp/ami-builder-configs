@@ -5,8 +5,16 @@ S3_FOLDER=$2
 SQS_URL=$3
 SNS_ARN=$4
 SQS_INCOMING_URL=$5
+FULL_PROXY=$6
+FULL_NO_PROXY=$7
 
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -d'"' -f4)
+export http_proxy="$FULL_PROXY"
+export HTTP_PROXY="$FULL_PROXY"
+export https_proxy="$FULL_PROXY"
+export HTTPS_PROXY="$FULL_PROXY"
+export no_proxy="$FULL_NO_PROXY"
+export NO_PROXY="$FULL_NO_PROXY"
 
 i=0
 while true; do

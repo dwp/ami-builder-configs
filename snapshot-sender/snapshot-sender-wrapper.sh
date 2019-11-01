@@ -2,8 +2,16 @@
 
 SQS_URL=$1
 SNS_ARN=$2
+FULL_PROXY=$3
+FULL_NO_PROXY=$4
 
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -d'"' -f4)
+export http_proxy="$FULL_PROXY"
+export HTTP_PROXY="$FULL_PROXY"
+export https_proxy="$FULL_PROXY"
+export HTTPS_PROXY="$FULL_PROXY"
+export no_proxy="$FULL_NO_PROXY"
+export NO_PROXY="$FULL_NO_PROXY"
 
 i=0
 while true; do

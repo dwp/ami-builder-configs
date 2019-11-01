@@ -5,6 +5,10 @@
 set -eEuo pipefail
 
 echo "1 Initial Setup"
+
+# Install Yum plugin that will remove unused dependancies after a package is uninstalled
+yum install -y yum-plugin-remove-with-leaves
+
 echo "1.1 Filesystem Configuration"
 
 # 1.1.1.1, 1.1.1.2, 1.1.1.3, 1.1.1.4, 1.1.1.5, 1.1.1.6, 1.1.1.7, 1.1.1.8,
@@ -115,7 +119,7 @@ yum remove -y  \
     rsh \
     talk \
     telnet \
-    openldap-clients
+    openldap-clients --remove-leaves
 
 # 1.6.1.1 is check-only; should be caught by OpenSACP & Lynis
 # 1.6.1.2, 1.6.1.3
@@ -165,7 +169,8 @@ echo "1.7.1.4, 1.7.1.5, 1.7.1.6 Ensure permissions on login warning banners are 
 chmod 0644 /etc/{motd,issue,issue.net}
 
 echo "1.8 Ensure patches, updates, and additional security software are installed"
-yum update -y
+echo "Excluded from hardening.sh, added to Userdata due to build time constraints"
+# yum update -y
 
 echo "2.2.1.2 Ensure ntp is configured"
 echo "Exemption; Amazon Linux recommends chrony"

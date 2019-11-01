@@ -14,7 +14,7 @@ echo "no_proxy=$no_proxy"
 yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 
 # Install Yum plugin that will remove unused dependancies after a package is uninstalled
-yum install yum-plugin-remove-with-leaves
+yum install -y yum-plugin-remove-with-leaves
 
 # Configure YUM repos to point at fixed mirrors so requests through the proxy will work
 # sed -i -e 's/^mirrorlist=/#&/' -e 's/^#baseurl=/baseurl=/' /etc/yum.repos.d/CentOS-Base.repo

@@ -21,7 +21,7 @@
         "encrypted": false
       }],
       "instance_type": "{{ event['instance_type'] or 't2.micro' }}",
-      "ssh_username": "{{ event['ssh_username'] or 'centos' }}",
+      "ssh_username": "ec2-user",
       "subnet_id": "{{ event['subnet_id'] }}",
       "ami_name": "dw-general-ami-{{ '{{' }} timestamp {{ '}}' }}",
       {% if 'profile' in event %}

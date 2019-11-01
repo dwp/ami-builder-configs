@@ -9,7 +9,7 @@
       "source_ami_filter": {
         "filters": {
           "virtualization-type": "{{ event['source_ami_virt_type'] or 'hvm' }}",
-          "name": "{{ event['source_ami_name'] or 'amzn-ami-hvm-*'}}",
+          "name": "amzn-ami-hvm-*",
           "root-device-type": "{{ event['source_ami_root_device_type'] or 'ebs'}}",
           "architecture": "{{ event['source_ami_architecture'] or 'x86_64'}}"
         },

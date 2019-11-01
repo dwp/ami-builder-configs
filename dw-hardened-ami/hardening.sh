@@ -7,7 +7,7 @@ set -eEuo pipefail
 echo "1 Initial Setup"
 
 # Install Yum plugin that will remove unused dependancies after a package is uninstalled
-yum install -y yum-plugin-remove-with-leaves
+yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/yum-plugin-remove-with-leaves-1.1.31-52.el7.noarch.rpm
 
 echo "1.1 Filesystem Configuration"
 

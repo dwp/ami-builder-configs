@@ -18,7 +18,7 @@ yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/yum-plugin-r
 
 # Configure YUM repos to point at fixed mirrors so requests through the proxy will work
 # sed -i -e 's/^mirrorlist=/#&/' -e 's/^#baseurl=/baseurl=/' /etc/yum.repos.d/CentOS-Base.repo
-yum-config-manager --enable epel
+sudo yum-config-manager --enable epel
 sed -i -e 's/^metalink=/#&/' -e 's@^#baseurl=.*@baseurl=http://mirrors.coreix.net/fedora-epel/7/$basearch@' /etc/yum.repos.d/epel.repo
 
 # Install Java

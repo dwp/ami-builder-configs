@@ -16,11 +16,6 @@
         "owners": ["137112412989"],
         "most_recent": true
       },
-      "launch_block_device_mappings": [{
-        "device_name": "/dev/sda1",
-        "encrypted": false,
-        "volume_size": 25
-      }],
       "instance_type": "{{ event['instance_type'] or 't2.micro' }}",
       "ssh_username": "ec2-user",
       "subnet_id": "{{ event['subnet_id'] }}",

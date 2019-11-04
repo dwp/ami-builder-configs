@@ -6,14 +6,17 @@
     },
     "builders": [{
       "type": "amazon-ebs",
+      {% if 'source_ami_id' in event and event['source_ami_id']|length > 0 %}
+        "source_ami": "{{ event['source_ami_id']}}"",
+      {% endif %}
       "source_ami_filter": {
         "filters": {
-        "virtualization-type": "hvm",
-        "name": "amzn-ami-hvm-*",
-        "root-device-type": "ebs",
+        "virtualization-type": "{{ event['source_ami_virt_type'] or 'hvm' }}",
+        "name": "{{ event['source_ami_name'] or 'amzn-ami-hvm-*' }}",
+        "root-device-type": "{{ event['source_ami_root_device_type'] or 'ebs' }}",
         "architecture": "x86_64"
         },
-        "owners": ["137112412989"],
+        "owners": ["{{ event['source_ami_owner'] or '137112412989' }}"],
         "most_recent": true
       },
       "instance_type": "{{ event['instance_type'] or 't2.micro' }}",

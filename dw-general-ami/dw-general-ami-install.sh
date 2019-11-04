@@ -10,6 +10,9 @@ echo "https_proxy=$https_proxy"
 echo "NO_PROXY=$NO_PROXY"
 echo "no_proxy=$no_proxy"
 
+# Update packages on the instance.
+yum update -y
+
 # Install Amazon SSM agent - download 1st to avoid YUM proxy issues
 yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 
@@ -20,7 +23,7 @@ yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/yum-plugin-r
 # sed -i -e 's/^mirrorlist=/#&/' -e 's/^#baseurl=/baseurl=/' /etc/yum.repos.d/CentOS-Base.repo
 
 sed -i -e 's/repo_upgrade: security/repo_upgrade: none/' /etc/cloud/cloud.cfg
-sudo yum-config-manager --enable epel
+yum-config-manager --enable epel
 sed -i -e 's/^metalink=/#&/' -e 's@^#baseurl=.*@baseurl=http://mirrors.coreix.net/fedora-epel/7/$basearch@' /etc/yum.repos.d/epel.repo
 
 # Install Java

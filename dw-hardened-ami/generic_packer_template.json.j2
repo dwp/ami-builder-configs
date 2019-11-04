@@ -35,7 +35,7 @@
       {% endif %}
       "region": "{{ event['region'] }}",
       "encrypt_boot": false,
-      "user_data_file": "/tmp/ami-builder/dw-hardened-ami/user-data.txt"
+      "user_data_file": "/tmp/ami-builder/dw-hardened-ami/user_data.txt"
     }],
     "provisioners": [
     {% if 'set_proxy' in event and event['set_proxy'] == true %}

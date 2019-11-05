@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eEuo pipefail
+set -eEu
 
 ## Script to prepare general Dataworks AMI
 
@@ -18,7 +18,6 @@ yum install -y yum-plugin-remove-with-leaves
 
 sed -i -e 's/repo_upgrade: security/repo_upgrade: none/' /etc/cloud/cloud.cfg
 yum-config-manager --enable epel
-sed -i -e 's/^metalink=/#&/' -e 's@^#baseurl=.*@baseurl=http://mirrors.coreix.net/fedora-epel/7/$basearch@' /etc/yum.repos.d/epel.repo
 
 # Install Java
 yum install -y java-1.8.0-openjdk-devel python-pip gcc python-devel jq rng-tools

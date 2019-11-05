@@ -13,14 +13,8 @@ echo "no_proxy=$no_proxy"
 # Update packages on the instance.
 yum update -y
 
-# Install Amazon SSM agent - download 1st to avoid YUM proxy issues
-yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
-
 # Install Yum plugin that will remove unused dependancies after a package is uninstalled
 yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/yum-plugin-remove-with-leaves-1.1.31-52.el7.noarch.rpm
-
-# Configure YUM repos to point at fixed mirrors so requests through the proxy will work
-# sed -i -e 's/^mirrorlist=/#&/' -e 's/^#baseurl=/baseurl=/' /etc/yum.repos.d/CentOS-Base.repo
 
 sed -i -e 's/repo_upgrade: security/repo_upgrade: none/' /etc/cloud/cloud.cfg
 yum-config-manager --enable epel

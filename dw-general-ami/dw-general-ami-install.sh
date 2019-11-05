@@ -30,4 +30,4 @@ pip install awscli
 
 yum remove -y gcc python-devel --remove-leaves
 
-systemctl enable rngd
+chkconfig rngd on

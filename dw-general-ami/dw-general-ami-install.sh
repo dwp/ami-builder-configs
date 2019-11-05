@@ -14,7 +14,7 @@ echo "no_proxy=$no_proxy"
 yum update -y
 
 # Install Yum plugin that will remove unused dependancies after a package is uninstalled
-yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/yum-plugin-remove-with-leaves-1.1.31-52.el7.noarch.rpm
+yum install -y yum-plugin-remove-with-leaves
 
 sed -i -e 's/repo_upgrade: security/repo_upgrade: none/' /etc/cloud/cloud.cfg
 yum-config-manager --enable epel

@@ -6,8 +6,6 @@ set -eEuo pipefail
 
 echo "1 Initial Setup"
 
-yum install -y http://mirror.centos.org/centos/7/os/x86_64/Packages/yum-plugin-remove-with-leaves-1.1.31-52.el7.noarch.rpm
-
 echo "1.1 Filesystem Configuration"
 
 # 1.1.1.1, 1.1.1.2, 1.1.1.3, 1.1.1.4, 1.1.1.5, 1.1.1.6, 1.1.1.7, 1.1.1.8,

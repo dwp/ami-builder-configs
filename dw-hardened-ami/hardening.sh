@@ -6,7 +6,6 @@ set -eEuo pipefail
 
 echo "1 Initial Setup"
 
-# Install Yum plugin that will remove unused dependancies after a package is uninstalled
 echo "1.1 Filesystem Configuration"
 
 # 1.1.1.1, 1.1.1.2, 1.1.1.3, 1.1.1.4, 1.1.1.5, 1.1.1.6, 1.1.1.7, 1.1.1.8,

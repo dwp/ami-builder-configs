@@ -22,7 +22,7 @@
       "instance_type": "{{ event['instance_type'] or 't2.micro' }}",
       "ssh_username": "ec2-user",
       "subnet_id": "{{ event['subnet_id'] }}",
-      "ami_name": "dw-general-ami-{{ '{{' }} timestamp {{ '}}' }}",
+      "ami_name": "{{ event['ami_name'] or 'hardened-ami' }}-{{ '{{' }} timestamp {{ '}}' }}",
       {% if 'profile' in event %}
       "profile": "{{ event['profile'] }}",
       {% endif %}

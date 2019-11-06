@@ -30,10 +30,7 @@ df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -typ
 # 2.1.11, 2.2.3, 2.2.4, 2.2.5, 2.2.6, 2.2.7, 2.2.8, 2.2.9, 2.2.10, 2.2.11,
 # 2.2.12, 2.2.13, 2.2.14, 2.2.15, 2.2.16
 echo "Disabling unnecessary services"
-for svc in autofs chargen-dgram chargen-stream daytime-dgram daytime-stream \
-  discard-dgram discard-stream echo-dgram echo-stream time-dgram time-stream \
-  rexec rlogin rsh talk telnet tftp rsync xinetd avahi-daemon cups dhcpd slapd \
-  nfs rpcbind named vsftpd httpd dovecot smb squid snmpd ypserv; do
+for svc in rpcbind rsync; do
     chkconfig $svc off
 done;
 

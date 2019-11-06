@@ -30,6 +30,7 @@ df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -typ
 # 2.1.11, 2.2.3, 2.2.4, 2.2.5, 2.2.6, 2.2.7, 2.2.8, 2.2.9, 2.2.10, 2.2.11,
 # 2.2.12, 2.2.13, 2.2.14, 2.2.15, 2.2.16
 echo "Disabling unnecessary services"
+echo "Only installed services are rpcbind and rsync"
 for svc in rpcbind rsync; do
     chkconfig $svc off
 done;

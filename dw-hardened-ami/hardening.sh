@@ -45,7 +45,6 @@ echo "Installing required packages"
 yum install -y \
   aide \
   libselinux \
-  chrony \
   tcp_wrappers \
   iptables \
   rsyslog

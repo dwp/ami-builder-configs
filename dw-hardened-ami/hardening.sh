@@ -130,7 +130,7 @@ SELINUX=enforcing
 SELINUXTYPE=targeted
 EOF
 
-sed -i -e 's/selinux=0/selinux=1 security=selinux/' /etc/boot/grub/menu.lst
+sed -i -e 's/selinux=0/selinux=1 security=selinux/' /boot/grub/menu.lst
 
 # Create AutoRelabel
 touch /.autorelabel

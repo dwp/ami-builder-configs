@@ -2,7 +2,7 @@
 
 # Hardens an Amazon Linux AMI according to CIS Amazon Linux Benchmark v2.1.0
 
-set -eEuo pipefail
+set -eEu
 
 echo "1 Initial Setup"
 

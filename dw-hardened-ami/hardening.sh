@@ -118,7 +118,22 @@ yum remove -y  \
 # 1.6.1.1 is check-only; should be caught by OpenSACP & Lynis
 # 1.6.1.2, 1.6.1.3
 echo "Configuring SELinux"
-sed -i -e 's/^SELINUX=.*/SELINUX=enforcing/' -e 's/^SELINUXTYPE=.*/SELINUXTYPE=targeted/' /etc/selinux/config
+# Install pre-requisites
+yum install -y \
+    selinux-policy \
+    selinux-policy-targeted \
+    policycoreutils-python
+
+#create config file
+cat > /etc/selinux/config << EOF
+SELINUX=enforcing
+SELINUXTYPE=targeted
+EOF
+
+sed -i -e 's/selinux=0/selinux=1 security=selinux/' /etc/boot/grub/menu.lst
+
+# Create AutoRelabel
+touch /.autorelabel
 
 # 1.6.1.6 is check-only; should be caught by OpenSACP & Lynis
 
@@ -170,7 +185,8 @@ echo "2.2.1.2 Ensure ntp is configured"
 echo "Exemption; Amazon Linux recommends chrony"
 
 echo "2.2.1.3 Ensure chrony is configured"
-echo "server 169.254.169.123 prefer iburst minpoll 4 maxpoll 4" >> /etc/chrony.conf
+echo "Chrony not installed"
+# echo "server 169.254.169.123 prefer iburst minpoll 4 maxpoll 4" >> /etc/chrony.conf
 # TODO: Confirm that there are no other server or pool entries to remove
 # TODO: Confirm that /etc/sysconfig/chronyd contains "-u chrony" in its OPTIONS by default
 

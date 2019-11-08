@@ -200,7 +200,8 @@ echo "3.3.3 Disable ipv6"
 # 3.4.2, 3.4.3, 3.4.4, 3.4.5
 echo "ALL: ALL" > /etc/hosts.allow
 > /etc/hosts.deny
-chmod 0644 /etc/hosts.{allow, deny}
+chmod 0644 /etc/hosts.allow
+chmod 0644 /etc/hosts.deny
 
 # 3.6.2, 3.6.3, 3.6.4, 3.6.5
 echo "Configuring iptables"

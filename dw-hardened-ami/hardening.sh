@@ -103,17 +103,16 @@ SYSCTL
 
 # 1.5.4, 1.6.1.4, 1.6.1.5, 2.2.1.1, 2.2.2, 2.3.1, 2.3.2, 2.3.3, 2.3.4, 2.3.5
 echo "Removing unneccessary packages"
-# yum remove -y  \
-#     prelink \
-#     setroubleshoot \
-#     mcstrans \
-#     xorg-x11* \
-#     ypbind \
-#     rsh \
-#     talk \
-#     telnet \
-#     openldap-clients
-echo Temporarily disabled due to xorg removal, triggers deletion of Java 1.8 and AWS API Tools
+yum remove -y  \
+    prelink \
+    setroubleshoot \
+    mcstrans \
+    xorg-x11* \
+    ypbind \
+    rsh \
+    talk \
+    telnet \
+    openldap-clients --remove-leaves
 
 
 # 1.6.1.1 is check-only; should be caught by OpenSACP & Lynis

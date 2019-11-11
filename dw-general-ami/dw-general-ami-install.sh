@@ -19,7 +19,7 @@ yum install -y yum-plugin-remove-with-leaves
 sed -i -e 's/repo_upgrade: security/repo_upgrade: none/' /etc/cloud/cloud.cfg
 yum-config-manager --enable epel
 
-yum install -y python-pip gcc
+yum install -y python-devel python-pip gcc
 # Install acm cert helper
 acm_cert_helper_repo=acm-pca-cert-generator
 acm_cert_helper_version=0.11.0

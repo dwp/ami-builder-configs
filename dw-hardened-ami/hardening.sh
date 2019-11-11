@@ -222,7 +222,7 @@ admin_space_left_action = halt
 AUDITD
 
 # 4.1.2, 4.2.1.1, 5.1.1
-for svc in auditd rsyslogd crond; do
+for svc in auditd rsyslog crond; do
     chkconfig $svc on
 done
 

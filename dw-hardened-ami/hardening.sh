@@ -183,12 +183,10 @@ echo "Excluded from hardening.sh, added to Userdata due to build time constraint
 
 echo "2.2.1.2 Ensure ntp is configured"
 echo "Exemption; Amazon Linux recommends chrony"
+# TODO: Harden ntpd configuration
 
 echo "2.2.1.3 Ensure chrony is configured"
 echo "Chrony not installed"
-# echo "server 169.254.169.123 prefer iburst minpoll 4 maxpoll 4" >> /etc/chrony.conf
-# TODO: Confirm that there are no other server or pool entries to remove
-# TODO: Confirm that /etc/sysconfig/chronyd contains "-u chrony" in its OPTIONS by default
 
 echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
 # TODO: Check inet_interfaces = loopback-only exists in /etc/postfix/main.cf

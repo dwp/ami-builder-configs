@@ -54,8 +54,7 @@ aide --init
 mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
 
 echo "1.3.2 Ensure filesystem integrity is regularly checked"
-echo '(crontab -l 2>/dev/null; echo "0 5 * * * /usr/sbin/aide --check") | crontab -'
-echo "Re-instate this when fixed"
+(crontab -l 2>/dev/null; echo "0 5 * * * /usr/sbin/aide --check") | crontab -
 
 echo "1.4 Secure Boot Settings"
 echo "1.4.1 Ensure permissions on bootloader config are configured"
@@ -115,10 +114,26 @@ yum remove -y  \
     telnet \
     openldap-clients --remove-leaves
 
+
 # 1.6.1.1 is check-only; should be caught by OpenSACP & Lynis
 # 1.6.1.2, 1.6.1.3
 echo "Configuring SELinux"
-sed -i -e 's/^SELINUX=.*/SELINUX=enforcing/' -e 's/^SELINUXTYPE=.*/SELINUXTYPE=targeted/' /etc/selinux/config
+# Install pre-requisites
+yum install -y \
+    selinux-policy \
+    selinux-policy-targeted \
+    policycoreutils-python
+
+#create config file
+cat > /etc/selinux/config << EOF
+SELINUX=enforcing
+SELINUXTYPE=targeted
+EOF
+
+sed -i -e 's/selinux=0/selinux=1 security=selinux/' /boot/grub/menu.lst
+
+# Create AutoRelabel
+touch /.autorelabel
 
 # 1.6.1.6 is check-only; should be caught by OpenSACP & Lynis
 
@@ -168,11 +183,10 @@ echo "Excluded from hardening.sh, added to Userdata due to build time constraint
 
 echo "2.2.1.2 Ensure ntp is configured"
 echo "Exemption; Amazon Linux recommends chrony"
+# TODO: Harden ntpd configuration
 
 echo "2.2.1.3 Ensure chrony is configured"
-echo "server 169.254.169.123 prefer iburst minpoll 4 maxpoll 4" >> /etc/chrony.conf
-# TODO: Confirm that there are no other server or pool entries to remove
-# TODO: Confirm that /etc/sysconfig/chronyd contains "-u chrony" in its OPTIONS by default
+echo "Chrony not installed"
 
 echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
 # TODO: Check inet_interfaces = loopback-only exists in /etc/postfix/main.cf
@@ -184,7 +198,8 @@ echo "3.3.3 Disable ipv6"
 # 3.4.2, 3.4.3, 3.4.4, 3.4.5
 echo "ALL: ALL" > /etc/hosts.allow
 > /etc/hosts.deny
-chmod 0644 /etc/hosts.{allow, deny}
+chmod 0644 /etc/hosts.allow
+chmod 0644 /etc/hosts.deny
 
 # 3.6.2, 3.6.3, 3.6.4, 3.6.5
 echo "Configuring iptables"
@@ -205,7 +220,7 @@ admin_space_left_action = halt
 AUDITD
 
 # 4.1.2, 4.2.1.1, 5.1.1
-for svc in auditd rsyslogd crond; do
+for svc in auditd rsyslog crond; do
     chkconfig $svc on
 done
 
@@ -329,14 +344,18 @@ sed -i -e '/^$ModLoad imtcp/d' -e '/^$InputTCPServerRun 514/d' /etc/rsyslog.conf
 
 
 # 4.2.4
-find /var/log -type f -exec chmod 0640g-wx,o-rwx {} \;
+find /var/log -type f -exec chmod 0640 {} \;
 
 # 4.3 - nothing to do here; userdata will configure log rotation via logrotate
 # TODO: Are there any common configs we can lay down here that will minimise
 # the amount of copy-paste required in each userdata script?
 
 # 5.1.2, 5.1.3, 5.1.4, 5.1.5, 5.1.6
-chmod 0600 /etc/{crontab,cron.hourly,cron.daily,cron.weekly, cron.monthly}
+chmod 0600 /etc/crontab
+chmod 0600 /etc/cron.hourly
+chmod 0600 /etc/cron.daily
+chmod 0600 /etc/cron.weekly
+chmod 0600 /etc/cron.monthly
 
 # 5.1.7
 chmod 0700 /etc/cron.d
@@ -354,6 +373,14 @@ chmod 0600 /etc/ssh/sshd_config
 # 5.2.2, 5.2.3, 5.2.4, 5.2.5, 5.2.6, 5.2.7, 5.2.8, 5.2.9, 5.2.10, 5.2.11,
 # 5.2.12, 5.2.13, 5.2.14, 5.2.15
 echo "Configuring SSH"
+echo Create sshusers and no-ssh-access groups
+groupadd sshusers
+groupadd no-ssh-access
+
+echo add ec2-user to sshusers group to allow access
+usermod -a -G sshusers ec2-user
+
+echo apply hardened SSHD config
 cat > /etc/ssh/sshd_config << SSHCONFIG
 Port 22
 ListenAddress 0.0.0.0

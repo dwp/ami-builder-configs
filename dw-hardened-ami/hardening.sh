@@ -346,7 +346,7 @@ sed -i -e '/^$ModLoad imtcp/d' -e '/^$InputTCPServerRun 514/d' /etc/rsyslog.conf
 
 
 # 4.2.4
-find /var/log -type f -exec chmod 0640g-wx,o-rwx {} \;
+find /var/log -type f -exec chmod 0640 {} \;
 
 # 4.3 - nothing to do here; userdata will configure log rotation via logrotate
 # TODO: Are there any common configs we can lay down here that will minimise

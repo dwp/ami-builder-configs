@@ -12,5 +12,4 @@ echo "no_proxy=$no_proxy"
 
 # Install Java
 yum install -y java-1.8.0-openjdk-devel jq rng-tools
-yum remove -y gcc python-devel java-1.7.0 --remove-leaves
 chkconfig rngd on

@@ -25,3 +25,5 @@ acm_cert_helper_repo=acm-pca-cert-generator
 acm_cert_helper_version=0.11.0
 pip install https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
 pip install awscli
+
+yum remove -y gcc python-devel java-1.7.0 --remove-leaves

@@ -11,10 +11,10 @@
       {% endif %}
       "source_ami_filter": {
         "filters": {
-        "virtualization-type": "{{ event['source_ami_virt_type'] or 'hvm' }}",
-        "name": "{{ event['source_ami_name'] or 'amzn-ami-hvm-*' }}",
-        "root-device-type": "{{ event['source_ami_root_device_type'] or 'ebs' }}",
-        "architecture": "x86_64"
+          "virtualization-type": "{{ event['source_ami_virt_type'] or 'hvm' }}",
+          "name": "{{ event['source_ami_name'] or 'amzn-ami-hvm-*' }}",
+          "root-device-type": "{{ event['source_ami_root_device_type'] or 'ebs' }}",
+          "architecture": "x86_64"
         },
         "owners": ["{{ event['source_ami_owner'] or '137112412989' }}"],
         "most_recent": true

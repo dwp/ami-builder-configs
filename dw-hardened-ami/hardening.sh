@@ -375,6 +375,14 @@ chmod 0600 /etc/ssh/sshd_config
 # 5.2.2, 5.2.3, 5.2.4, 5.2.5, 5.2.6, 5.2.7, 5.2.8, 5.2.9, 5.2.10, 5.2.11,
 # 5.2.12, 5.2.13, 5.2.14, 5.2.15
 echo "Configuring SSH"
+echo Create sshusers and no-ssh-access groups
+groupadd sshusers
+groupadd no-ssh-access
+
+echo add ec2-user to sshusers group to allow access
+usermod -a -G sshusers ec2-user
+
+echo apply hardened SSHD config
 cat > /etc/ssh/sshd_config << SSHCONFIG
 Port 22
 ListenAddress 0.0.0.0

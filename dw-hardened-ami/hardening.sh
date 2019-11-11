@@ -54,8 +54,7 @@ aide --init
 mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
 
 echo "1.3.2 Ensure filesystem integrity is regularly checked"
-echo '(crontab -l 2>/dev/null; echo "0 5 * * * /usr/sbin/aide --check") | crontab -'
-echo "Re-instate this when fixed"
+(crontab -l 2>/dev/null; echo "0 5 * * * /usr/sbin/aide --check") | crontab -
 
 echo "1.4 Secure Boot Settings"
 echo "1.4.1 Ensure permissions on bootloader config are configured"

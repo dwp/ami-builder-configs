@@ -112,7 +112,9 @@ yum remove -y  \
     rsh \
     talk \
     telnet \
-    openldap-clients --remove-leaves
+    openldap-clients
+
+
 
 # 1.6.1.1 is check-only; should be caught by OpenSACP & Lynis
 # 1.6.1.2, 1.6.1.3

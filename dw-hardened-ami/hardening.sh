@@ -353,7 +353,11 @@ find /var/log -type f -exec chmod 0640 {} \;
 # the amount of copy-paste required in each userdata script?
 
 # 5.1.2, 5.1.3, 5.1.4, 5.1.5, 5.1.6
-chmod 0600 /etc/{crontab,cron.hourly,cron.daily,cron.weekly, cron.monthly}
+chmod 0600 /etc/crontab
+chmod 0600 /etc/cron.hourly
+chmod 0600 /etc/cron.daily
+chmod 0600 /etc/cron.weekly
+chmod 0600 /etc/cron.monthly
 
 # 5.1.7
 chmod 0700 /etc/cron.d

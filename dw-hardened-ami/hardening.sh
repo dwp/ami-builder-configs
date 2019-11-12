@@ -180,21 +180,21 @@ chmod 0644 /etc/issue
 chmod 0644 /etc/issue.net
 
 echo "1.8 Ensure patches, updates, and additional security software are installed"
-echo "Excluded from hardening.sh, added to Userdata due to build time constraints"
+echo "Excluded from hardening.sh, added to Userdata in General AMI due to build time constraints"
 # yum update -y
 
 echo "2.2.1.2 Ensure ntp is configured"
 echo "Exemption; Amazon Linux recommends chrony"
-# TODO: Harden ntpd configuration
+# AL1 defaults to pre-hardened ntpd configuration
 
 echo "2.2.1.3 Ensure chrony is configured"
 echo "Chrony not installed"
 
 echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
-# TODO: Check inet_interfaces = loopback-only exists in /etc/postfix/main.cf
+# Check inet_interfaces = loopback-only exists in /etc/postfix/main.cf <- File not present on default AL1 instance
 
 echo "3.3.3 Disable ipv6"
-# TODO: Edit /boot/grub/grub.conf to include ipv6.disable=1 on all kernel lines and defaults for newly installed kernels
+sed -i -e '/^kernel/ s/$/ ipv6.disable=1/' /boot/grub/grub.conf
 
 # Disable host-based connection blocking as SGs do what we need
 # 3.4.2, 3.4.3, 3.4.4, 3.4.5

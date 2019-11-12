@@ -315,21 +315,21 @@ done
 # 4.2.1.2
 # TODO - check the contents of /etc/rsyslog.conf & /etc/rsyslog.d/*.conf
 # CIS recommends the following:
-# *.emerg                 :omusrmsg:*
-# mail.*                  -/var/log/mail
-# mail.info               -/var/log/mail.info
-# mail.warning            -/var/log/mail.warn
-# mail.err                 /var/log/mail.err
-# news.crit               -/var/log/news/news.crit
-# news.err                -/var/log/news/news.err
-# news.notice             -/var/log/news/news.notice
-# *.=warning;*.=err       -/var/log/warn
-# *.crit                   /var/log/warn
-# *.*;mail.none;news.none -/var/log/messages
-# local0,local1.*         -/var/log/localmessages
-# local2,local3.*         -/var/log/localmessages
-# local4,local5.*         -/var/log/localmessages
-# local6,local7.*         -/var/log/localmessages
+echo "*.emerg                 :omusrmsg:*" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "mail.*                  -/var/log/mail" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "mail.info               -/var/log/mail.info" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "mail.warning            -/var/log/mail.warn" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "mail.err                 /var/log/mail.err" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "news.crit               -/var/log/news/news.crit" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "news.err                -/var/log/news/news.err" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "news.notice             -/var/log/news/news.notice" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "*.=warning;*.=err       -/var/log/warn" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "*.crit                   /var/log/warn" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "*.*;mail.none;news.none -/var/log/messages" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "local0,local1.*         -/var/log/localmessages" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "local2,local3.*         -/var/log/localmessages" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "local4,local5.*         -/var/log/localmessages" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "local6,local7.*         -/var/log/localmessages" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
 
 # 4.2.1.3
 sed -i -e 's/^$FileCreateMode.*/$FileCreateMode 0640/' /etc/rsyslog.conf

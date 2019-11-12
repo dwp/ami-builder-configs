@@ -175,7 +175,9 @@ echo "1.7.1.3 Ensure remote login warning banner is configured properly"
 cp /etc/issue /etc/issue.net
 
 echo "1.7.1.4, 1.7.1.5, 1.7.1.6 Ensure permissions on login warning banners are configured"
-chmod 0644 /etc/{motd,issue,issue.net}
+chmod 0644 /etc/motd
+chmod 0644 /etc/issue
+chmod 0644 /etc/issue.net
 
 echo "1.8 Ensure patches, updates, and additional security software are installed"
 echo "Excluded from hardening.sh, added to Userdata due to build time constraints"

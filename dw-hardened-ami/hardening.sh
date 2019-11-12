@@ -65,7 +65,7 @@ echo "1.4.2 Ensure authentication required for single user mode"
 echo "Exemption; AWS instances do not allow access to the bootloader or console when the instance is started."
 
 echo "1.4.3 Ensure interactive boot is not enabled"
-echo "PROMT=NO" >> /etc/sysconfig/init
+echo "PROMPT=NO" >> /etc/sysconfig/init
 
 echo "1.5 Additional process hardening"
 echo "1.5.1 Ensure core dumps are restricted"
@@ -175,24 +175,26 @@ echo "1.7.1.3 Ensure remote login warning banner is configured properly"
 cp /etc/issue /etc/issue.net
 
 echo "1.7.1.4, 1.7.1.5, 1.7.1.6 Ensure permissions on login warning banners are configured"
-chmod 0644 /etc/{motd,issue,issue.net}
+chmod 0644 /etc/motd
+chmod 0644 /etc/issue
+chmod 0644 /etc/issue.net
 
 echo "1.8 Ensure patches, updates, and additional security software are installed"
-echo "Excluded from hardening.sh, added to Userdata due to build time constraints"
+echo "Excluded from hardening.sh, added to Userdata in General AMI due to build time constraints"
 # yum update -y
 
 echo "2.2.1.2 Ensure ntp is configured"
 echo "Exemption; Amazon Linux recommends chrony"
-# TODO: Harden ntpd configuration
+# AL1 defaults to pre-hardened ntpd configuration
 
 echo "2.2.1.3 Ensure chrony is configured"
 echo "Chrony not installed"
 
 echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
-# TODO: Check inet_interfaces = loopback-only exists in /etc/postfix/main.cf
+# Check inet_interfaces = loopback-only exists in /etc/postfix/main.cf <- File not present on default AL1 instance
 
 echo "3.3.3 Disable ipv6"
-# TODO: Edit /boot/grub/grub.conf to include ipv6.disable=1 on all kernel lines and defaults for newly installed kernels
+sed -i -e '/^kernel/ s/$/ ipv6.disable=1/' /boot/grub/grub.conf
 
 # Disable host-based connection blocking as SGs do what we need
 # 3.4.2, 3.4.3, 3.4.4, 3.4.5
@@ -225,9 +227,10 @@ for svc in auditd rsyslog crond; do
 done
 
 # 4.1.3
-# TODO: Edit /boot/grub/grub.conf to include audit=1 on all kernel lines (and defaults for newly installed kernels)
+sed -i -e '/^kernel/ s/$/ audit=1/' /boot/grub/grub.conf
 
-# TODO - check default /etc/audit/audit.rules to see if any need deleting
+sed -i -e '/^-a never,task/ s/$/# /' /etc/audit/audit.rules
+
 # see https://github.com/dwp/packer-infrastructure/blob/master/amazon-ebs-builder/scripts/centos7/generic/090-harden.sh#L114
 cat > /etc/audit/rules.d/audit.rules << AUDITRULES
 # CIS 4.1.4
@@ -310,33 +313,32 @@ for i in $(find / -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null);
 done
 
 # 4.2.1.2
-# TODO - check the contents of /etc/rsyslog.conf & /etc/rsyslog.d/*.conf
 # CIS recommends the following:
-# *.emerg                 :omusrmsg:*
-# mail.*                  -/var/log/mail
-# mail.info               -/var/log/mail.info
-# mail.warning            -/var/log/mail.warn
-# mail.err                 /var/log/mail.err
-# news.crit               -/var/log/news/news.crit
-# news.err                -/var/log/news/news.err
-# news.notice             -/var/log/news/news.notice
-# *.=warning;*.=err       -/var/log/warn
-# *.crit                   /var/log/warn
-# *.*;mail.none;news.none -/var/log/messages
-# local0,local1.*         -/var/log/localmessages
-# local2,local3.*         -/var/log/localmessages
-# local4,local5.*         -/var/log/localmessages
-# local6,local7.*         -/var/log/localmessages
+echo "*.emerg                 :omusrmsg:*" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "mail.*                  -/var/log/mail" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "mail.info               -/var/log/mail.info" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "mail.warning            -/var/log/mail.warn" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "mail.err                 /var/log/mail.err" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "news.crit               -/var/log/news/news.crit" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "news.err                -/var/log/news/news.err" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "news.notice             -/var/log/news/news.notice" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "*.=warning;*.=err       -/var/log/warn" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "*.crit                   /var/log/warn" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "*.*;mail.none;news.none -/var/log/messages" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "local0,local1.*         -/var/log/localmessages" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "local2,local3.*         -/var/log/localmessages" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "local4,local5.*         -/var/log/localmessages" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
+echo "local6,local7.*         -/var/log/localmessages" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
 
 # 4.2.1.3
-# TODO - also check this isn't being set in any /etc/rsyslog.d/*.conf files
 sed -i -e 's/^$FileCreateMode.*/$FileCreateMode 0640/' /etc/rsyslog.conf
+sed -i -e 's/^$FileCreateMode.*/$FileCreateMode 0640/' /etc/rsyslog.d/*.conf
 
 echo "4.2.1.4 Ensure rsyslog is configured to send logs to a remote host"
 echo "Exemption; all AWS instances *must* send logs to CloudWatch"
 
 # 4.2.1.5
-# TODO - also check there aren't any mentions of this in any /etc/rsyslog.d/*.conf files
+sed -i -e '/^$ModLoad imtcp/d' -e '/^$InputTCPServerRun 514/d' /etc/rsyslog.d/*.conf
 sed -i -e '/^$ModLoad imtcp/d' -e '/^$InputTCPServerRun 514/d' /etc/rsyslog.conf
 
 # 4.2.2.1, 4.2.2.2, 4.2.2.3, 4.2.2.4, 4.2.2.5 are exempt; we install/configure
@@ -346,9 +348,7 @@ sed -i -e '/^$ModLoad imtcp/d' -e '/^$InputTCPServerRun 514/d' /etc/rsyslog.conf
 # 4.2.4
 find /var/log -type f -exec chmod 0640 {} \;
 
-# 4.3 - nothing to do here; userdata will configure log rotation via logrotate
-# TODO: Are there any common configs we can lay down here that will minimise
-# the amount of copy-paste required in each userdata script?
+# 4.3 -userdata will configure log rotation via logrotate
 
 # 5.1.2, 5.1.3, 5.1.4, 5.1.5, 5.1.6
 chmod 0600 /etc/crontab

@@ -227,7 +227,7 @@ for svc in auditd rsyslog crond; do
 done
 
 # 4.1.3
-# TODO: Edit /boot/grub/grub.conf to include audit=1 on all kernel lines (and defaults for newly installed kernels)
+sed -i -e '/^kernel/ s/$/ audit=1/' /boot/grub/grub.conf
 
 # TODO - check default /etc/audit/audit.rules to see if any need deleting
 # see https://github.com/dwp/packer-infrastructure/blob/master/amazon-ebs-builder/scripts/centos7/generic/090-harden.sh#L114

@@ -65,7 +65,7 @@ echo "1.4.2 Ensure authentication required for single user mode"
 echo "Exemption; AWS instances do not allow access to the bootloader or console when the instance is started."
 
 echo "1.4.3 Ensure interactive boot is not enabled"
-echo "PROMT=NO" >> /etc/sysconfig/init
+echo "PROMPT=NO" >> /etc/sysconfig/init
 
 echo "1.5 Additional process hardening"
 echo "1.5.1 Ensure core dumps are restricted"

@@ -338,7 +338,7 @@ echo "4.2.1.4 Ensure rsyslog is configured to send logs to a remote host"
 echo "Exemption; all AWS instances *must* send logs to CloudWatch"
 
 # 4.2.1.5
-# TODO - also check there aren't any mentions of this in any /etc/rsyslog.d/*.conf files
+sed -i -e '/^$ModLoad imtcp/d' -e '/^$InputTCPServerRun 514/d' /etc/rsyslog.d/*.conf
 sed -i -e '/^$ModLoad imtcp/d' -e '/^$InputTCPServerRun 514/d' /etc/rsyslog.conf
 
 # 4.2.2.1, 4.2.2.2, 4.2.2.3, 4.2.2.4, 4.2.2.5 are exempt; we install/configure

@@ -229,7 +229,8 @@ done
 # 4.1.3
 sed -i -e '/^kernel/ s/$/ audit=1/' /boot/grub/grub.conf
 
-# TODO - check default /etc/audit/audit.rules to see if any need deleting
+sed -i -e '/^-a never,task/ s/$/# /' /etc/audit/audit.rules
+
 # see https://github.com/dwp/packer-infrastructure/blob/master/amazon-ebs-builder/scripts/centos7/generic/090-harden.sh#L114
 cat > /etc/audit/rules.d/audit.rules << AUDITRULES
 # CIS 4.1.4

@@ -331,8 +331,8 @@ done
 # local6,local7.*         -/var/log/localmessages
 
 # 4.2.1.3
-# TODO - also check this isn't being set in any /etc/rsyslog.d/*.conf files
 sed -i -e 's/^$FileCreateMode.*/$FileCreateMode 0640/' /etc/rsyslog.conf
+sed -i -e 's/^$FileCreateMode.*/$FileCreateMode 0640/' /etc/rsyslog.d/*.conf
 
 echo "4.2.1.4 Ensure rsyslog is configured to send logs to a remote host"
 echo "Exemption; all AWS instances *must* send logs to CloudWatch"

@@ -27,3 +27,5 @@ pip install https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${a
 pip install awscli
 
 yum remove -y gcc python-devel java-1.7.0 --remove-leaves
+
+echo "export PATH=$PATH:/usr/local/bin" >> /etc/environment

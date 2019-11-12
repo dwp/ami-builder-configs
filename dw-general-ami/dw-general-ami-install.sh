@@ -23,6 +23,7 @@ yum install -y python-devel python-pip gcc
 # Install acm cert helper
 acm_cert_helper_repo=acm-pca-cert-generator
 acm_cert_helper_version=0.11.0
+pip install boto3==1.10.15 --upgrade
 pip install https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
 pip install awscli
 

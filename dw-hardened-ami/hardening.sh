@@ -313,7 +313,6 @@ for i in $(find / -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null);
 done
 
 # 4.2.1.2
-# TODO - check the contents of /etc/rsyslog.conf & /etc/rsyslog.d/*.conf
 # CIS recommends the following:
 echo "*.emerg                 :omusrmsg:*" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
 echo "mail.*                  -/var/log/mail" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
@@ -349,9 +348,7 @@ sed -i -e '/^$ModLoad imtcp/d' -e '/^$InputTCPServerRun 514/d' /etc/rsyslog.conf
 # 4.2.4
 find /var/log -type f -exec chmod 0640 {} \;
 
-# 4.3 - nothing to do here; userdata will configure log rotation via logrotate
-# TODO: Are there any common configs we can lay down here that will minimise
-# the amount of copy-paste required in each userdata script?
+# 4.3 -userdata will configure log rotation via logrotate
 
 # 5.1.2, 5.1.3, 5.1.4, 5.1.5, 5.1.6
 chmod 0600 /etc/crontab

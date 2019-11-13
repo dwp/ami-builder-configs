@@ -4,7 +4,7 @@
 
 set -eEu
 
-echo "1 Initial Setup"
+echo "1 Initial Setup now"
 
 echo "1.1 Filesystem Configuration"
 

@@ -4,43 +4,34 @@
 
 set -eEu
 
-echo "1 Initial Setup"
-
-echo "1.1 Filesystem Configuration"
-
-# 1.1.1.1, 1.1.1.2, 1.1.1.3, 1.1.1.4, 1.1.1.5, 1.1.1.6, 1.1.1.7, 1.1.1.8,
-# 3.5.1, 3.5.2 3.5.3 3.5.4
 echo "1.1.1.1 - 1.1.1.8 Disable Unused Filesystems"
+echo "3.5.1, 3.5.2 3.5.3 3.5.4"
 > /etc/modprobe.d/CIS.conf
 for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
     dccp sctp tipc; do
     echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
 done
 
-# 1.1.2, 1.1.3, 1.1.4, 1.1.5, 1.1.6, 1.1.7, 1.1.8, 1.1.9, 1.1.10, 1.1.11,
-# 1.1.12, 1.1.13, 1.1.14, 1.1.15, 1.1.16, 1.1.17
 echo "1.1.2 - 1.1.17 Partitioning & Mounting"
 echo "Temporary exemption; we're not sure that partioning provides much value for single-use instances"
 
-# 1.1.18
 echo "1.1.18 Set sticky bit on all world-writable directories"
 df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
 
-# 1.1.19, 2.1.1, 2.1.2, 2.1.3, 2.1.4, 2.1.5, 2.1.6, 2.1.7, 2.1.8, 2.1.9, 2.1.10,
-# 2.1.11, 2.2.3, 2.2.4, 2.2.5, 2.2.6, 2.2.7, 2.2.8, 2.2.9, 2.2.10, 2.2.11,
-# 2.2.12, 2.2.13, 2.2.14, 2.2.15, 2.2.16
+echo "1.1.19, 2.1.1, 2.1.2, 2.1.3, 2.1.4, 2.1.5, 2.1.6, 2.1.7, 2.1.8, 2.1.9, 2.1.10"
+echo "2.1.11, 2.2.3, 2.2.4, 2.2.5, 2.2.6, 2.2.7, 2.2.8, 2.2.9, 2.2.10, 2.2.11"
+echo "2.2.12, 2.2.13, 2.2.14, 2.2.15, 2.2.16"
 echo "Disabling unnecessary services"
 echo "Only installed services are rpcbind and rsync"
 for svc in rpcbind rsync; do
     chkconfig $svc off
 done;
 
-
-# 1.2.1, 1.2.2, 1.2.3
+echo "1.2.1, 1.2.2, 1.2.3"
 echo "1.2 Configure Software Updates"
 echo "Exemption; in-life instances require no access to package repositories; they'll be rebuilt from refreshed AMIs"
 
-# 1.3.1, 1.6.2, 2.2.1.1, 3.4.1, 3.6.1, 4.2.3
+echo "1.3.1, 1.6.2, 2.2.1.1, 3.4.1, 3.6.1, 4.2.3"
 echo "Installing required packages"
 yum install -y \
   aide \
@@ -71,9 +62,9 @@ echo "1.5 Additional process hardening"
 echo "1.5.1 Ensure core dumps are restricted"
 echo "* hard core 0" > /etc/security/limits.d/CIS.conf
 
+echo "# 1.5.1, 1.5.3, 3.1.1, 3.1.2, 3.2.1, 3.2.2, 3.2.3, 3.2.4, 3.2.5, 3.2.6, 3.2.7"
+echo "3.2.8, 3.3.1, 3.3.2"
 echo "Tweaking sysctl knobs"
-# 1.5.1, 1.5.3, 3.1.1, 3.1.2, 3.2.1, 3.2.2, 3.2.3, 3.2.4, 3.2.5, 3.2.6, 3.2.7,
-# 3.2.8, 3.3.1, 3.3.2
 cat > /etc/sysctl.d/CIS.conf << SYSCTL
 fs.suid_dumpable = 0
 kernel.randomize_va_space = 2
@@ -99,9 +90,11 @@ net.ipv6.conf.all.accept_redirects = 0
 net.ipv6.conf.default.accept_redirects = 0
 SYSCTL
 
-# 1.5.2 is check-only; should be caught by OpenSCAP & Lynis
+echo "1.5.2 Ensure XD/NX support is enabled"
+echo "Expect: active"
+dmesg | grep NX
 
-# 1.5.4, 1.6.1.4, 1.6.1.5, 2.2.1.1, 2.2.2, 2.3.1, 2.3.2, 2.3.3, 2.3.4, 2.3.5
+echo "1.5.4, 1.6.1.4, 1.6.1.5, 2.2.1.1, 2.2.2, 2.3.1, 2.3.2, 2.3.3, 2.3.4, 2.3.5"
 echo "Removing unneccessary packages"
 yum remove -y  \
     prelink \
@@ -115,8 +108,11 @@ yum remove -y  \
     openldap-clients --remove-leaves
 
 
-# 1.6.1.1 is check-only; should be caught by OpenSACP & Lynis
-# 1.6.1.2, 1.6.1.3
+echo "1.6.1.1 - Ensure SELinux is not disabled in bootloader configuration"
+echo "Expect: no setting with selinux=0 or enforcing=0"
+grep "^\s*kernel" /boot/grub/menu.lst
+
+echo "1.6.1.2, 1.6.1.3"
 echo "Configuring SELinux"
 # Install pre-requisites
 yum install -y \
@@ -135,7 +131,9 @@ sed -i -e 's/selinux=0/selinux=1 security=selinux/' /boot/grub/menu.lst
 # Create AutoRelabel
 touch /.autorelabel
 
-# 1.6.1.6 is check-only; should be caught by OpenSACP & Lynis
+echo "1.6.1.6 - Ensure no unconfined daemons exist"
+echo "Expect: no output"
+ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk" | tr ':' ' ' | awk '{ print $NF }'
 
 echo "1.7 Warning Banners"
 echo "1.7.1 Command Line Warning Banners"
@@ -183,8 +181,8 @@ echo "1.8 Ensure patches, updates, and additional security software are installe
 echo "Excluded from hardening.sh, added to Userdata in General AMI due to build time constraints"
 # yum update -y
 
+
 echo "2.2.1.2 Ensure ntp is configured"
-echo "Exemption; Amazon Linux recommends chrony"
 # AL1 defaults to pre-hardened ntpd configuration
 
 echo "2.2.1.3 Ensure chrony is configured"
@@ -192,22 +190,25 @@ echo "Chrony not installed"
 
 echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
 # Check inet_interfaces = loopback-only exists in /etc/postfix/main.cf <- File not present on default AL1 instance
+# AL1 appears to use sendmail rather than postfix
+# netstat -an | grep LIST | grep ":25[[:space:]]" <- to check sendmail is in local-only mode, is default for AL1
+echo "Expect 'DaemonPortOptions=Port=smtp,Addr=127.0.0.1, Name=MTA'"
+cat /etc/mail/sendmail.cf | grep DaemonPortOptions
 
 echo "3.3.3 Disable ipv6"
 sed -i -e '/^kernel/ s/$/ ipv6.disable=1/' /boot/grub/grub.conf
 
-# Disable host-based connection blocking as SGs do what we need
-# 3.4.2, 3.4.3, 3.4.4, 3.4.5
+echo "3.4.2, 3.4.3, 3.4.4, 3.4.5 - Disable host-based connection blocking as SGs do what we need"
 echo "ALL: ALL" > /etc/hosts.allow
 > /etc/hosts.deny
 chmod 0644 /etc/hosts.allow
 chmod 0644 /etc/hosts.deny
 
-# 3.6.2, 3.6.3, 3.6.4, 3.6.5
+echo "3.6.2, 3.6.3, 3.6.4, 3.6.5"
 echo "Configuring iptables"
 echo "Exemption; SG rules are enough"
 
-# 4.1.1.1, 4.1.1.2
+echo "4.1.1.1, 4.1.1.2"
 # Note that in order to not fill disks with Audit Logs (which will be shipped to
 # CloudWatch), we explicitly fail to meet 4.1.1.2. Instead of keeping all logs,
 # we just keep the last 3 files.
@@ -221,14 +222,13 @@ action_mail_acct = root
 admin_space_left_action = halt
 AUDITD
 
-# 4.1.2, 4.2.1.1, 5.1.1
+echo "4.1.2, 4.2.1.1, 5.1.1"
 for svc in auditd rsyslog crond; do
     chkconfig $svc on
 done
 
-# 4.1.3
+echo "4.1.3 - Ensure auditing for processes that start prior to auditd is enabled"
 sed -i -e '/^kernel/ s/$/ audit=1/' /boot/grub/grub.conf
-
 sed -i -e '/^-a never,task/ s/$/# /' /etc/audit/audit.rules
 
 # see https://github.com/dwp/packer-infrastructure/blob/master/amazon-ebs-builder/scripts/centos7/generic/090-harden.sh#L114
@@ -312,7 +312,7 @@ for i in $(find / -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null);
     echo "-a always,exit -F path=${i} -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged" >> /etc/audit/rules.d/audit.rules
 done
 
-# 4.2.1.2
+echo "4.2.1.2 - Ensure logging is configured"
 # CIS recommends the following:
 echo "*.emerg                 :omusrmsg:*" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
 echo "mail.*                  -/var/log/mail" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
@@ -330,48 +330,47 @@ echo "local2,local3.*         -/var/log/localmessages" >> /etc/rsyslog.d/22-CIS-
 echo "local4,local5.*         -/var/log/localmessages" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
 echo "local6,local7.*         -/var/log/localmessages" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
 
-# 4.2.1.3
+echo "4.2.1.3 - Ensure rsyslog default file permissions configured"
 sed -i -e 's/^$FileCreateMode.*/$FileCreateMode 0640/' /etc/rsyslog.conf
 sed -i -e 's/^$FileCreateMode.*/$FileCreateMode 0640/' /etc/rsyslog.d/*.conf
 
-echo "4.2.1.4 Ensure rsyslog is configured to send logs to a remote host"
+echo "4.2.1.4 - Ensure rsyslog is configured to send logs to a remote host"
 echo "Exemption; all AWS instances *must* send logs to CloudWatch"
 
-# 4.2.1.5
+echo "4.2.1.5 - Ensure remote rsyslog messages are only accepted on designated log hosts."
 sed -i -e '/^$ModLoad imtcp/d' -e '/^$InputTCPServerRun 514/d' /etc/rsyslog.d/*.conf
 sed -i -e '/^$ModLoad imtcp/d' -e '/^$InputTCPServerRun 514/d' /etc/rsyslog.conf
 
 # 4.2.2.1, 4.2.2.2, 4.2.2.3, 4.2.2.4, 4.2.2.5 are exempt; we install/configure
 # rsyslog rather than syslog-ng
 
-
-# 4.2.4
+echo "4.2.4 - Ensure permissions on all logfiles are configured"
 find /var/log -type f -exec chmod 0640 {} \;
 
 # 4.3 -userdata will configure log rotation via logrotate
 
-# 5.1.2, 5.1.3, 5.1.4, 5.1.5, 5.1.6
+echo "5.1.2, 5.1.3, 5.1.4, 5.1.5, 5.1.6"
 chmod 0600 /etc/crontab
 chmod 0600 /etc/cron.hourly
 chmod 0600 /etc/cron.daily
 chmod 0600 /etc/cron.weekly
 chmod 0600 /etc/cron.monthly
 
-# 5.1.7
+echo "5.1.7 - Ensure permissions on /etc/cron.d are configured"
 chmod 0700 /etc/cron.d
 
-# 5.1.8
+echo "5.1.8 - Ensure at/cron is restricted to authorized users"
 rm -f /etc/cron.deny /etc/at.deny
 touch /etc/cron.allow /etc/at.allow
 chmod 0600 /etc/cron.allow /etc/at.allow
 chown root:root /etc/cron.allow /etc/at.allow
 
-# 5.2.1
+echo "5.2.1 - Ensure permissions on /etc/ssh/sshd_config are configured"
 chown root:root /etc/ssh/sshd_config
 chmod 0600 /etc/ssh/sshd_config
 
-# 5.2.2, 5.2.3, 5.2.4, 5.2.5, 5.2.6, 5.2.7, 5.2.8, 5.2.9, 5.2.10, 5.2.11,
-# 5.2.12, 5.2.13, 5.2.14, 5.2.15
+echo "5.2.2, 5.2.3, 5.2.4, 5.2.5, 5.2.6, 5.2.7, 5.2.8, 5.2.9, 5.2.10, 5.2.11"
+echo "5.2.12, 5.2.13, 5.2.14, 5.2.15"
 echo "Configuring SSH"
 echo Create sshusers and no-ssh-access groups
 groupadd sshusers
@@ -431,25 +430,380 @@ MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@op
 PermitUserEnvironment no
 SSHCONFIG
 
-echo "5.3.1 - Ensure password creation requirements are configured...."
+echo "5.3.1 - Ensure password creation requirements are configured"
+echo "5.3.2 - Ensure lockout for failed password attempts is configured"
+echo "5.3.3 - Ensure password reuse is limited"
+echo "5.3.4 - Ensure password hashing algorithm is SHA-512"
 # See https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#regular-users
 sed -i 's/^# minlen.*$/minlen = 24/' /etc/security/pwquality.conf
 sed -i 's/^# difok.*$/difok = 1/' /etc/security/pwquality.conf
-
-# TODO:
-# Check /etc/pam.d/password-auth and /etc/pam.d/system-auth contain:
+# AL1 defaults are generally better than CIS requirements
+# 5.3.1 - Check /etc/pam.d/password-auth and /etc/pam.d/system-auth contain:
 # password requisite pam_pwquality.so try_first_pass retry=3
-
-# 5.3.2
-# TODO: Check /etc/pam.d/password-auth and /etc/pam.d/system-auth contain the
-# following:
-#
+# 5.3.2 - Ensure lockout for failed password attempts is configured
 # auth required pam_faillock.so preauth audit silent deny=10 unlock_time=900
 # auth [success=1 default=bad] pam_unix.so
 # auth [default=die] pam_faillock.so authfail audit deny=10 unlock_time=900
 # auth sufficient pam_faillock.so authsucc audit deny=10 unlock_time=900
+cat > /etc/pam.d/system-auth << PAMSYSCONFIG
+auth        required                   pam_env.so
+auth        required                   pam_faildelay.so delay=2000000
+auth        required                   pam_faillock.so preauth audit silent deny=10 unlock_time=900
+auth        sufficient                 pam_unix.so nullok try_first_pass
+auth        sufficient                 pam_faillock.so authsucc audit deny=10 unlock_time=900
+auth        requisite                  pam_succeed_if.so uid >= 500 quiet_success
+auth        required                   pam_deny.so
+auth        [success=1 default=bad]    pam_unix.so
+auth        [default=die]              pam_faillock.so authfail audit deny=10 unlock_time=900
 
-# 5.3.3
-# TODO: Check /etc/pam.d/password-auth and /etc/pam.d/system-auth contain the
-# following:
-# password sufficient pam_unix.so remember=24
+account     required                   pam_unix.so
+account     sufficient                 pam_localuser.so
+account     sufficient                 pam_succeed_if.so uid < 500 quiet
+account     required                   pam_permit.so
+
+password    requisite                  pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
+password    sufficient                 pam_unix.so sha512 shadow nullok try_first_pass use_authtok remember=5
+password    required                   pam_deny.so
+
+session     optional                   pam_keyinit.so revoke
+session     required                   pam_limits.so
+-session    optional                   pam_systemd.so
+session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+session     required                   pam_unix.so
+PAMSYSCONFIG
+
+
+echo "5.4.1.1 Ensure password expiration is 365 days or less"
+# Whilst no users will be logging on to this system, our policy is 90 days for regular users and 365 for machine users
+# Refs: https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#regular-users
+#       https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#machine-accounts
+sed -i 's/^PASS_MAX_DAYS.*$/PASS_MAX_DAYS 90/' /etc/login.defs
+
+echo "5.4.1.2 - Ensure minimum days between password changes is 7 or more"
+sed -i 's/^PASS_MIN_DAYS.*$/PASS_MIN_DAYS 7/' /etc/login.defs
+
+echo "5.4.1.3 - Ensure password expiration warning days is 7 or more"
+sed -i 's/^PASS_WARN_AGE.*$/PASS_WARN_AGE 7/' /etc/login.defs
+
+echo "5.4.1.4 - Ensure inactive password lock is 30 days or less"
+useradd -D -f 30
+
+# echo "5.4.1.5 - Ensure all users last password change date is in the past"
+# Exemption - we have no users that we configure with passwords
+
+echo "5.4.2 - Ensure system accounts are non-login"
+# This fixed cwagent user, used for CloudWatch Logs
+usermod -s /sbin/nologin cwagent
+
+echo "5.4.3 - Ensure default group for the root account is GID 0"
+usermod -g 0 root
+
+echo "5.4.4 - Ensure default user umask is 027 or more restrictive"
+sed -i 's/^.*umask 0.*$/umask 027/' /etc/bashrc
+sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile
+sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile.d/*.sh
+
+echo "5.4.5 - Ensure default user shell timeout is 900 seconds or less"
+echo 'TMOUT=600' >> /etc/bashrc
+echo 'TMOUT=600' >> /etc/profile
+
+echo "5.5 - Ensure access to the su command is restricted"
+sed -i '/#auth.*required.*pam_wheel.so/s/^# *//' /etc/pam.d/su
+
+
+
+echo "6.1.1 - Audit system file permissions"
+# Exemption - we are not auditing all system files, unscored
+
+echo "6.1.2 - Ensure permissions on /etc/passwd are configured"
+chown root:root /etc/passwd
+chmod 644 /etc/passwd
+
+echo "6.1.3 - Ensure permissions on /etc/shadow are configured"
+chown root:root /etc/shadow
+chmod 000 /etc/shadow
+
+echo "6.1.4 - Ensure permissions on /etc/group are configured"
+chown root:root /etc/group
+chmod 644 /etc/group
+
+echo "6.1.5 - Ensure permissions on /etc/gshadow are configured"
+chown root:root /etc/gshadow
+chmod 000 /etc/gshadow
+
+echo "6.1.6 - Ensure permissions on /etc/passwd-are configured"
+chown root:root /etc/passwd-
+chmod u-x,go-wx /etc/passwd-
+
+echo "6.1.7 - Ensure permissions on /etc/shadow-are configured"
+chown root:root /etc/shadow-
+chmod 000 /etc/shadow-
+
+echo "6.1.8 - Ensure permissions on /etc/group-are configured"
+chown root:root /etc/group-
+chmod u-x,go-wx /etc/group-
+
+echo "6.1.9 - Ensure permissions on /etc/gshadow-are configured "
+chown root:root /etc/gshadow-
+chmod 000 /etc/gshadow-
+
+echo "6.1.10 - Ensure no world writable files exist"
+echo "Expect: no output"
+df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
+
+echo "6.1.11 - Ensure no unowned files or directories exist"
+echo "Expect: no output"
+df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nouser
+
+echo "6.1.12 - Ensure no ungrouped files or directories exist"
+echo "Expect: no output"
+df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nogroup
+
+echo "6.1.13 - Audit SUID executables"
+# Exemption - we are not auditing all system files, unscored
+
+echo "6.1.14 - Audit SGID executables"
+# Exemption - we are not auditing all system files, unscored
+
+
+
+echo "6.2.1 - Ensure password fields are not empty"
+echo "Expect: no output"
+cat /etc/shadow | awk -F: '($2 == "" ) { print $1 " does not have a password "}'
+
+echo "6.2.2 - Ensure no legacy '+' entries exist in /etc/passwd"
+echo "Expect: no output"
+grep '^\+:' /etc/passwd
+
+echo "6.2.3 - Ensure no legacy '+' entries exist in /etc/shadow"
+echo "Expect: no output"
+grep '^\+:' /etc/shadow
+
+echo "6.2.4 Ensure no legacy '+' entries exist in /etc/group"
+echo "Expect: no output"
+grep '^\+:' /etc/group
+
+echo "6.2.5 - Ensure root is the only UID 0 account"
+echo "Expect: root"
+cat /etc/passwd | awk -F: '($3 == 0) { print $1 }'
+
+echo "6.2.6 - Ensure root PATH Integrity"
+echo "Expect: no output"
+if [ " `echo $PATH | grep ::` " != "" ]; then
+  echo "Empty Directory in PATH (::)"
+fi
+if["`echo$PATH|grep:$`" !=""];then 
+  echo "Trailing : in PATH"
+fi
+p= `echo $PATH | sed -e 's/::/:/' -e 's/:$//' -e 's/:/ /g'` 
+set -- $p
+while [ "$1" != "" ]; do
+  if [ "$1" = "." ]; then
+    echo "PATH contains ."
+    shift
+    continue
+  fi
+  if [ -d $1 ]; then
+    dirperm= `ls -ldH $1 | cut -f1 -d" "`
+    if [ `echo $dirperm | cut -c6`  != "-" ]; then
+      echo "Group Write permission set on directory $1"
+    fi
+    if [ `echo $dirperm | cut -c9` != "-" ]; then
+      echo "Other Write permission set on directory $1"
+    fi
+    dirown= `ls -ldH $1 | awk '{print $3}'`
+    if [ "$dirown" != "root" ] ; then
+      echo $1 is not owned by root
+    fi
+  else
+    echo $1 is not a directory
+  fi
+  shift
+done
+
+echo "6.2.7 - Ensure all users' home directories exist"
+echo "Expect: all users to have home folders"
+cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }'
+
+echo "6.2.8 - Ensure users' home directories permissions are 750 or more restrictive"
+echo "Expect: no output"
+cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+  if [ ! -d "$dir" ]; then
+    echo "The home directory ($dir) of user $user does not exist."
+  else
+    dirperm=`ls -ld $dir | cut -f1 -d" "`
+    if [ `echo $dirperm | cut -c6` != "-" ]; then
+      echo "Group Write permission set on the home directory ($dir) of user $user"
+    fi
+    if [ `echo $dirperm | cut -c8` != "-" ]; then
+      echo "Other Read permission set on the home directory ($dir) of user $user"
+    fi
+    if [ `echo $dirperm | cut -c9` != "-" ]; then
+      echo "Other Write permission set on the home directory ($dir) of user $user"
+    fi
+    if [ `echo $dirperm | cut -c10` != "-" ]; then
+      echo "Other Execute permission set on the home directory ($dir) of user $user"
+    fi
+  fi
+done
+
+echo "6.2.9 - Ensure users own their home directories"
+echo "Expect: no output"
+cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+  if [ ! -d "$dir" ]; then
+    echo "The home directory ($dir) of user $user does not exist."
+  else
+    owner=$(stat -L -c "%U" "$dir")
+    if [ "$owner" != "$user" ]; then
+      echo "The home directory ($dir) of user $user is owned by $owner." 
+    fi
+  fi
+done
+
+echo "6.2.10 - Ensure users' dot files are not group or world writable"
+echo "Expect: no output"
+cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+  if [ ! -d "$dir" ]; then
+    echo "The home directory ($dir) of user $user does not exist."
+  else
+    for file in $dir/.[A-Za-z0-9]*; do
+      if [ ! -h "$file" -a -f "$file" ]; then
+        fileperm=`ls -ld $file | cut -f1 -d" "`
+        if [ `echo $fileperm | cut -c6` != "-" ]; then
+          echo "Group Write permission set on file $file"
+        fi
+        if [ `echo $fileperm | cut -c9`  != "-" ]; then
+          echo "Other Write permission set on file $file"
+        fi
+      fi
+    done
+  fi
+done
+
+echo "6.2.11 - Ensure no users have .forward files"
+echo "Expect: no output"
+cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+  if [ ! -d "$dir" ]; then
+    echo "The home directory ($dir) of user $user does not exist."
+  else
+  if [ ! -h "$dir/.forward" -a -f "$dir/.forward" ]; then
+    echo ".forward file $dir/.forward exists" fi
+  fi
+done
+
+
+echo "6.2.12 - Ensure no users have .netrc files"
+echo "Expect: no output"
+cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+  if [ ! -d "$dir" ]; then
+    echo "The home directory ($dir) of user $user does not exist."
+  else
+    if [ ! -h "$dir/.netrc" -a -f "$dir/.netrc" ]; then
+      echo ".netrc file $dir/.netrc exists"
+    fi
+  fi
+done
+
+echo "6.2.13 - Ensure users' .netrc Files are not group or world accessible"
+echo "Expect: no output"
+cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+  if [ ! -d "$dir" ]; then
+    echo "The home directory ($dir) of user $user does not exist."
+  else
+    for file in $dir/.netrc; do
+      if [ ! -h "$file" -a -f "$file" ]; then
+        fileperm=`ls -ld $file | cut -f1 -d" "`
+        if [ `echo $fileperm | cut -c5`  != "-" ]; then
+          echo "Group Read set on $file"
+        fi
+        if [ `echo $fileperm | cut -c6`  != "-" ]; then
+          echo "Group Write set on $file"
+        fi
+        if [ `echo $fileperm | cut -c7`  != "-" ]; then
+          echo "Group Execute set on $file"
+        fi
+        if [ `echo $fileperm | cut -c8`  != "-" ]; then
+          echo "Other Read set on $file"
+        fi
+        if [ `echo $fileperm | cut -c9`  != "-" ]; then
+          echo "Other Write set on $file"
+        fi
+        if [ `echo $fileperm | cut -c10`  != "-" ]; then
+          echo "Other Execute set on $file"
+        fi
+      fi
+    done
+  fi
+done
+
+
+echo "6.2.14 - Ensure no users have .rhosts files"
+echo "Expect: no output"
+cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+  if [ ! -d "$dir" ]; then
+    echo "The home directory ($dir) of user $user does not exist."
+  else
+    for file in $dir/.rhosts; do
+      if [ ! -h "$file" -a -f "$file" ]; then
+        echo ".rhosts file in $dir"
+      fi
+    done
+  fi
+done
+
+
+echo "6.2.15 - Ensure all groups in /etc/passwd exist in /etc/group"
+echo "Expect: no output"
+for i in $(cut -s -d: -f4 /etc/passwd | sort -u ); do
+  grep -q -P "^.*?:[^:]*:$i:" /etc/group
+  if [ $? -ne 0 ]; then
+   echo "Group $i is referenced by /etc/passwd but does not exist in /etc/group"
+  fi
+done
+
+
+echo "6.2.16 - Ensure no duplicate UIDs exist"
+echo "Expect: no output"
+cat /etc/passwd | cut -f3 -d":" | sort -n | uniq -c | while read x ; do
+  [ -z "${x}" ] && break
+  set - $x
+  if [ $1 -gt 1 ]; then
+    users= `awk -F: '($3 == n) { print $1 }' n=$2 /etc/passwd | xargs`
+    echo "Duplicate UID ($2): ${users}"
+  fi
+done
+
+
+echo "6.2.17 - Ensure no duplicate GIDs exist"
+cat /etc/group | cut -f3 -d":" | sort -n | uniq -c | while read x ; do
+  [ -z "${x}" ] && break
+  set - $x
+  if [ $1 -gt 1 ]; then
+    groups= `awk -F: '($3 == n) { print $1 }' n=$2 /etc/group | xargs`
+    echo "Duplicate GID ($2): ${groups}"
+  fi
+done
+
+
+echo "6.2.18 - Ensure no duplicate user names exist"
+echo "Expect: no output"
+cat /etc/passwd | cut -f1 -d":" | sort -n | uniq -c | while read x ; do
+  [ -z "${x}" ] && break
+  set - $x
+  if [ $1 -gt 1 ]; then
+    uids= `awk -F: '($1 == n) { print $3 }' n=$2 /etc/passwd | xargs`
+    echo "Duplicate User Name ($2): ${uids}"
+  fi
+done
+
+
+echo "6.2.19 - Ensure no duplicate group names exist"
+echo "Expect: no output"
+cat /etc/group | cut -f1 -d":" | sort -n | uniq -c | while read x ; do
+  [ -z "${x}" ] && break
+  set - $x
+  if [ $1 -gt 1 ]; then
+    gids= `gawk -F: '($1 == n) { print $3 }' n=$2 /etc/group | xargs`
+    echo "Duplicate Group Name ($2): ${gids}"
+  fi
+done

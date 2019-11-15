@@ -16,7 +16,13 @@ yum update -y
 # Install Yum plugin that will remove unused dependancies after a package is uninstalled
 yum install -y yum-plugin-remove-with-leaves
 
-sed -i -e 's/repo_upgrade: security/repo_upgrade: none/' /etc/cloud/cloud.cfg
+# Tidy cloud.cfg to prevent yum locks in hardened AMI builds
+sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
+       -e 's/repo_upgrade_exclude:/repo_update: false/' \
+       -e '/.-.nvidia.*/ d' \
+       -e '/.-.kernel.*/ d' \
+       -e '/.-.cudatoolkit.*/ d' /etc/cloud/cloud.cfg
+
 sed -i -e 's/^mirrorlist=/#&/' -e 's@^#baseurl=.*@baseurl=http://mirrors.coreix.net/fedora-epel/6/$basearch@' /etc/yum.repos.d/epel.repo
 yum-config-manager --enable epel
 

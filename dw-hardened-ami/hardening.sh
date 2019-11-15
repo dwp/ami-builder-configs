@@ -2,7 +2,7 @@
 
 # Hardens an Amazon Linux AMI according to CIS Amazon Linux Benchmark v2.1.0
 
-set -eEu
+set -eEu 0o pipefail
 
 echo "1.1.1.1 - 1.1.1.8 Disable Unused Filesystems"
 echo "3.5.1, 3.5.2 3.5.3 3.5.4"
@@ -373,8 +373,8 @@ echo "5.2.2, 5.2.3, 5.2.4, 5.2.5, 5.2.6, 5.2.7, 5.2.8, 5.2.9, 5.2.10, 5.2.11"
 echo "5.2.12, 5.2.13, 5.2.14, 5.2.15"
 echo "Configuring SSH"
 echo Create sshusers and no-ssh-access groups
-groupadd sshusers
-groupadd no-ssh-access
+groupadd sshusers || true
+groupadd no-ssh-access || true
 
 echo add ec2-user to sshusers group to allow access
 usermod -a -G sshusers ec2-user
@@ -572,53 +572,23 @@ cat /etc/shadow | awk -F: '($2 == "" ) { print $1 " does not have a password "}'
 
 echo "6.2.2 - Ensure no legacy '+' entries exist in /etc/passwd"
 echo "Expect: no output"
-grep '^\+:' /etc/passwd
+grep '^\+:' /etc/passwd || true
 
 echo "6.2.3 - Ensure no legacy '+' entries exist in /etc/shadow"
 echo "Expect: no output"
-grep '^\+:' /etc/shadow
+grep '^\+:' /etc/shadow || true
 
 echo "6.2.4 Ensure no legacy '+' entries exist in /etc/group"
 echo "Expect: no output"
-grep '^\+:' /etc/group
+grep '^\+:' /etc/group || true
 
 echo "6.2.5 - Ensure root is the only UID 0 account"
 echo "Expect: root"
 cat /etc/passwd | awk -F: '($3 == 0) { print $1 }'
 
 echo "6.2.6 - Ensure root PATH Integrity"
-echo "Expect: no output"
-if [ " `echo $PATH | grep ::` " != "" ]; then
-  echo "Empty Directory in PATH (::)"
-fi
-if["`echo$PATH|grep:$`" !=""];then 
-  echo "Trailing : in PATH"
-fi
-p= `echo $PATH | sed -e 's/::/:/' -e 's/:$//' -e 's/:/ /g'` 
-set -- $p
-while [ "$1" != "" ]; do
-  if [ "$1" = "." ]; then
-    echo "PATH contains ."
-    shift
-    continue
-  fi
-  if [ -d $1 ]; then
-    dirperm= `ls -ldH $1 | cut -f1 -d" "`
-    if [ `echo $dirperm | cut -c6`  != "-" ]; then
-      echo "Group Write permission set on directory $1"
-    fi
-    if [ `echo $dirperm | cut -c9` != "-" ]; then
-      echo "Other Write permission set on directory $1"
-    fi
-    dirown= `ls -ldH $1 | awk '{print $3}'`
-    if [ "$dirown" != "root" ] ; then
-      echo $1 is not owned by root
-    fi
-  else
-    echo $1 is not a directory
-  fi
-  shift
-done
+echo "Expect: no '.' or other writeable directory in PATH"
+echo $PATH
 
 
 echo "6.2.7 - Ensure all users' home directories exist"
@@ -690,8 +660,9 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
   if [ ! -d "$dir" ]; then
     echo "The home directory ($dir) of user $user does not exist."
   else
-  if [ ! -h "$dir/.forward" -a -f "$dir/.forward" ]; then
-    echo ".forward file $dir/.forward exists" fi
+    if [ ! -h "$dir/.forward" -a -f "$dir/.forward" ]; then
+      echo ".forward file $dir/.forward exists" 
+    fi
   fi
 done
 

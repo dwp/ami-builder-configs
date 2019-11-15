@@ -4,31 +4,107 @@
 
 set -eEu
 
-echo "1.1.1.1 - 1.1.1.8 Disable Unused Filesystems"
-echo "3.5.1, 3.5.2 3.5.3 3.5.4"
+echo "#############################################################"
+echo "1.1.1.1 Ensure mounting of cramfs filesystems is disabled"
+echo "1.1.1.2 Ensure mounting of freevxfs filesystems is disabled"
+echo "1.1.1.3 Ensure mounting of jffs2 filesystems is disabled"
+echo "1.1.1.4 Ensure mounting of hfs filesystems is disabled"
+echo "1.1.1.5 Ensure mounting of hfsplus filesystems is disabled"
+echo "1.1.1.6 Ensure mounting of squashfs filesystems is disabled"
+echo "1.1.1.7 Ensure mounting of udf filesystems is disabled"
+echo "1.1.1.8 Ensure mounting of FAT filesystems is disabled"
+echo "3.5.1 Ensure DCCP is disabled"
+echo "3.5.2 Ensure SCTP is disabled"
+echo "3.5.3 Ensure RDS is disabled" 
+echo "3.5.4 Ensure TIPC is disabled"
 > /etc/modprobe.d/CIS.conf
 for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
     dccp sctp tipc; do
     echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
 done
 
-echo "1.1.2 - 1.1.17 Partitioning & Mounting"
+echo "#############################################################"
+echo "1.1.2 Ensure separate partition exists for /tmp"
 echo "Temporary exemption; we're not sure that partioning provides much value for single-use instances"
 
+echo "#############################################################"
+echo "1.1.3 Ensure nodev option set on /tmp partition"
+echo "Temporary exemption; we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.4 Ensure nosuid option set on /tmp partition"
+echo "Temporary exemption; we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.5 Ensure noexec option set on /tmp partition"
+echo "Temporary exemption; we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.6 Ensure separate partition exists for /var"
+echo "Temporary exemption; we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.7 Ensure separate partition exists for /var/tmp"
+echo "Temporary exemption; we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.8 Ensure nodev option set on /var/tmp partition"
+echo "Temporary exemption; we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.9 Ensure nosuid option set on /var/tmp partition"
+echo "Temporary exemption; we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.10 Ensure noexec option set on /var/tmp partition"
+echo "Temporary exemption; we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.11 Ensure separate partition exists for /var/log"
+echo "Temporary exemption; we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
 echo "1.1.18 Set sticky bit on all world-writable directories"
 df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
 
-echo "1.1.19, 2.1.1, 2.1.2, 2.1.3, 2.1.4, 2.1.5, 2.1.6, 2.1.7, 2.1.8, 2.1.9, 2.1.10"
-echo "2.1.11, 2.2.3, 2.2.4, 2.2.5, 2.2.6, 2.2.7, 2.2.8, 2.2.9, 2.2.10, 2.2.11"
-echo "2.2.12, 2.2.13, 2.2.14, 2.2.15, 2.2.16"
+echo "#############################################################"
+echo "1.1.19 - Disable Automounting"
+echo "2.1.1 Ensure chargen services are not enabled"
+echo "2.1.2 Ensure daytime services are not enabled"
+echo "2.1.3 Ensure discard services are not enabled"
+echo "2.1.4 Ensure echo services are not enabled"
+echo "2.1.5 Ensure time services are not enabled"
+echo "2.1.6 Ensure rsh server is not enabled"
+echo "2.1.7 Ensure talk server is not enabled"
+echo "2.1.8 Ensure telnet server is not enabled"
+echo "2.1.9 Ensure tftp server is not enabled"
+echo "2.1.10 Ensure rsync service is not enabled"
+echo "2.1.11 Ensure xinetd is not enabled"
+echo "2.2.3 Ensure Avahi Server is not enabled"
+echo "2.2.4 Ensure CUPS is not enabled"
+echo "2.2.5 Ensure DHCP Server is not enabled"
+echo "2.2.6 Ensure LDAP server is not enabled"
+echo "2.2.7 Ensure NFS and RPC are not enabled"
+echo "2.2.8 Ensure DNS Server is not enabled"
+echo "2.2.9 Ensure FTP Server is not enabled"
+echo "2.2.10 Ensure HTTP server is not enabled"
+echo "2.2.11 Ensure IMAP and POP3 server is not enabled"
+echo "2.2.12 Ensure Samba is not enabled"
+echo "2.2.13 Ensure HTTP Proxy Server is not enabled"
+echo "2.2.14 Ensure SNMP Server is not enabled"
+echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
+echo "2.2.16 Ensure NIS Server is not enabled"
 echo "Disabling unnecessary services"
 echo "Only installed services are rpcbind and rsync"
 for svc in rpcbind rsync; do
     chkconfig $svc off
 done;
 
-echo "1.2.1, 1.2.2, 1.2.3"
+echo "#############################################################"
 echo "1.2 Configure Software Updates"
+echo "1.2.1 Ensure package manager repositories are configured"
+echo "1.2.2 Ensure GPG keys are configured"
+echo "1.2.3 Ensure gpgcheck is globally activated"
 echo "Exemption; in-life instances require no access to package repositories; they'll be rebuilt from refreshed AMIs"
 
 echo "1.3.1, 1.6.2, 2.2.1.1, 3.4.1, 3.6.1, 4.2.3"

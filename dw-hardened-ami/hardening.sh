@@ -2,7 +2,7 @@
 
 # Hardens an Amazon Linux AMI according to CIS Amazon Linux Benchmark v2.1.0
 
-set -eEu 0o pipefail
+set -eEu
 
 echo "1.1.1.1 - 1.1.1.8 Disable Unused Filesystems"
 echo "3.5.1, 3.5.2 3.5.3 3.5.4"

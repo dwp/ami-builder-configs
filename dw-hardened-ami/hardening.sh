@@ -492,8 +492,7 @@ useradd -D -f 30
 # Exemption - we have no users that we configure with passwords
 
 echo "5.4.2 - Ensure system accounts are non-login"
-# This fixed cwagent user, used for CloudWatch Logs
-usermod -s /sbin/nologin cwagent
+# No users in AL1 have this, CWA adds it later but we have dealt with this upstream
 
 echo "5.4.3 - Ensure default group for the root account is GID 0"
 usermod -g 0 root
@@ -621,9 +620,11 @@ while [ "$1" != "" ]; do
   shift
 done
 
+
 echo "6.2.7 - Ensure all users' home directories exist"
 echo "Expect: all users to have home folders"
 cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }'
+
 
 echo "6.2.8 - Ensure users' home directories permissions are 750 or more restrictive"
 echo "Expect: no output"
@@ -647,6 +648,7 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
   fi
 done
 
+
 echo "6.2.9 - Ensure users own their home directories"
 echo "Expect: no output"
 cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
@@ -659,6 +661,7 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
     fi
   fi
 done
+
 
 echo "6.2.10 - Ensure users' dot files are not group or world writable"
 echo "Expect: no output"
@@ -679,6 +682,7 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
     done
   fi
 done
+
 
 echo "6.2.11 - Ensure no users have .forward files"
 echo "Expect: no output"
@@ -703,6 +707,7 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
     fi
   fi
 done
+
 
 echo "6.2.13 - Ensure users' .netrc Files are not group or world accessible"
 echo "Expect: no output"

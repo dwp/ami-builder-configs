@@ -37,7 +37,7 @@ yum remove -y gcc python27-devel java-1.7.0 --remove-leaves
 
 echo "export PATH=$PATH:/usr/local/bin" >> /etc/environment
 
-cat > /usr/local/bin/set_yum_proxy.sh << SETYUMPROXY
+cat > /usr/local/bin/set_yum_proxy.sh << 'SETYUMPROXY'
 TAG_NAME="internet_proxy"
 INSTANCE_ID="`curl -s http://instance-data/latest/meta-data/instance-id`"
 REGION="`curl -s http://instance-data/latest/meta-data/placement/availability-zone | sed -e 's:\([0-9][0-9]*\)[a-z]*\$:\\1:'`"

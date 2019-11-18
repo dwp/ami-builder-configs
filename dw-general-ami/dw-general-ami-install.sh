@@ -51,5 +51,5 @@ chmod 0700 /usr/local/bin/set_yum_proxy.sh
 
 cat > /etc/cloud/cloud.cfg.d/15_yum_proxy.cfg << CLOUDCFG
 bootcmd:
- - [ cloud-init-per, once, /usr/local/bin/set_yum_proxy.sh ]
+ - [ cloud-init-per, once, set-yum-proxy, /usr/local/bin/set_yum_proxy.sh ]
 CLOUDCFG

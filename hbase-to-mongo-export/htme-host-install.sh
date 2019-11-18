@@ -39,7 +39,7 @@ sudo mkdir /opt/htme
 sudo mkdir /var/log/htme
 
 # Download & install latest hbase-to-mongo-export service artifact
-VERSION="0.0.46"
+VERSION="0.0.48"
 URL="https://github.com/dwp/hbase-to-mongo-export/releases/download/${VERSION}/hbase-to-mongo-export-${VERSION}.jar"
 echo "JAR_VERSION: $VERSION"
 echo "JAR_DOWNLOAD_URL: $URL"

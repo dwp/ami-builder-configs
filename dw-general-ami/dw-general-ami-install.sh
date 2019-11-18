@@ -42,9 +42,9 @@ TAG_NAME="internet_proxy"
 INSTANCE_ID="`curl -s http://instance-data/latest/meta-data/instance-id`"
 REGION="`curl -s http://instance-data/latest/meta-data/placement/availability-zone | sed -e 's:\([0-9][0-9]*\)[a-z]*\$:\\1:'`"
 TAG_VALUE="`aws ec2 describe-tags --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=$TAG_NAME" --region $REGION --output=text | cut -f5`"
-if [ -n "${TAG_VALUE}"]; then
+if [ -n "${TAG_VALUE}" ]; then
   sed -i -e "/^enabled=/a \
-proxy=$TAG_VALUE" amzn-*.repo epel*.repo
+proxy=$TAG_VALUE" /etc/yum.repos.d/{amzn-*,epel*}.repo
 fi
 SETYUMPROXY
 chmod 0700 /usr/local/bin/set_yum_proxy.sh

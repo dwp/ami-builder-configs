@@ -4,34 +4,116 @@
 
 set -eEu
 
-echo "1.1.1.1 - 1.1.1.8 Disable Unused Filesystems"
-echo "3.5.1, 3.5.2 3.5.3 3.5.4"
+echo "#############################################################"
+echo "1.1.1.1 Ensure mounting of cramfs filesystems is disabled"
+echo "1.1.1.2 Ensure mounting of freevxfs filesystems is disabled"
+echo "1.1.1.3 Ensure mounting of jffs2 filesystems is disabled"
+echo "1.1.1.4 Ensure mounting of hfs filesystems is disabled"
+echo "1.1.1.5 Ensure mounting of hfsplus filesystems is disabled"
+echo "1.1.1.6 Ensure mounting of squashfs filesystems is disabled"
+echo "1.1.1.7 Ensure mounting of udf filesystems is disabled"
+echo "1.1.1.8 Ensure mounting of FAT filesystems is disabled"
+echo "3.5.1 Ensure DCCP is disabled"
+echo "3.5.2 Ensure SCTP is disabled"
+echo "3.5.3 Ensure RDS is disabled" 
+echo "3.5.4 Ensure TIPC is disabled"
 > /etc/modprobe.d/CIS.conf
 for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
     dccp sctp tipc; do
     echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
 done
 
-echo "1.1.2 - 1.1.17 Partitioning & Mounting"
-echo "Temporary exemption; we're not sure that partioning provides much value for single-use instances"
+echo "#############################################################"
+echo "1.1.2 Ensure separate partition exists for /tmp"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
 
+echo "#############################################################"
+echo "1.1.3 Ensure nodev option set on /tmp partition"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.4 Ensure nosuid option set on /tmp partition"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.5 Ensure noexec option set on /tmp partition"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.6 Ensure separate partition exists for /var"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.7 Ensure separate partition exists for /var/tmp"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.8 Ensure nodev option set on /var/tmp partition"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.9 Ensure nosuid option set on /var/tmp partition"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.10 Ensure noexec option set on /var/tmp partition"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.11 Ensure separate partition exists for /var/log"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
 echo "1.1.18 Set sticky bit on all world-writable directories"
 df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
 
-echo "1.1.19, 2.1.1, 2.1.2, 2.1.3, 2.1.4, 2.1.5, 2.1.6, 2.1.7, 2.1.8, 2.1.9, 2.1.10"
-echo "2.1.11, 2.2.3, 2.2.4, 2.2.5, 2.2.6, 2.2.7, 2.2.8, 2.2.9, 2.2.10, 2.2.11"
-echo "2.2.12, 2.2.13, 2.2.14, 2.2.15, 2.2.16"
+echo "#############################################################"
+echo "1.1.19 Disable Automounting"
+echo "2.1.1 Ensure chargen services are not enabled"
+echo "2.1.2 Ensure daytime services are not enabled"
+echo "2.1.3 Ensure discard services are not enabled"
+echo "2.1.4 Ensure echo services are not enabled"
+echo "2.1.5 Ensure time services are not enabled"
+echo "2.1.6 Ensure rsh server is not enabled"
+echo "2.1.7 Ensure talk server is not enabled"
+echo "2.1.8 Ensure telnet server is not enabled"
+echo "2.1.9 Ensure tftp server is not enabled"
+echo "2.1.10 Ensure rsync service is not enabled"
+echo "2.1.11 Ensure xinetd is not enabled"
+echo "2.2.3 Ensure Avahi Server is not enabled"
+echo "2.2.4 Ensure CUPS is not enabled"
+echo "2.2.5 Ensure DHCP Server is not enabled"
+echo "2.2.6 Ensure LDAP server is not enabled"
+echo "2.2.7 Ensure NFS and RPC are not enabled"
+echo "2.2.8 Ensure DNS Server is not enabled"
+echo "2.2.9 Ensure FTP Server is not enabled"
+echo "2.2.10 Ensure HTTP server is not enabled"
+echo "2.2.11 Ensure IMAP and POP3 server is not enabled"
+echo "2.2.12 Ensure Samba is not enabled"
+echo "2.2.13 Ensure HTTP Proxy Server is not enabled"
+echo "2.2.14 Ensure SNMP Server is not enabled"
+echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
+echo "2.2.16 Ensure NIS Server is not enabled"
 echo "Disabling unnecessary services"
 echo "Only installed services are rpcbind and rsync"
 for svc in rpcbind rsync; do
     chkconfig $svc off
 done;
 
-echo "1.2.1, 1.2.2, 1.2.3"
+echo "#############################################################"
 echo "1.2 Configure Software Updates"
-echo "Exemption; in-life instances require no access to package repositories; they'll be rebuilt from refreshed AMIs"
+echo "1.2.1 Ensure package manager repositories are configured"
+echo "1.2.2 Ensure GPG keys are configured"
+echo "1.2.3 Ensure gpgcheck is globally activated"
+echo "Exemption: in-life instances require no access to package repositories; they'll be rebuilt from refreshed AMIs"
 
-echo "1.3.1, 1.6.2, 2.2.1.1, 3.4.1, 3.6.1, 4.2.3"
+echo "#############################################################"
+echo "1.3.1 Ensure AIDE is installed"
+echo "1.6.2 Ensure SELinux is installed"
+echo "2.2.1.1 Ensure time synchronization is in use"
+echo "3.4.1 Ensure TCP Wrappers is installed"
+echo "3.6.1 Ensure iptables is installed"
+echo "4.2.3 Ensure rsyslog or syslog-ng is installed"
 echo "Installing required packages"
 yum install -y \
   aide \
@@ -40,30 +122,49 @@ yum install -y \
   iptables \
   rsyslog
 
+echo "#############################################################"
 echo "1.3.1 Ensure AIDE is installed"
 aide --init
 mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
 
+echo "#############################################################"
 echo "1.3.2 Ensure filesystem integrity is regularly checked"
 (crontab -l 2>/dev/null; echo "0 5 * * * /usr/sbin/aide --check") | crontab -
 
+echo "#############################################################"
 echo "1.4 Secure Boot Settings"
 echo "1.4.1 Ensure permissions on bootloader config are configured"
 chown root:root /boot/grub/menu.lst
 chmod 0600 /boot/grub/menu.lst
 
+echo "#############################################################"
 echo "1.4.2 Ensure authentication required for single user mode"
-echo "Exemption; AWS instances do not allow access to the bootloader or console when the instance is started."
+echo "Exemption: AWS instances do not allow access to the bootloader or console when the instance is started."
 
+echo "#############################################################"
 echo "1.4.3 Ensure interactive boot is not enabled"
 echo "PROMPT=NO" >> /etc/sysconfig/init
 
+echo "#############################################################"
 echo "1.5 Additional process hardening"
 echo "1.5.1 Ensure core dumps are restricted"
 echo "* hard core 0" > /etc/security/limits.d/CIS.conf
 
-echo "# 1.5.1, 1.5.3, 3.1.1, 3.1.2, 3.2.1, 3.2.2, 3.2.3, 3.2.4, 3.2.5, 3.2.6, 3.2.7"
-echo "3.2.8, 3.3.1, 3.3.2"
+echo "#############################################################"
+echo "1.5.1 Ensure core dumps are restricted"
+echo "1.5.3 Ensure address space layout randomization (ASLR) is enabled"
+echo "3.1.1 Ensure IP forwarding is disabled"
+echo "3.1.2 Ensure packet redirect sending is disabled"
+echo "3.2.1 Ensure source routed packets are not accepted"
+echo "3.2.2 Ensure ICMP redirects are not accepted"
+echo "3.2.3 Ensure secure ICMP redirects are not accepted"
+echo "3.2.4 Ensure suspicious packets are logged"
+echo "3.2.5 Ensure broadcast ICMP requests are ignored"
+echo "3.2.6 Ensure bogus ICMP responses are ignored"
+echo "3.2.7 Ensure Reverse Path Filtering is enabled"
+echo "3.2.8 Ensure TCP SYN Cookies is enabled"
+echo "3.3.1 Ensure IPv6 router advertisements are not accepted"
+echo "3.3.2 Ensure IPv6 redirects are not accepted"
 echo "Tweaking sysctl knobs"
 cat > /etc/sysctl.d/CIS.conf << SYSCTL
 fs.suid_dumpable = 0
@@ -90,11 +191,22 @@ net.ipv6.conf.all.accept_redirects = 0
 net.ipv6.conf.default.accept_redirects = 0
 SYSCTL
 
+echo "#############################################################"
 echo "1.5.2 Ensure XD/NX support is enabled"
 echo "Expect: active"
 dmesg | grep NX
 
-echo "1.5.4, 1.6.1.4, 1.6.1.5, 2.2.1.1, 2.2.2, 2.3.1, 2.3.2, 2.3.3, 2.3.4, 2.3.5"
+echo "#############################################################"
+echo "1.5.4 Ensure prelink is disabled"
+echo "1.6.1.4 Ensure SETroubleshoot is not installed"
+echo "1.6.1.5 Ensure the MCS Translation Service (mcstrans) is not installed"
+echo "2.2.1.1 Ensure time synchronization is in use"
+echo "2.2.2 Ensure X Window System is not installed"
+echo "2.3.1 Ensure NIS Client is not installed"
+echo "2.3.2 Ensure rsh client is not installed"
+echo "2.3.3 Ensure talk client is not installed"
+echo "2.3.4 Ensure telnet client is not installed"
+echo "2.3.5 Ensure LDAP client is not installed"
 echo "Removing unneccessary packages"
 yum remove -y  \
     prelink \
@@ -107,12 +219,14 @@ yum remove -y  \
     telnet \
     openldap-clients --remove-leaves
 
-
+echo "#############################################################"
 echo "1.6.1.1 - Ensure SELinux is not disabled in bootloader configuration"
 echo "Expect: no setting with selinux=0 or enforcing=0"
 grep "^\s*kernel" /boot/grub/menu.lst
 
-echo "1.6.1.2, 1.6.1.3"
+echo "#############################################################"
+echo "1.6.1.2 Ensure the SELinux state is enforcing"
+echo "1.6.1.3 Ensure SELinux policy is configured"
 echo "Configuring SELinux"
 # Install pre-requisites
 yum install -y \
@@ -131,10 +245,12 @@ sed -i -e 's/selinux=0/selinux=1 security=selinux/' /boot/grub/menu.lst
 # Create AutoRelabel
 touch /.autorelabel
 
+echo "#############################################################"
 echo "1.6.1.6 - Ensure no unconfined daemons exist"
 echo "Expect: no output"
 ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk" | tr ':' ' ' | awk '{ print $NF }'
 
+echo "#############################################################"
 echo "1.7 Warning Banners"
 echo "1.7.1 Command Line Warning Banners"
 echo "1.7.1.1 Ensure message of the day is configured properly"
@@ -142,6 +258,7 @@ echo "1.7.1.1 Ensure message of the day is configured properly"
 # in compliance with DWP norms (see 1.7.1.2 below)
 > /etc/motd
 
+echo "#############################################################"
 echo "1.7.1.2 Ensure local login warning banner is configured properly"
 cat > /etc/issue << BANNER
 /------------------------------------------------------------------------------\
@@ -167,27 +284,34 @@ cat > /etc/issue << BANNER
 \------------------------------------------------------------------------------/
 BANNER
 
+echo "#############################################################"
 echo "1.7.1.3 Ensure remote login warning banner is configured properly"
 # We don't intend to allow remote logins, but this meets CIS compliance and
 # ensures compliance with DWP norms if we do decide to enable remote logins
 cp /etc/issue /etc/issue.net
 
-echo "1.7.1.4, 1.7.1.5, 1.7.1.6 Ensure permissions on login warning banners are configured"
+echo "#############################################################"
+echo "1.7.1.4 Ensure permissions on /etc/motd are configured"
+echo "1.7.1.5 Ensure permissions on /etc/issue are configured"
+echo "1.7.1.6 Ensure permissions on /etc/issue.net are configured"
 chmod 0644 /etc/motd
 chmod 0644 /etc/issue
 chmod 0644 /etc/issue.net
 
+echo "#############################################################"
 echo "1.8 Ensure patches, updates, and additional security software are installed"
 echo "Excluded from hardening.sh, added to Userdata in General AMI due to build time constraints"
 # yum update -y
 
-
+echo "#############################################################"
 echo "2.2.1.2 Ensure ntp is configured"
 # AL1 defaults to pre-hardened ntpd configuration
 
+echo "#############################################################"
 echo "2.2.1.3 Ensure chrony is configured"
 echo "Chrony not installed"
 
+echo "#############################################################"
 echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
 # Check inet_interfaces = loopback-only exists in /etc/postfix/main.cf <- File not present on default AL1 instance
 # AL1 appears to use sendmail rather than postfix
@@ -195,20 +319,34 @@ echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
 echo "Expect 'DaemonPortOptions=Port=smtp,Addr=127.0.0.1, Name=MTA'"
 cat /etc/mail/sendmail.cf | grep DaemonPortOptions
 
+echo "#############################################################"
 echo "3.3.3 Disable ipv6"
 sed -i -e '/^kernel/ s/$/ ipv6.disable=1/' /boot/grub/grub.conf
 
-echo "3.4.2, 3.4.3, 3.4.4, 3.4.5 - Disable host-based connection blocking as SGs do what we need"
+echo "#############################################################"
+echo "3.4.2 Ensure /etc/hosts.allow is configured"
+echo "3.4.3 Ensure /etc/hosts.deny is configured"
+echo "3.4.4 Ensure permissions on /etc/hosts.allow are configured"
+echo "3.4.5 Ensure permissions on /etc/hosts.deny are configured"
+echo "Exemption: Disable host-based connection blocking as SGs do what we need"
 echo "ALL: ALL" > /etc/hosts.allow
 > /etc/hosts.deny
 chmod 0644 /etc/hosts.allow
 chmod 0644 /etc/hosts.deny
 
-echo "3.6.2, 3.6.3, 3.6.4, 3.6.5"
+echo "#############################################################"
+echo "3.6 Firewall Configuration"
+echo "3.6.1 Ensure iptables is installed"
+echo "3.6.2 Ensure default deny firewall policy"
+echo "3.6.3 Ensure loopback traffic is configured"
+echo "3.6.4 Ensure outbound and established connections are configured"
+echo "3.6.5 Ensure firewall rules exist for all open ports"
 echo "Configuring iptables"
-echo "Exemption; SG rules are enough"
+echo "Exemption:  SGs do what we need"
 
-echo "4.1.1.1, 4.1.1.2"
+echo "#############################################################"
+echo "4.1.1.1 Ensure audit log storage size is configured"
+echo "4.1.1.2 Ensure system is disabled when audit logs are full"
 # Note that in order to not fill disks with Audit Logs (which will be shipped to
 # CloudWatch), we explicitly fail to meet 4.1.1.2. Instead of keeping all logs,
 # we just keep the last 3 files.
@@ -222,15 +360,36 @@ action_mail_acct = root
 admin_space_left_action = halt
 AUDITD
 
-echo "4.1.2, 4.2.1.1, 5.1.1"
+echo "#############################################################"
+echo "4.1.2 Ensure auditd service is enabled"
+echo "4.2.1.1 Ensure rsyslog Service is enabled"
+echo "5.1.1 Ensure cron daemon is enabled"
 for svc in auditd rsyslog crond; do
     chkconfig $svc on
 done
 
-echo "4.1.3 - Ensure auditing for processes that start prior to auditd is enabled"
+echo "#############################################################"
+echo "4.1.3 Ensure auditing for processes that start prior to auditd is enabled"
 sed -i -e '/^kernel/ s/$/ audit=1/' /boot/grub/grub.conf
 sed -i -e '/^-a never,task/ s/$/# /' /etc/audit/audit.rules
 
+
+echo "#############################################################"
+echo "4.1.4 Ensure events that modify date and time information are collected"
+echo "4.1.5 Ensure events that modify user/group information are collected"
+echo "4.1.6 Ensure events that modify the system's network environment are collected"
+echo "4.1.7 Ensure events that modify the system's Mandatory Access Controls are collected"
+echo "4.1.8 Ensure login and logout events are collected"
+echo "4.1.9 Ensure session initiation information is collected"
+echo "4.1.10 Ensure discretionary access control permission modification events are collected"
+echo "4.1.11 Ensure unsuccessful unauthorized file access attempts are collected"
+echo "4.1.12 Ensure use of privileged commands is collected"
+echo "4.1.13 Ensure successful file system mounts are collected"
+echo "4.1.14 Ensure file deletion events by users are collected"
+echo "4.1.15 Ensure changes to system administration scope (sudoers) is collected"
+echo "4.1.16 Ensure system administrator actions (sudolog) are collected"
+echo "4.1.17 Ensure kernel module loading and unloading is collected"
+echo "4.1.18 Ensure the audit configuration is immutable"
 # see https://github.com/dwp/packer-infrastructure/blob/master/amazon-ebs-builder/scripts/centos7/generic/090-harden.sh#L114
 cat > /etc/audit/rules.d/audit.rules << AUDITRULES
 # CIS 4.1.4
@@ -312,7 +471,8 @@ for i in $(find / -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null);
     echo "-a always,exit -F path=${i} -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged" >> /etc/audit/rules.d/audit.rules
 done
 
-echo "4.2.1.2 - Ensure logging is configured"
+echo "#############################################################"
+echo "4.2.1.2 Ensure logging is configured"
 # CIS recommends the following:
 echo "*.emerg                 :omusrmsg:*" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
 echo "mail.*                  -/var/log/mail" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
@@ -330,47 +490,79 @@ echo "local2,local3.*         -/var/log/localmessages" >> /etc/rsyslog.d/22-CIS-
 echo "local4,local5.*         -/var/log/localmessages" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
 echo "local6,local7.*         -/var/log/localmessages" >> /etc/rsyslog.d/22-CIS-hardened-logs.conf
 
-echo "4.2.1.3 - Ensure rsyslog default file permissions configured"
+echo "#############################################################"
+echo "4.2.1.3 Ensure rsyslog default file permissions configured"
 sed -i -e 's/^$FileCreateMode.*/$FileCreateMode 0640/' /etc/rsyslog.conf
 sed -i -e 's/^$FileCreateMode.*/$FileCreateMode 0640/' /etc/rsyslog.d/*.conf
 
-echo "4.2.1.4 - Ensure rsyslog is configured to send logs to a remote host"
-echo "Exemption; all AWS instances *must* send logs to CloudWatch"
+echo "#############################################################"
+echo "4.2.1.4 Ensure rsyslog is configured to send logs to a remote host"
+echo "Exemption: all AWS instances *must* send logs to CloudWatch"
 
-echo "4.2.1.5 - Ensure remote rsyslog messages are only accepted on designated log hosts."
+echo "#############################################################"
+echo "4.2.1.5 Ensure remote rsyslog messages are only accepted on designated log hosts."
 sed -i -e '/^$ModLoad imtcp/d' -e '/^$InputTCPServerRun 514/d' /etc/rsyslog.d/*.conf
 sed -i -e '/^$ModLoad imtcp/d' -e '/^$InputTCPServerRun 514/d' /etc/rsyslog.conf
 
-# 4.2.2.1, 4.2.2.2, 4.2.2.3, 4.2.2.4, 4.2.2.5 are exempt; we install/configure
-# rsyslog rather than syslog-ng
+echo "#############################################################"
+echo "4.2.2.1 Ensure syslog-ng service is enabled"
+echo "4.2.2.2 Ensure logging is configured"
+echo "4.2.2.3 Ensure syslog-ng default file permissions configured"
+echo "4.2.2.4 Ensure syslog-ng is configured to send logs to a remote log host"
+echo "4.2.2.5 Ensure remote syslog-ng messages are only accepted on designated log hosts"
+echo "Exemption: We install / configure rsyslog rather than syslog-ng"
 
-echo "4.2.4 - Ensure permissions on all logfiles are configured"
+echo "#############################################################"
+echo "4.2.4 Ensure permissions on all logfiles are configured"
 find /var/log -type f -exec chmod 0640 {} \;
 
-# 4.3 -userdata will configure log rotation via logrotate
+echo "#############################################################"
+echo "4.3 Ensure logrotate is configured"
+echo "Exemption: userdata is used to configure log rotation via logrotate"
 
-echo "5.1.2, 5.1.3, 5.1.4, 5.1.5, 5.1.6"
+echo "#############################################################"
+echo "5.1.2 Ensure permissions on /etc/crontab are configured"
+echo "5.1.3 Ensure permissions on /etc/cron.hourly are configured"
+echo "5.1.4 Ensure permissions on /etc/cron.daily are configured"
+echo "5.1.5 Ensure permissions on /etc/cron.weekly are configured"
+echo "5.1.6 Ensure permissions on /etc/cron.monthly are configured"
 chmod 0600 /etc/crontab
 chmod 0600 /etc/cron.hourly
 chmod 0600 /etc/cron.daily
 chmod 0600 /etc/cron.weekly
 chmod 0600 /etc/cron.monthly
 
-echo "5.1.7 - Ensure permissions on /etc/cron.d are configured"
+echo "#############################################################"
+echo "5.1.7 Ensure permissions on /etc/cron.d are configured"
 chmod 0700 /etc/cron.d
 
-echo "5.1.8 - Ensure at/cron is restricted to authorized users"
+echo "#############################################################"
+echo "5.1.8 Ensure at/cron is restricted to authorized users"
 rm -f /etc/cron.deny /etc/at.deny
 touch /etc/cron.allow /etc/at.allow
 chmod 0600 /etc/cron.allow /etc/at.allow
 chown root:root /etc/cron.allow /etc/at.allow
 
-echo "5.2.1 - Ensure permissions on /etc/ssh/sshd_config are configured"
+echo "#############################################################"
+echo "5.2.1 Ensure permissions on /etc/ssh/sshd_config are configured"
 chown root:root /etc/ssh/sshd_config
 chmod 0600 /etc/ssh/sshd_config
 
-echo "5.2.2, 5.2.3, 5.2.4, 5.2.5, 5.2.6, 5.2.7, 5.2.8, 5.2.9, 5.2.10, 5.2.11"
-echo "5.2.12, 5.2.13, 5.2.14, 5.2.15"
+echo "#############################################################"
+echo "5.2.2 Ensure SSH Protocol is set to 2"
+echo "5.2.3 Ensure SSH LogLevel is set to INFO"
+echo "5.2.4 Ensure SSH X11 forwarding is disabled"
+echo "5.2.5 Ensure SSH MaxAuthTries is set to 4 or less"
+echo "5.2.6 Ensure SSH IgnoreRhosts is enabled"
+echo "5.2.7 Ensure SSH HostbasedAuthentication is disabled"
+echo "5.2.8 Ensure SSH root login is disabled"
+echo "5.2.9 Ensure SSH PermitEmptyPasswords is disabled"
+echo "5.2.10 Ensure SSH PermitUserEnvironment is disabled"
+echo "5.2.11 Ensure only approved MAC algorithms are used"
+echo "5.2.12 Ensure SSH Idle Timeout Interval is configured"
+echo "5.2.13 Ensure SSH LoginGraceTime is set to one minute or less"
+echo "5.2.14 Ensure SSH access is limited"
+echo "5.2.15 Ensure SSH warning banner is configured"
 echo "Configuring SSH"
 echo Create sshusers and no-ssh-access groups
 groupadd sshusers || true
@@ -430,10 +622,11 @@ MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@op
 PermitUserEnvironment no
 SSHCONFIG
 
-echo "5.3.1 - Ensure password creation requirements are configured"
-echo "5.3.2 - Ensure lockout for failed password attempts is configured"
-echo "5.3.3 - Ensure password reuse is limited"
-echo "5.3.4 - Ensure password hashing algorithm is SHA-512"
+echo "#############################################################"
+echo "5.3.1 Ensure password creation requirements are configured"
+echo "5.3.2 Ensure lockout for failed password attempts is configured"
+echo "5.3.3 Ensure password reuse is limited"
+echo "5.3.4 Ensure password hashing algorithm is SHA-512"
 # See https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#regular-users
 sed -i 's/^# minlen.*$/minlen = 24/' /etc/security/pwquality.conf
 sed -i 's/^# difok.*$/difok = 1/' /etc/security/pwquality.conf
@@ -472,131 +665,156 @@ session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet 
 session     required                   pam_unix.so
 PAMSYSCONFIG
 
-
+echo "#############################################################"
 echo "5.4.1.1 Ensure password expiration is 365 days or less"
-# Whilst no users will be logging on to this system, our policy is 90 days for regular users and 365 for machine users
+echo "Whilst no users will be logging on to this system, our policy is 90 days for regular users and 365 for machine users"
 # Refs: https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#regular-users
 #       https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#machine-accounts
 sed -i 's/^PASS_MAX_DAYS.*$/PASS_MAX_DAYS 90/' /etc/login.defs
 
-echo "5.4.1.2 - Ensure minimum days between password changes is 7 or more"
+echo "#############################################################"
+echo "5.4.1.2 Ensure minimum days between password changes is 7 or more"
 sed -i 's/^PASS_MIN_DAYS.*$/PASS_MIN_DAYS 7/' /etc/login.defs
 
-echo "5.4.1.3 - Ensure password expiration warning days is 7 or more"
+echo "#############################################################"
+echo "5.4.1.3 Ensure password expiration warning days is 7 or more"
 sed -i 's/^PASS_WARN_AGE.*$/PASS_WARN_AGE 7/' /etc/login.defs
 
-echo "5.4.1.4 - Ensure inactive password lock is 30 days or less"
+echo "#############################################################"
+echo "5.4.1.4 Ensure inactive password lock is 30 days or less"
 useradd -D -f 30
 
-# echo "5.4.1.5 - Ensure all users last password change date is in the past"
-# Exemption - we have no users that we configure with passwords
+echo "#############################################################"
+echo "5.4.1.5 Ensure all users last password change date is in the past"
+echo "Exemption: we have no users that we configure with passwords"
 
-echo "5.4.2 - Ensure system accounts are non-login"
-# No users in AL1 have this, CWA adds it later but we have dealt with this upstream
+echo "#############################################################"
+echo "5.4.2 Ensure system accounts are non-login"
+echo "Exemption: No users in AL1 have this, CWA adds it later but we have dealt with this upstream"
 
-echo "5.4.3 - Ensure default group for the root account is GID 0"
+echo "#############################################################"
+echo "5.4.3 Ensure default group for the root account is GID 0"
 usermod -g 0 root
 
-echo "5.4.4 - Ensure default user umask is 027 or more restrictive"
+echo "#############################################################"
+echo "5.4.4 Ensure default user umask is 027 or more restrictive"
 sed -i 's/^.*umask 0.*$/umask 027/' /etc/bashrc
 sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile
 sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile.d/*.sh
 
-echo "5.4.5 - Ensure default user shell timeout is 900 seconds or less"
+echo "#############################################################"
+echo "5.4.5 Ensure default user shell timeout is 900 seconds or less"
 echo 'TMOUT=600' >> /etc/bashrc
 echo 'TMOUT=600' >> /etc/profile
 
-echo "5.5 - Ensure access to the su command is restricted"
+echo "#############################################################"
+echo "5.5 Ensure access to the su command is restricted"
 sed -i '/#auth.*required.*pam_wheel.so/s/^# *//' /etc/pam.d/su
 
+echo "#############################################################"
+echo "6.1.1 Audit system file permissions"
+echo "Exemption: We are not auditing all system files, unscored"
 
-
-echo "6.1.1 - Audit system file permissions"
-# Exemption - we are not auditing all system files, unscored
-
-echo "6.1.2 - Ensure permissions on /etc/passwd are configured"
+echo "#############################################################"
+echo "6.1.2 Ensure permissions on /etc/passwd are configured"
 chown root:root /etc/passwd
 chmod 644 /etc/passwd
 
-echo "6.1.3 - Ensure permissions on /etc/shadow are configured"
+echo "#############################################################"
+echo "6.1.3 Ensure permissions on /etc/shadow are configured"
 chown root:root /etc/shadow
 chmod 000 /etc/shadow
 
-echo "6.1.4 - Ensure permissions on /etc/group are configured"
+echo "#############################################################"
+echo "6.1.4 Ensure permissions on /etc/group are configured"
 chown root:root /etc/group
 chmod 644 /etc/group
 
-echo "6.1.5 - Ensure permissions on /etc/gshadow are configured"
+echo "#############################################################"
+echo "6.1.5 Ensure permissions on /etc/gshadow are configured"
 chown root:root /etc/gshadow
 chmod 000 /etc/gshadow
 
-echo "6.1.6 - Ensure permissions on /etc/passwd-are configured"
+echo "#############################################################"
+echo "6.1.6 Ensure permissions on /etc/passwd-are configured"
 chown root:root /etc/passwd-
 chmod u-x,go-wx /etc/passwd-
 
-echo "6.1.7 - Ensure permissions on /etc/shadow-are configured"
+echo "#############################################################"
+echo "6.1.7 Ensure permissions on /etc/shadow-are configured"
 chown root:root /etc/shadow-
 chmod 000 /etc/shadow-
 
-echo "6.1.8 - Ensure permissions on /etc/group-are configured"
+echo "#############################################################"
+echo "6.1.8 Ensure permissions on /etc/group-are configured"
 chown root:root /etc/group-
 chmod u-x,go-wx /etc/group-
 
-echo "6.1.9 - Ensure permissions on /etc/gshadow-are configured "
+echo "#############################################################"
+echo "6.1.9 Ensure permissions on /etc/gshadow-are configured "
 chown root:root /etc/gshadow-
 chmod 000 /etc/gshadow-
 
-echo "6.1.10 - Ensure no world writable files exist"
+echo "#############################################################"
+echo "6.1.10 Ensure no world writable files exist"
 echo "Expect: no output"
 df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
 
-echo "6.1.11 - Ensure no unowned files or directories exist"
+echo "#############################################################"
+echo "6.1.11 Ensure no unowned files or directories exist"
 echo "Expect: no output"
 df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nouser
 
-echo "6.1.12 - Ensure no ungrouped files or directories exist"
+echo "#############################################################"
+echo "6.1.12 Ensure no ungrouped files or directories exist"
 echo "Expect: no output"
 df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nogroup
 
-echo "6.1.13 - Audit SUID executables"
-# Exemption - we are not auditing all system files, unscored
+echo "#############################################################"
+echo "6.1.13 Audit SUID executables"
+echo "Exemption: we are not auditing all system files, unscored"
 
-echo "6.1.14 - Audit SGID executables"
-# Exemption - we are not auditing all system files, unscored
+echo "#############################################################"
+echo "6.1.14 Audit SGID executables"
+echo "Exemption: we are not auditing all system files, unscored"
 
-
-
-echo "6.2.1 - Ensure password fields are not empty"
+echo "#############################################################"
+echo "6.2.1 Ensure password fields are not empty"
 echo "Expect: no output"
 cat /etc/shadow | awk -F: '($2 == "" ) { print $1 " does not have a password "}'
 
-echo "6.2.2 - Ensure no legacy '+' entries exist in /etc/passwd"
+echo "#############################################################"
+echo "6.2.2 Ensure no legacy '+' entries exist in /etc/passwd"
 echo "Expect: no output"
 grep '^\+:' /etc/passwd || true
 
-echo "6.2.3 - Ensure no legacy '+' entries exist in /etc/shadow"
+echo "#############################################################"
+echo "6.2.3 Ensure no legacy '+' entries exist in /etc/shadow"
 echo "Expect: no output"
 grep '^\+:' /etc/shadow || true
 
+echo "#############################################################"
 echo "6.2.4 Ensure no legacy '+' entries exist in /etc/group"
 echo "Expect: no output"
 grep '^\+:' /etc/group || true
 
-echo "6.2.5 - Ensure root is the only UID 0 account"
+echo "#############################################################"
+echo "6.2.5 Ensure root is the only UID 0 account"
 echo "Expect: root"
 cat /etc/passwd | awk -F: '($3 == 0) { print $1 }'
 
-echo "6.2.6 - Ensure root PATH Integrity"
+echo "#############################################################"
+echo "6.2.6 Ensure root PATH Integrity"
 echo "Expect: no '.' or other writeable directory in PATH"
 echo $PATH
 
-
-echo "6.2.7 - Ensure all users' home directories exist"
+echo "#############################################################"
+echo "6.2.7 Ensure all users' home directories exist"
 echo "Expect: all users to have home folders"
 cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }'
 
-
-echo "6.2.8 - Ensure users' home directories permissions are 750 or more restrictive"
+echo "#############################################################"
+echo "6.2.8 Ensure users' home directories permissions are 750 or more restrictive"
 echo "Expect: no output"
 cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
   if [ ! -d "$dir" ]; then
@@ -618,8 +836,8 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
   fi
 done
 
-
-echo "6.2.9 - Ensure users own their home directories"
+echo "#############################################################"
+echo "6.2.9 Ensure users own their home directories"
 echo "Expect: no output"
 cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
   if [ ! -d "$dir" ]; then
@@ -632,8 +850,8 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
   fi
 done
 
-
-echo "6.2.10 - Ensure users' dot files are not group or world writable"
+echo "#############################################################"
+echo "6.2.10 Ensure users' dot files are not group or world writable"
 echo "Expect: no output"
 cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
   if [ ! -d "$dir" ]; then
@@ -653,8 +871,8 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
   fi
 done
 
-
-echo "6.2.11 - Ensure no users have .forward files"
+echo "#############################################################"
+echo "6.2.11 Ensure no users have .forward files"
 echo "Expect: no output"
 cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
   if [ ! -d "$dir" ]; then
@@ -666,8 +884,8 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
   fi
 done
 
-
-echo "6.2.12 - Ensure no users have .netrc files"
+echo "#############################################################"
+echo "6.2.12 Ensure no users have .netrc files"
 echo "Expect: no output"
 cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
   if [ ! -d "$dir" ]; then
@@ -679,8 +897,8 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
   fi
 done
 
-
-echo "6.2.13 - Ensure users' .netrc Files are not group or world accessible"
+echo "#############################################################"
+echo "6.2.13 Ensure users' .netrc Files are not group or world accessible"
 echo "Expect: no output"
 cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
   if [ ! -d "$dir" ]; then
@@ -712,8 +930,8 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
   fi
 done
 
-
-echo "6.2.14 - Ensure no users have .rhosts files"
+echo "#############################################################"
+echo "6.2.14 Ensure no users have .rhosts files"
 echo "Expect: no output"
 cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
   if [ ! -d "$dir" ]; then
@@ -727,8 +945,8 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
   fi
 done
 
-
-echo "6.2.15 - Ensure all groups in /etc/passwd exist in /etc/group"
+echo "#############################################################"
+echo "6.2.15 Ensure all groups in /etc/passwd exist in /etc/group"
 echo "Expect: no output"
 for i in $(cut -s -d: -f4 /etc/passwd | sort -u ); do
   grep -q -P "^.*?:[^:]*:$i:" /etc/group
@@ -737,8 +955,8 @@ for i in $(cut -s -d: -f4 /etc/passwd | sort -u ); do
   fi
 done
 
-
-echo "6.2.16 - Ensure no duplicate UIDs exist"
+echo "#############################################################"
+echo "6.2.16 Ensure no duplicate UIDs exist"
 echo "Expect: no output"
 cat /etc/passwd | cut -f3 -d":" | sort -n | uniq -c | while read x ; do
   [ -z "${x}" ] && break
@@ -749,8 +967,8 @@ cat /etc/passwd | cut -f3 -d":" | sort -n | uniq -c | while read x ; do
   fi
 done
 
-
-echo "6.2.17 - Ensure no duplicate GIDs exist"
+echo "#############################################################"
+echo "6.2.17 Ensure no duplicate GIDs exist"
 cat /etc/group | cut -f3 -d":" | sort -n | uniq -c | while read x ; do
   [ -z "${x}" ] && break
   set - $x
@@ -760,8 +978,8 @@ cat /etc/group | cut -f3 -d":" | sort -n | uniq -c | while read x ; do
   fi
 done
 
-
-echo "6.2.18 - Ensure no duplicate user names exist"
+echo "#############################################################"
+echo "6.2.18 Ensure no duplicate user names exist"
 echo "Expect: no output"
 cat /etc/passwd | cut -f1 -d":" | sort -n | uniq -c | while read x ; do
   [ -z "${x}" ] && break
@@ -772,8 +990,8 @@ cat /etc/passwd | cut -f1 -d":" | sort -n | uniq -c | while read x ; do
   fi
 done
 
-
-echo "6.2.19 - Ensure no duplicate group names exist"
+echo "#############################################################"
+echo "6.2.19 Ensure no duplicate group names exist"
 echo "Expect: no output"
 cat /etc/group | cut -f1 -d":" | sort -n | uniq -c | while read x ; do
   [ -z "${x}" ] && break

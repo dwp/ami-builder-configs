@@ -1,2 +1,0 @@
-#cloud-config
-repo_upgrade: none

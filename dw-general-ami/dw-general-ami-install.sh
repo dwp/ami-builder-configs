@@ -13,7 +13,7 @@ echo "no_proxy=$no_proxy"
 # Update packages on the instance.
 yum update -y
 
-# Install Yum plugin that will remove unused dependancies after a package is uninstalled
+# Install Yum plugin that will remove unused dependencies after a package is uninstalled
 yum install -y yum-plugin-remove-with-leaves
 
 # Tidy cloud.cfg to prevent yum locks in hardened AMI builds
@@ -22,9 +22,6 @@ sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
        -e '/.-.nvidia.*/ d' \
        -e '/.-.kernel.*/ d' \
        -e '/.-.cudatoolkit.*/ d' /etc/cloud/cloud.cfg
-
-sed -i -e 's/^mirrorlist=/#&/' -e 's@^#baseurl=.*@baseurl=http://mirrors.coreix.net/fedora-epel/6/$basearch@' /etc/yum.repos.d/epel.repo
-yum-config-manager --enable epel
 
 yum install -y python27-devel python27-pip gcc
 # Install acm cert helper

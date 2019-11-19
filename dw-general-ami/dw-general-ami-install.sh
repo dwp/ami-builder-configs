@@ -16,20 +16,12 @@ yum update -y
 # Install Yum plugin that will remove unused dependencies after a package is uninstalled
 yum install -y yum-plugin-remove-with-leaves
 
-# Disable default caching of repo metadata
-# EPEL is particularly fast moving so can have trouble getting packages/metadata files
-# The Amazon Linux repos have caching specified in their individual .repo files
-# sed -i -e 's/# metadata_expire=.*/metadata_expire=0/' /etc/yum.conf
-
 # Tidy cloud.cfg to prevent yum locks in hardened AMI builds
 sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
        -e 's/repo_upgrade_exclude:/repo_update: false/' \
        -e '/.-.nvidia.*/ d' \
        -e '/.-.kernel.*/ d' \
        -e '/.-.cudatoolkit.*/ d' /etc/cloud/cloud.cfg
-
-# sed -i -e 's/^mirrorlist=/#&/' -e 's@^#baseurl=.*@baseurl=http://mirrors.coreix.net/fedora-epel/6/$basearch@' /etc/yum.repos.d/epel.repo
-# yum-config-manager --enable epel
 
 yum install -y python27-devel python27-pip gcc
 # Install acm cert helper
@@ -58,6 +50,3 @@ cat > /etc/cloud/cloud.cfg.d/15_yum_proxy.cfg << CLOUDCFG
 bootcmd:
  - [ cloud-init-per, once, set-yum-proxy, /usr/local/bin/set_yum_proxy.sh ]
 CLOUDCFG
-
-# Force fresh YUM metadata retrieval when an instance first runs YUM
-# yum clean all

@@ -19,7 +19,7 @@ echo "3.5.3 Ensure RDS is disabled"
 echo "3.5.4 Ensure TIPC is disabled"
 > /etc/modprobe.d/CIS.conf
 for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
-    dccp sctp tipc; do
+    dccp sctp rds tipc; do
     echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
 done
 
@@ -64,6 +64,15 @@ echo "1.1.11 Ensure separate partition exists for /var/log"
 echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
 
 echo "#############################################################"
+echo "1.1.15 Ensure nodev option set on /dev/shm partition"
+echo "1.1.16 Ensure nosuid option set on /dev/shm partition"
+echo "1.1.17 Ensure noexec option set on /dev/shm partition"
+# OpenSCAP Rule ID mount_option_dev_shm_noexec
+# OpenSCAP Rule ID mount_option_dev_shm_nosuid
+# OpenSCAP Rule ID mount_option_dev_shm_nosuid
+sed -i 's|tmpfs       /dev/shm    tmpfs   defaults        0   0|tmpfs       /dev/shm    tmpfs   defaults,nodev,nosuid,noexec        0   0|' /etc/fstab
+
+echo "#############################################################"
 echo "1.1.18 Set sticky bit on all world-writable directories"
 df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
 
@@ -105,6 +114,9 @@ echo "1.2 Configure Software Updates"
 echo "1.2.1 Ensure package manager repositories are configured"
 echo "1.2.2 Ensure GPG keys are configured"
 echo "1.2.3 Ensure gpgcheck is globally activated"
+# OpenSCAP Rule ID ensure_gpgcheck_never_disabled
+# Fixing gpgcheck in one file
+sed -i 's/gpgcheck=0/gpgcheck=1/' /etc/yum.repos.d/amzn-nosrc.repo
 echo "Exemption: in-life instances require no access to package repositories; they'll be rebuilt from refreshed AMIs"
 
 echo "#############################################################"
@@ -129,7 +141,7 @@ mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
 
 echo "#############################################################"
 echo "1.3.2 Ensure filesystem integrity is regularly checked"
-(crontab -l 2>/dev/null; echo "0 5 * * * /usr/sbin/aide --check") | crontab -
+echo "0 5 * * * root /usr/sbin/aide --check" > /etc/crond.d/99-CIS
 
 echo "#############################################################"
 echo "1.4 Secure Boot Settings"
@@ -144,6 +156,8 @@ echo "Exemption: AWS instances do not allow access to the bootloader or console 
 echo "#############################################################"
 echo "1.4.3 Ensure interactive boot is not enabled"
 echo "PROMPT=NO" >> /etc/sysconfig/init
+# OpenSCAP Rule ID require_singleuser_auth
+echo "SINGLE=/sbin/sulogin" >> /etc/sysconfig/init
 
 echo "#############################################################"
 echo "1.5 Additional process hardening"
@@ -166,7 +180,9 @@ echo "3.2.8 Ensure TCP SYN Cookies is enabled"
 echo "3.3.1 Ensure IPv6 router advertisements are not accepted"
 echo "3.3.2 Ensure IPv6 redirects are not accepted"
 echo "Tweaking sysctl knobs"
-cat > /etc/sysctl.d/CIS.conf << SYSCTL
+
+# OpenSCAP sysctl_net_ipv6_conf_default_accept_ra, sysctl_net_ipv6_conf_default_accept_redirects
+cat >> /etc/sysctl.conf << SYSCTL
 fs.suid_dumpable = 0
 kernel.randomize_va_space = 2
 net.ipv4.ip_forward = 0
@@ -258,6 +274,7 @@ echo "1.7.1.1 Ensure message of the day is configured properly"
 # in compliance with DWP norms (see 1.7.1.2 below)
 > /etc/motd
 
+# OpenSCAP Rule ID banner_etc_issue will fail (requires a DOD banner)
 echo "#############################################################"
 echo "1.7.1.2 Ensure local login warning banner is configured properly"
 cat > /etc/issue << BANNER
@@ -306,6 +323,7 @@ echo "Excluded from hardening.sh, added to Userdata in General AMI due to build 
 echo "#############################################################"
 echo "2.2.1.2 Ensure ntp is configured"
 # AL1 defaults to pre-hardened ntpd configuration
+sed -i -e 's/^pool/server 169.254.169.123 prefer iburst minpoll 3/' /etc/ntp.conf
 
 echo "#############################################################"
 echo "2.2.1.3 Ensure chrony is configured"
@@ -357,6 +375,8 @@ max_log_file_action = rotate
 num_logs = 3
 space_left_action = email
 action_mail_acct = root
+# OpenSCAP Rule ID auditd_data_retention_admin_space_left_action
+# OpenSCAP will fail as wants "single" but CIS specifies "halt"
 admin_space_left_action = halt
 AUDITD
 
@@ -391,40 +411,53 @@ echo "4.1.16 Ensure system administrator actions (sudolog) are collected"
 echo "4.1.17 Ensure kernel module loading and unloading is collected"
 echo "4.1.18 Ensure the audit configuration is immutable"
 # see https://github.com/dwp/packer-infrastructure/blob/master/amazon-ebs-builder/scripts/centos7/generic/090-harden.sh#L114
-cat > /etc/audit/rules.d/audit.rules << AUDITRULES
+cat >> /etc/audit/audit.rules << AUDITRULES
 # CIS 4.1.4
--a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change
--a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time- change
--a always,exit -F arch=b64 -S clock_settime -k time-change
--a always,exit -F arch=b32 -S clock_settime -k time-change
--w /etc/localtime -p wa -k time-change
+# OpenSCAP Rule ID audit_rules_time_settimeofday
+# OpenSCAP Rule ID audit_rules_time_stime
+# Also 64bit does not have stime syscall
+# OpenSCAP Rule ID audit_rules_time_adjtimex
+-a always,exit -F arch=b64 -S adjtimex,settimeofday -F key=audit_time_rules
+-a always,exit -F arch=b32 -S adjtimex,settimeofday -F key=audit_time_rules
+-a always,exit -F arch=b32 -S stime -F key=audit_time_rules
+-a always,exit -F arch=b64 -S clock_settime -F key=audit_time_rules
+-a always,exit -F arch=b32 -S clock_settime -F key=audit_time_rules
+-w /etc/localtime -p wa -F key=audit_time_rules
 
 # CIS 4.1.5
--w /etc/group -p wa -k identity
--w /etc/passwd -p wa -k identity
--w /etc/gshadow -p wa -k identity
--w /etc/shadow -p wa -k identity
--w /etc/security/opasswd -p wa -k identity
+# Key name is changed to match OpenSCAP requirements, but functionally is the same
+-w /etc/group -p wa -k audit_rules_usergroup_modification
+-w /etc/passwd -p wa -k audit_rules_usergroup_modification
+-w /etc/gshadow -p wa -k audit_rules_usergroup_modification
+-w /etc/shadow -p wa -k audit_rules_usergroup_modification
+-w /etc/security/opasswd -p wa -k audit_rules_usergroup_modification
 
 # CIS 4.1.6
--a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale -a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale -w /etc/issue -p wa -k system-locale
--w /etc/issue.net -p wa -k system-locale
--w /etc/hosts -p wa -k system-locale
--w /etc/sysconfig/network -p wa -k system-locale
--w /etc/sysconfig/network-scripts/ -p wa -k system-locale
+# Key name is changed to match OpenSCAP requirements, but functionally is the same
+-a always,exit -F arch=b64 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
+-a always,exit -F arch=b32 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
+-w /etc/issue -p wa -k audit_rules_networkconfig_modification
+-w /etc/issue.net -p wa -k audit_rules_networkconfig_modification
+-w /etc/hosts -p wa -k audit_rules_networkconfig_modification
+-w /etc/sysconfig/network -p wa -k audit_rules_networkconfig_modification
+-w /etc/sysconfig/network-scripts/ -p wa -k audit_rules_networkconfig_modification
 
 # CIS 4.1.7
 -w /etc/selinux/ -p wa -k MAC-policy
 -w /usr/share/selinux/ -p wa -k MAC-policy
 
 # CIS 4.1.8
--w /var/log/lastlog -p wa -k logins
+# OpenSCAP Rule ID audit_rules_login_events
+# OpenSCAP added tallylog
+-w /var/log/tallylog -p wa -k logins
 -w /var/run/faillock/ -p wa -k logins
+-w /var/log/lastlog -p wa -k logins
 
 # CIS 4.1.9
+# Key name is changed to match OpenSCAP requirements, but functionally is the same
 -w /var/run/utmp -p wa -k session
--w /var/log/wtmp -p wa -k logins
--w /var/log/btmp -p wa -k logins
+-w /var/log/wtmp -p wa -k session
+-w /var/log/btmp -p wa -k session
 
 # CIS 4.1.10
 -a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=500 -F
@@ -436,18 +469,23 @@ auid!=4294967295 -k perm_mod
 -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=500 -F auid!=4294967295 -k perm_mod
 
 # CIS 4.1.11
--a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -k access
--a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -k access
--a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -k access
--a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -k access
+# OpenSCAP Rule ID audit_rules_unsuccessful_file_modification
+# OpenSCAP will fail on this point as expects auid>=1000 which is less secure
+-a always,exit -F arch=b32 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -F key=access
+-a always,exit -F arch=b32 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -F key=access
+-a always,exit -F arch=b64 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -F key=access
+-a always,exit -F arch=b64 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -F key=access
 
 # CIS 4.1.13
+# OpenSCAP will fail on this point as expects auid>=1000 which is less secure
 -a always,exit -F arch=b64 -S mount -F auid>=500 -F auid!=4294967295 -k mounts
 -a always,exit -F arch=b32 -S mount -F auid>=500 -F auid!=4294967295 -k mounts
 
 # CIS 4.1.14
--a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=500 -F auid!=4294967295 -k delete
--a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=500 -F auid!=4294967295 -k delete
+# OpenSCAP Rule ID audit_rules_file_deletion_events
+# OpenSCAP will fail on this point as expects auid>=1000 which is less secure
+-a always,exit -F arch=b32 -S rmdir,unlink,unlinkat,rename -S renameat -F auid>=500 -F auid!=4294967295 -F key=delete
+-a always,exit -F arch=b64 -S rmdir,unlink,unlinkat,rename -S renameat -F auid>=500 -F auid!=4294967295 -F key=delete
 
 # CIS 4.1.15
 -w /etc/sudoers -p wa -k scope
@@ -457,18 +495,25 @@ auid!=4294967295 -k perm_mod
 -w /var/log/sudo.log -p wa -k actions
 
 # CIS 4.1.17
--w /sbin/insmod -p x -k modules
--w /sbin/rmmod -p x -k modules
--w /sbin/modprobe -p x -k modules
--a always,exit -F arch=b64 -S init_module -S delete_module -k modules
+# OpenSCAP Rule ID audit_rules_kernel_module_loading
+# CIS requires /sbin/* but OpenSCAP wants /usr/sbin and they both symlink to same place
+-w /usr/sbin/insmod -p x -k modules
+-w /usr/sbin/rmmod -p x -k modules
+-w /usr/sbin/modprobe -p x -k modules
+-a always,exit -F arch=b64 -S init_module,delete_module -F key=modules
+
+# OpenSCAP remediation Rule ID audit_rules_sysadmin_actions
+-w /etc/sudoers -p wa -k actions
+-w /etc/sudoers.d/ -p wa -k actions
 
 # CIS 4.1.18
 -e 2
 AUDITRULES
 
-echo "# CIS 4.1.12" >> /etc/audit/rules.d/audit.rules
+# OpenSCAP Rule ID audit_rules_privileged_commands
+echo "# CIS 4.1.12" >> /etc/audit/audit.rules
 for i in $(find / -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null); do
-    echo "-a always,exit -F path=${i} -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged" >> /etc/audit/rules.d/audit.rules
+    echo "-a always,exit -F path=${i} -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged" >> /etc/audit/audit.rules
 done
 
 echo "#############################################################"
@@ -610,13 +655,15 @@ X11DisplayOffset 10
 PrintMotd no
 PrintLastLog yes
 TCPKeepAlive yes
-Banner /etc/issue.net
+Banner /etc/issue
 AcceptEnv LANG LC_* XMODIFIERS
 Subsystem sftp    /usr/libexec/openssh/sftp-server
 UsePAM yes
 UseDNS no
 DenyUsers no-ssh-access
 AllowGroups sshusers
+# OpenSCAP Rule ID sshd_use_approved_ciphers
+# OpenSCAP will fail with this cipher set, but ours is more strict
 Ciphers aes256-ctr,aes192-ctr,aes128-ctr
 MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
 PermitUserEnvironment no
@@ -638,24 +685,27 @@ sed -i 's/^# difok.*$/difok = 1/' /etc/security/pwquality.conf
 # auth [success=1 default=bad] pam_unix.so
 # auth [default=die] pam_faillock.so authfail audit deny=10 unlock_time=900
 # auth sufficient pam_faillock.so authsucc audit deny=10 unlock_time=900
+# OpenSCAP Rule ID accounts_passwords_pam_faillock_deny will fail (we deny at 10 in line with our policy)
+# OpenSCAP Rule ID removed nullok entries
 cat > /etc/pam.d/system-auth << PAMSYSCONFIG
 auth        required                   pam_env.so
 auth        required                   pam_faildelay.so delay=2000000
 auth        required                   pam_faillock.so preauth audit silent deny=10 unlock_time=900
-auth        sufficient                 pam_unix.so nullok try_first_pass
+auth        sufficient                 pam_unix.so try_first_pass
 auth        sufficient                 pam_faillock.so authsucc audit deny=10 unlock_time=900
 auth        requisite                  pam_succeed_if.so uid >= 500 quiet_success
 auth        required                   pam_deny.so
 auth        [success=1 default=bad]    pam_unix.so
 auth        [default=die]              pam_faillock.so authfail audit deny=10 unlock_time=900
 
+account     required                   pam_faillock.so
 account     required                   pam_unix.so
 account     sufficient                 pam_localuser.so
 account     sufficient                 pam_succeed_if.so uid < 500 quiet
 account     required                   pam_permit.so
 
 password    requisite                  pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
-password    sufficient                 pam_unix.so sha512 shadow nullok try_first_pass use_authtok remember=5
+password    sufficient                 pam_unix.so sha512 shadow try_first_pass use_authtok remember=5
 password    required                   pam_deny.so
 
 session     optional                   pam_keyinit.so revoke
@@ -758,6 +808,7 @@ chmod 000 /etc/gshadow-
 echo "#############################################################"
 echo "6.1.10 Ensure no world writable files exist"
 echo "Expect: no output"
+# OpenSCAP Rule ID file_permissions_unauthorized_world_writable will fail (have verified there is no output for command)
 df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
 
 echo "#############################################################"
@@ -772,10 +823,12 @@ df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nog
 
 echo "#############################################################"
 echo "6.1.13 Audit SUID executables"
+# OpenSCAP Rule ID file_permissions_unauthorized_suid
 echo "Exemption: we are not auditing all system files, unscored"
 
 echo "#############################################################"
 echo "6.1.14 Audit SGID executables"
+# OpenSCAP Rule ID file_permissions_unauthorized_sgid
 echo "Exemption: we are not auditing all system files, unscored"
 
 echo "#############################################################"
@@ -1001,3 +1054,39 @@ cat /etc/group | cut -f1 -d":" | sort -n | uniq -c | while read x ; do
     echo "Duplicate Group Name ($2): ${gids}"
   fi
 done
+
+
+# OpenSCAP fix for Rule ID no_direct_root_logins
+> /etc/securetty
+# This should empty this file, however ttyS0 will always be added back in as it is a
+# built-in that's ensuring there can be a root logon to console, which cannot happen in AWS
+
+# OpenSCAP Rule ID mount_option_dev_shm_noexec will fail (we exempt partitioning)
+# OpenSCAP Rule ID mount_option_dev_shm_nosuid will fail (we exempt partitioning)
+# OpenSCAP Rule ID mount_option_var_tmp_bind will fail (we exempt partitioning)
+# OpenSCAP Rule ID mount_option_dev_shm_node will fail (we exempt partitioning)
+# OpenSCAP Rule ID rsyslog_remote_loghost will fail (we offload logs to CloudWatch instead)
+# OpenSCAP Rule ID selinux_confinement_of_daemons will fail (we have verified the output the query generates)
+# OpenSCAP Rule ID grub_legacy_password will fail (will cause Instance not to boot)
+# OpenSCAP Rule ID rpm_verify_permissions will fail (CIS explicitly sets the perms on these files)
+# OpenSCAP Rule ID rpm_verify_hashes will fail (we have verified the output the query generates)
+# OpenSCAP Rule ID mount_option_tmp_nodev, mount_option_tmp_noexec, mount_option_tmp_nosuid, mount_option_var_tmp_bind (exemption as we don't have sep partition for /tmp)
+# OpenSCAP Rule ID rsyslog_files_permissions will fail (cloud-init appears to be setting back to 644)
+# OpenSCAP Rule ID service_ip6tables_enabled will fail (we are not using ipv6)
+# OpenSCAP Rule ID sysctl_net_ipv6_conf_default_accept_ra will fail (we are not using ipv6)
+# OpenSCAP Rule ID sysctl_net_ipv6_conf_default_accept_redirects will fail (we are not using ipv6)
+
+
+# OpenSCAP Rule ID ensure_logrotate_activated
+# CIS 4.3 - Ensure logrotate is configured
+sed -i 's/^weekly/daily/' /etc/logrotate.conf
+
+
+
+# OpenSCAP Rule ID service_ip6tables_enabled
+service ip6tables stop
+chkconfig ip6tables off
+
+# OpenSCAP Rule ID umask_for_daemons
+sed -i 's/^umask 022/umask 027/' /etc/init.d/functions
+

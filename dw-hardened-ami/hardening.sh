@@ -391,7 +391,7 @@ echo "4.1.16 Ensure system administrator actions (sudolog) are collected"
 echo "4.1.17 Ensure kernel module loading and unloading is collected"
 echo "4.1.18 Ensure the audit configuration is immutable"
 # see https://github.com/dwp/packer-infrastructure/blob/master/amazon-ebs-builder/scripts/centos7/generic/090-harden.sh#L114
-cat > /etc/audit/rules.d/audit.rules << AUDITRULES
+cat >> /etc/audit/audit.rules << AUDITRULES
 # CIS 4.1.4
 -a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change
 -a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time- change
@@ -400,18 +400,22 @@ cat > /etc/audit/rules.d/audit.rules << AUDITRULES
 -w /etc/localtime -p wa -k time-change
 
 # CIS 4.1.5
--w /etc/group -p wa -k identity
--w /etc/passwd -p wa -k identity
--w /etc/gshadow -p wa -k identity
--w /etc/shadow -p wa -k identity
--w /etc/security/opasswd -p wa -k identity
+# Key name is changed to match OpenSCAP requirements, but functionally is the same
+-w /etc/group -p wa -k audit_rules_usergroup_modification
+-w /etc/passwd -p wa -k audit_rules_usergroup_modification
+-w /etc/gshadow -p wa -k audit_rules_usergroup_modification
+-w /etc/shadow -p wa -k audit_rules_usergroup_modification
+-w /etc/security/opasswd -p wa -k audit_rules_usergroup_modification
 
 # CIS 4.1.6
--a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale -a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale -w /etc/issue -p wa -k system-locale
--w /etc/issue.net -p wa -k system-locale
--w /etc/hosts -p wa -k system-locale
--w /etc/sysconfig/network -p wa -k system-locale
--w /etc/sysconfig/network-scripts/ -p wa -k system-locale
+# Key name is changed to match OpenSCAP requirements, but functionally is the same
+-a always,exit -F arch=b64 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
+-a always,exit -F arch=b32 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
+-w /etc/issue -p wa -k audit_rules_networkconfig_modification
+-w /etc/issue.net -p wa -k audit_rules_networkconfig_modification
+-w /etc/hosts -p wa -k audit_rules_networkconfig_modification
+-w /etc/sysconfig/network -p wa -k audit_rules_networkconfig_modification
+-w /etc/sysconfig/network-scripts/ -p wa -k audit_rules_networkconfig_modification
 
 # CIS 4.1.7
 -w /etc/selinux/ -p wa -k MAC-policy
@@ -422,9 +426,10 @@ cat > /etc/audit/rules.d/audit.rules << AUDITRULES
 -w /var/run/faillock/ -p wa -k logins
 
 # CIS 4.1.9
+# Key name is changed to match OpenSCAP requirements, but functionally is the same
 -w /var/run/utmp -p wa -k session
--w /var/log/wtmp -p wa -k logins
--w /var/log/btmp -p wa -k logins
+-w /var/log/wtmp -p wa -k session
+-w /var/log/btmp -p wa -k session
 
 # CIS 4.1.10
 -a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=500 -F
@@ -442,6 +447,7 @@ auid!=4294967295 -k perm_mod
 -a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -k access
 
 # CIS 4.1.13
+# OpenSCAP will fail on this point as expects auid>=1000 which is less secure
 -a always,exit -F arch=b64 -S mount -F auid>=500 -F auid!=4294967295 -k mounts
 -a always,exit -F arch=b32 -S mount -F auid>=500 -F auid!=4294967295 -k mounts
 
@@ -462,13 +468,17 @@ auid!=4294967295 -k perm_mod
 -w /sbin/modprobe -p x -k modules
 -a always,exit -F arch=b64 -S init_module -S delete_module -k modules
 
+# OpenSCAP remediation Rule ID audit_rules_sysadmin_actions
+-w /etc/sudoers -p wa -k actions
+-w /etc/sudoers.d/ -p wa -k actions
+
 # CIS 4.1.18
 -e 2
 AUDITRULES
 
-echo "# CIS 4.1.12" >> /etc/audit/rules.d/audit.rules
+echo "# CIS 4.1.12" >> /etc/audit/audit.rules
 for i in $(find / -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null); do
-    echo "-a always,exit -F path=${i} -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged" >> /etc/audit/rules.d/audit.rules
+    echo "-a always,exit -F path=${i} -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged" >> /etc/audit/audit.rules
 done
 
 echo "#############################################################"
@@ -610,7 +620,7 @@ X11DisplayOffset 10
 PrintMotd no
 PrintLastLog yes
 TCPKeepAlive yes
-Banner /etc/issue.net
+Banner /etc/issue
 AcceptEnv LANG LC_* XMODIFIERS
 Subsystem sftp    /usr/libexec/openssh/sftp-server
 UsePAM yes
@@ -1001,3 +1011,12 @@ cat /etc/group | cut -f1 -d":" | sort -n | uniq -c | while read x ; do
     echo "Duplicate Group Name ($2): ${gids}"
   fi
 done
+
+
+# OpenSCAP fix for Rule ID no_direct_root_logins
+> /etc/securetty
+
+# OpenSCAP Rule ID mount_option_dev_shm_noexec will fail (we exempt partitioning)
+# OpenSCAP Rule ID mount_option_dev_shm_nosuid will fail (we exempt partitioning)
+# OpenSCAP Rule ID mount_option_var_tmp_bind will fail (we exempt partitioning)
+# OpenSCAP Rule ID mount_option_dev_shm_node will fail (we exempt partitioning)

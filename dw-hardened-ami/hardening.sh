@@ -141,8 +141,7 @@ mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
 
 echo "#############################################################"
 echo "1.3.2 Ensure filesystem integrity is regularly checked"
-(crontab -l 2>/dev/null; echo "0 5 * * * /usr/sbin/aide --check") | crontab -
-crontab -l
+echo "0 5 * * * root /usr/sbin/aide --check" > /etc/crond.d/99-CIS
 
 echo "#############################################################"
 echo "1.4 Secure Boot Settings"
@@ -1059,6 +1058,8 @@ done
 
 # OpenSCAP fix for Rule ID no_direct_root_logins
 > /etc/securetty
+# This should empty this file, however ttyS0 will always be added back in as it is a
+# built-in that's ensuring there can be a root logon to console, which cannot happen in AWS
 
 # OpenSCAP Rule ID mount_option_dev_shm_noexec will fail (we exempt partitioning)
 # OpenSCAP Rule ID mount_option_dev_shm_nosuid will fail (we exempt partitioning)

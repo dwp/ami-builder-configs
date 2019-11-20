@@ -306,6 +306,7 @@ echo "Excluded from hardening.sh, added to Userdata in General AMI due to build 
 echo "#############################################################"
 echo "2.2.1.2 Ensure ntp is configured"
 # AL1 defaults to pre-hardened ntpd configuration
+sed -i -e '/^pool/d' /etc/ntp.conf
 
 echo "#############################################################"
 echo "2.2.1.3 Ensure chrony is configured"

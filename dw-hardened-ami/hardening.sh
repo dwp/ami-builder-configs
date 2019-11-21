@@ -141,7 +141,7 @@ mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
 
 echo "#############################################################"
 echo "1.3.2 Ensure filesystem integrity is regularly checked"
-echo "0 5 * * * root /usr/sbin/aide --check" > /etc/crond.d/99-CIS
+echo "0 5 * * * root /usr/sbin/aide --check" > /etc/cron.d/99-CIS
 
 echo "#############################################################"
 echo "1.4 Secure Boot Settings"

@@ -15,7 +15,7 @@ echo "1.1.1.7 Ensure mounting of udf filesystems is disabled"
 echo "1.1.1.8 Ensure mounting of FAT filesystems is disabled"
 echo "3.5.1 Ensure DCCP is disabled"
 echo "3.5.2 Ensure SCTP is disabled"
-echo "3.5.3 Ensure RDS is disabled" 
+echo "3.5.3 Ensure RDS is disabled"
 echo "3.5.4 Ensure TIPC is disabled"
 > /etc/modprobe.d/CIS.conf
 for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
@@ -896,7 +896,7 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
   else
     owner=$(stat -L -c "%U" "$dir")
     if [ "$owner" != "$user" ]; then
-      echo "The home directory ($dir) of user $user is owned by $owner." 
+      echo "The home directory ($dir) of user $user is owned by $owner."
     fi
   fi
 done
@@ -930,7 +930,7 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
     echo "The home directory ($dir) of user $user does not exist."
   else
     if [ ! -h "$dir/.forward" -a -f "$dir/.forward" ]; then
-      echo ".forward file $dir/.forward exists" 
+      echo ".forward file $dir/.forward exists"
     fi
   fi
 done

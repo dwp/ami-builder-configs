@@ -15,7 +15,7 @@ echo "1.1.1.7 Ensure mounting of udf filesystems is disabled"
 echo "1.1.1.8 Ensure mounting of FAT filesystems is disabled"
 echo "3.5.1 Ensure DCCP is disabled"
 echo "3.5.2 Ensure SCTP is disabled"
-echo "3.5.3 Ensure RDS is disabled" 
+echo "3.5.3 Ensure RDS is disabled"
 echo "3.5.4 Ensure TIPC is disabled"
 > /etc/modprobe.d/CIS.conf
 for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
@@ -141,7 +141,7 @@ mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
 
 echo "#############################################################"
 echo "1.3.2 Ensure filesystem integrity is regularly checked"
-echo "0 5 * * * root /usr/sbin/aide --check" > /etc/crond.d/99-CIS
+echo "0 5 * * * root /usr/sbin/aide --check" > /etc/cron.d/99-CIS
 
 echo "#############################################################"
 echo "1.4 Secure Boot Settings"
@@ -252,11 +252,11 @@ yum install -y \
 
 #create config file
 cat > /etc/selinux/config << EOF
-SELINUX=enforcing
+SELINUX=permissive
 SELINUXTYPE=targeted
 EOF
 
-sed -i -e 's/selinux=0/selinux=1 security=selinux/' /boot/grub/menu.lst
+sed -i -e 's/selinux=0/selinux=1 enforcing=0/' /boot/grub/menu.lst
 
 # Create AutoRelabel
 touch /.autorelabel
@@ -323,7 +323,7 @@ echo "Excluded from hardening.sh, added to Userdata in General AMI due to build 
 echo "#############################################################"
 echo "2.2.1.2 Ensure ntp is configured"
 # AL1 defaults to pre-hardened ntpd configuration
-sed -i -e 's/^pool/server 169.254.169.123 prefer iburst minpoll 3/' /etc/ntp.conf
+sed -i -e '/^pool/d' /etc/ntp.conf
 
 echo "#############################################################"
 echo "2.2.1.3 Ensure chrony is configured"
@@ -748,9 +748,7 @@ usermod -g 0 root
 
 echo "#############################################################"
 echo "5.4.4 Ensure default user umask is 027 or more restrictive"
-sed -i 's/^.*umask 0.*$/umask 027/' /etc/bashrc
-sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile
-sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile.d/*.sh
+echo "Exemption: EMR fails to bootstrap with a restrictive umask set"
 
 echo "#############################################################"
 echo "5.4.5 Ensure default user shell timeout is 900 seconds or less"
@@ -898,7 +896,7 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
   else
     owner=$(stat -L -c "%U" "$dir")
     if [ "$owner" != "$user" ]; then
-      echo "The home directory ($dir) of user $user is owned by $owner." 
+      echo "The home directory ($dir) of user $user is owned by $owner."
     fi
   fi
 done
@@ -932,7 +930,7 @@ cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin
     echo "The home directory ($dir) of user $user does not exist."
   else
     if [ ! -h "$dir/.forward" -a -f "$dir/.forward" ]; then
-      echo ".forward file $dir/.forward exists" 
+      echo ".forward file $dir/.forward exists"
     fi
   fi
 done
@@ -1087,6 +1085,4 @@ sed -i 's/^weekly/daily/' /etc/logrotate.conf
 service ip6tables stop
 chkconfig ip6tables off
 
-# OpenSCAP Rule ID umask_for_daemons
-sed -i 's/^umask 022/umask 027/' /etc/init.d/functions
-
+# OpenSCAP Rule ID umask_for_daemons will fail (EMR fails to bootstrap with a restrictive umask set)

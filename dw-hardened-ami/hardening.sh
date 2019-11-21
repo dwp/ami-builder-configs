@@ -252,11 +252,11 @@ yum install -y \
 
 #create config file
 cat > /etc/selinux/config << EOF
-SELINUX=enforcing
+SELINUX=permissive
 SELINUXTYPE=targeted
 EOF
 
-sed -i -e 's/selinux=0/selinux=1 security=selinux/' /boot/grub/menu.lst
+sed -i -e 's/selinux=0/selinux=1 enforcing=0/' /boot/grub/menu.lst
 
 # Create AutoRelabel
 touch /.autorelabel

@@ -13,3 +13,6 @@ echo "no_proxy=$no_proxy"
 # Install Java
 yum install -y java-1.8.0-openjdk-devel jq rng-tools
 chkconfig rngd on
+
+# Turn down cloud-init logs to prevent false CloudWatch alarms regarding DEBUG logs
+sed -i s/DEBUG/INFO/ /etc/cloud/cloud.cfg.d/05_logging.cfg

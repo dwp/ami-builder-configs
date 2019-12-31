@@ -10,7 +10,7 @@ echo "https_proxy=$https_proxy"
 echo "NO_PROXY=$NO_PROXY"
 echo "no_proxy=$no_proxy"
 
-# Update packages on the instance.
+# Update packages on the instance
 yum update -y
 
 # Install Yum plugin that will remove unused dependencies after a package is uninstalled

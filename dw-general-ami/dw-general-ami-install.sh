@@ -24,11 +24,15 @@ sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
        -e '/.-.cudatoolkit.*/ d' /etc/cloud/cloud.cfg
 
 yum install -y python27-devel python27-pip gcc
+
+pip install --upgrade awscli
+
 # Install acm cert helper
+export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -d'"' -f4)
 acm_cert_helper_repo=acm-pca-cert-generator
 acm_cert_helper_version=0.11.0
-pip install https://github.com/dwp/${acm_cert_helper_repo}/releases/download/${acm_cert_helper_version}/acm_cert_helper-${acm_cert_helper_version}.tar.gz
-pip install --upgrade awscli
+$(which aws) s3 cp s3://${s3_artefact_bucket_id}/acm-pca-cert-generator/acm_cert_helper-${acm_cert_helper_version}.tar.gz ./
+pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
 
 yum remove -y gcc python27-devel java-1.7.0 --remove-leaves
 

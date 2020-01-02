@@ -99,7 +99,7 @@
           "script": "{{download_dir}}/{{ provisioner }}",
           "execute_command": "sudo -E sh -eux -c '{% raw %}{{ .Path }}{% endraw %}'",
           "environment_vars": [
-            "ARTEFACT_BUCKET={% raw %}{{ user `artefact_bucket` }}{% endraw %}",
+            "ARTEFACT_BUCKET={% raw %}{{ user `artefact_bucket` }}{% endraw %}"
             {% if 'set_proxy' in event and event['set_proxy'] == true %}
             ,
               "HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %}",

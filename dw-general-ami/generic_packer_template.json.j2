@@ -97,18 +97,19 @@
         {
           "type": "shell",
           "script": "{{download_dir}}/{{ provisioner }}",
-          "execute_command": "sudo -E sh -eux -c '{% raw %}{{ .Path }}{% endraw %}'"
-          {% if 'set_proxy' in event and event['set_proxy'] == true %}
-          ,
+          "execute_command": "sudo -E sh -eux -c '{% raw %}{{ .Path }}{% endraw %}'",
           "environment_vars": [
-            "HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %}",
-            "HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %}",
-            "http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
-            "https_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
-            "NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %}",
-            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}"
+            "ARTEFACT_BUCKET={% raw %}{{ user `artefact_bucket` }}{% endraw %}",
+            {% if 'set_proxy' in event and event['set_proxy'] == true %}
+            ,
+              "HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %}",
+              "HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %}",
+              "http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
+              "https_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
+              "NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %}",
+              "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}"
+            {% endif %}
           ]
-          {% endif %}
         }
         {% endfor %}
     {% endif %}

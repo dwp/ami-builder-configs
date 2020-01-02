@@ -54,6 +54,7 @@
             "sudo sh -c 'echo \"export https_proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/environment'",
             "sudo sh -c 'echo \"export NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %} \" >> /etc/environment'",
             "sudo sh -c 'echo \"export no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %} \" >> /etc/environment'",
+            "sudo sh -c 'echo \"export ARTEFACT_BUCKET={% raw %}{{ user `artefact_bucket` }}{% endraw %} \" >> /etc/environment'",
             "sudo sh -c 'echo \"proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/yum.conf'"
           ]
         }

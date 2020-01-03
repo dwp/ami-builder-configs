@@ -45,7 +45,7 @@
         {
           "type": "shell",
           "inline": [
-            "sudo sh -c 'echo \"export ARTEFACT_BUCKET={% raw %}{{ user `artefact_bucket` }}{% endraw %} \" >> /etc/environment'"
+            "sudo sh -c 'echo \"export ARTEFACT_BUCKET={% raw %}{{ user `artefact_bucket` }}{% endraw %}\" >> /etc/environment'"
           ]
         },
     {% endif %}

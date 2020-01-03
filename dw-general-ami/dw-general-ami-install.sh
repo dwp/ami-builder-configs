@@ -9,7 +9,7 @@ echo "http_proxy=$http_proxy"
 echo "https_proxy=$https_proxy"
 echo "NO_PROXY=$NO_PROXY"
 echo "no_proxy=$no_proxy"
-echo "ARTEFACT_BUCKET=$ARTEFACT_BUCKET"
+echo "ARTEFACT_BUCKET=${ARTEFACT_BUCKET}test"
 
 # Update packages on the instance
 yum update -y
@@ -26,17 +26,13 @@ sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
 
 yum install -y python27-devel python27-pip gcc
 
-echo test1
-
 pip install --upgrade awscli
-
-echo test2
 
 # Install acm cert helper
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -d'"' -f4)
 acm_cert_helper_repo=acm-pca-cert-generator
 acm_cert_helper_version=0.11.0
-echo "Download from s3://$ARTEFACT_BUCKET/acm-pca-cert-generator/acm_cert_helper-${acm_cert_helper_version}.tar.gz complete with result $?"
+echo "Download from s3://$ARTEFACT_BUCKET/acm-pca-cert-generator/acm_cert_helper-${acm_cert_helper_version}.tar.gz"
 $(which aws) s3 cp s3://$ARTEFACT_BUCKET/acm-pca-cert-generator/acm_cert_helper-${acm_cert_helper_version}.tar.gz .
 pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
 

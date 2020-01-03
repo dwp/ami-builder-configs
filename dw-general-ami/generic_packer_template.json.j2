@@ -47,7 +47,7 @@
           "inline": [
             "sudo sh -c 'echo \"export ARTEFACT_BUCKET={% raw %}{{ user `artefact_bucket` }}{% endraw %} \" >> /etc/environment'"
           ]
-        }
+        },
     {% endif %}
 
     {% if 'set_proxy' in event and event['set_proxy'] == true %}

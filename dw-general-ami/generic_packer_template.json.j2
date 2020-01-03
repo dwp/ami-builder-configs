@@ -1,9 +1,11 @@
 {
     "variables": {
+        {% if 'artefact_bucket' in event %}
+        "artefact_bucket": "{{ event['artefact_bucket'] }}",
+        {% endif %}
         "http_proxy": "{% raw %}{{ env `HTTP_PROXY` }}{% endraw %}",
         "https_proxy": "{% raw %}{{ env `HTTPS_PROXY` }}{% endraw %}",
         "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}",
-        "artefact_bucket": "{% raw %}{{ env `ARTEFACT_BUCKET` }}{% endraw %}"
     },
     "builders": [{
       "type": "amazon-ebs",

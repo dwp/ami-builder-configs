@@ -1,5 +1,8 @@
 {
     "variables": {
+        {% if 'artefact_bucket' in event %}
+        "artefact_bucket": "{{ event['artefact_bucket'] }}",
+        {% endif %}
         "http_proxy": "{% raw %}{{ env `HTTP_PROXY` }}{% endraw %}",
         "https_proxy": "{% raw %}{{ env `HTTPS_PROXY` }}{% endraw %}",
         "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}"
@@ -17,7 +20,7 @@
         "most_recent": true
       },
       "instance_type": "{{ event['instance_type'] or 't2.micro' }}",
-      "iam_instance_profile": 'instance_ami_builder',,
+      "iam_instance_profile": "instance_ami_builder",
       "ssh_username": "{{ event['ssh_username'] or 'ec2-user' }}",
       "subnet_id": "{{ event['subnet_id'] }}",
       "ami_name": "dw-general-ami-{{ '{{' }} timestamp {{ '}}' }}",
@@ -38,6 +41,14 @@
       "encrypt_boot": false
     }],
     "provisioners": [
+    {% if 'artefact_bucket' in event %}
+        {
+          "type": "shell",
+          "inline": [
+            "sudo sh -c 'echo \"export ARTEFACT_BUCKET={% raw %}{{ user `artefact_bucket` }}{% endraw %}\" >> /etc/environment'"
+          ]
+        },
+    {% endif %}
     {% if 'set_proxy' in event and event['set_proxy'] == true %}
         {
           "type": "shell",

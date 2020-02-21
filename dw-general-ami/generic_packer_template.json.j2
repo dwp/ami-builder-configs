@@ -8,6 +8,14 @@
         "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}"
     },
     "builders": [{
+      "launch_block_device_mappings": [
+        {
+          "device_name": "/dev/sda",
+          "volume_type": "io1",
+          "volume_size": 2000,
+          "delete_on_termination": true
+        }
+      ],
       "type": "amazon-ebs",
       "source_ami_filter": {
         "filters": {

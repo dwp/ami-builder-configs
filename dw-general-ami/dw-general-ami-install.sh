@@ -17,6 +17,24 @@ yum update -y
 # Install Yum plugin that will remove unused dependencies after a package is uninstalled
 yum install -y yum-plugin-remove-with-leaves
 
+# Install AWS Inspector Agent for DW-3495
+echo "Installing AWS Inspector Agent"
+
+cat > FILE << 'AWSAGENTPROXYCONFIG'
+export https_proxy=$https_proxy
+export http_proxy=$http_proxy
+export no_proxy=$no_proxy
+AWSAGENTPROXYCONFIG
+
+curl -O https://inspector-agent.amazonaws.com/linux/latest/install
+bash install
+if [[ $? -eq 0 ]]; then
+  echo "AWS Inspector Agent install successful"
+else
+  echo "AWS Inspector Agent install failed"
+fi
+rm install
+
 # Tidy cloud.cfg to prevent yum locks in hardened AMI builds
 sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
        -e 's/repo_upgrade_exclude:/repo_update: false/' \

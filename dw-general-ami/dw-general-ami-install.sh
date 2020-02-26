@@ -20,13 +20,18 @@ yum install -y yum-plugin-remove-with-leaves
 # Install AWS Inspector Agent for DW-3495
 echo "Installing AWS Inspector Agent"
 
-cat > FILE << 'AWSAGENTPROXYCONFIG'
+echo "Setting AWS Inspector Agent Proxy Config"
+cat > /etc/init.d/awsagent.env << AWSAGENTPROXYCONFIG
 export https_proxy=$https_proxy
 export http_proxy=$http_proxy
 export no_proxy=$no_proxy
 AWSAGENTPROXYCONFIG
+cat /etc/init.d/awsagent.env
 
-curl -O https://inspector-agent.amazonaws.com/linux/latest/install
+echo "Obtaining AWS Inspector Agent installer"
+curl -x $http_proxy -O https://inspector-agent.amazonaws.com/linux/latest/install
+
+echo "Running AWS Inspector Agent installer"
 bash install
 if [[ $? -eq 0 ]]; then
   echo "AWS Inspector Agent install successful"

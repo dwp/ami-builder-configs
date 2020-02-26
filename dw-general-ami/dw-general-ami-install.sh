@@ -39,6 +39,7 @@ else
   echo "AWS Inspector Agent install failed"
 fi
 rm install
+rm /etc/init.d/awsagent.env
 
 # Tidy cloud.cfg to prevent yum locks in hardened AMI builds
 sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \

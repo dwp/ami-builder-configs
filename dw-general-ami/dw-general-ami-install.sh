@@ -21,7 +21,7 @@ yum install -y yum-plugin-remove-with-leaves
 echo "Installing AWS Inspector Agent"
 
 echo "Setting AWS Inspector Agent Proxy Config"
-cat > /etc/init.d/awsagent.env << 'AWSAGENTPROXYCONFIG'
+cat > /etc/init.d/awsagent.env << AWSAGENTPROXYCONFIG
 export https_proxy=$https_proxy
 export http_proxy=$http_proxy
 export no_proxy=$no_proxy

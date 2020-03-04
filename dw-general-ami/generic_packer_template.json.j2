@@ -40,7 +40,7 @@
       "region": "{{ event['region'] }}",
       "encrypt_boot": false,
       {% if 'run_tags' in event %}
-      "run_tags",:, "{{ event['run_tags'] }}",
+      "run_tags",:, "{{ event['run_tags'] }}"
       {% endif %}
     }],
     "provisioners": [

@@ -39,6 +39,9 @@
       {% endif %}
       "region": "{{ event['region'] }}",
       "encrypt_boot": false
+      {% if 'tags' in event %}
+      "tags": "{{ event['tags'] }}",
+      {% endif %}
     }],
     "provisioners": [
     {% if 'artefact_bucket' in event %}

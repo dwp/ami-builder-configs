@@ -39,7 +39,7 @@
       "region": "{{ event['region'] }}",
       "encrypt_boot": false,
       {% if 'tags' in event %}
-      "tags": "{{ event['tags'] }}",
+      "tags": "{{ event['tags'] }}"
       {% endif %}
     }],
     "provisioners": [

@@ -39,7 +39,7 @@
       {% endif %}
       "region": "{{ event['region'] }}",
       {% if 'run_tags' in event %}
-      "run_tags": "{{ event['run_tags']|tojson }}",
+      "run_tags": {{ event['run_tags']|tojson }},
       {% endif %}
       "encrypt_boot": false
     }],

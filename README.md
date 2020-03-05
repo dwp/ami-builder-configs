@@ -112,6 +112,7 @@ An example is given below:
             "security_group_id":              "${SECURITY_GROUP_ID}",
             "ami_users":                      "${AMI_USERS}",
             "region":                         "${REGION}"
+            "run_tags":                       ${RUN_TAGS}
             }
             EOF
 ```

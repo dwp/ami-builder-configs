@@ -3,6 +3,8 @@ set -eEu
 
 # Make changes to hardened-ami that are required for EMR to work
 
+# Make Concourse green again
+
 # Change SELinux config to be permissive
 cat > /etc/selinux/config << EOF
 SELINUX=permissive

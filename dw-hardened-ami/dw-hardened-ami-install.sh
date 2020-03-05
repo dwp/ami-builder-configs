@@ -3,6 +3,8 @@ set -eEu
 
 ## Script to prepare general Dataworks AMI
 
+# Make Concourse green again
+
 echo "HTTP_PROXY=$HTTP_PROXY"
 echo "HTTPS_PROXY=$HTTPS_PROXY"
 echo "http_proxy=$http_proxy"

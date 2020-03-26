@@ -24,6 +24,15 @@
       "ssh_username": "{{ event['ssh_username'] or 'ec2-user' }}",
       "subnet_id": "{{ event['subnet_id'] }}",
       "ami_name": "dw-general-ami-{{ '{{' }} timestamp {{ '}}' }}",
+      "ami_block_device_mappings": [
+        {
+          "device_name": "/dev/xvda",
+          "volume_type": "io1",
+          "volume_size": 40,
+          "iops": 2000,
+          "delete_on_termination": true
+        }
+      ],
       {% if 'profile' in event %}
       "profile": "{{ event['profile'] }}",
       {% endif %}

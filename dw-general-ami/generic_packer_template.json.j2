@@ -24,8 +24,9 @@
       "ssh_username": "{{ event['ssh_username'] or 'ec2-user' }}",
       "subnet_id": "{{ event['subnet_id'] }}",
       "ami_name": "dw-general-ami-{{ '{{' }} timestamp {{ '}}' }}",
-      "launch_block_device_mappings": [
+      "ami_block_device_mappings": [
         {
+          "device_name": "/dev/xvda",
           "volume_type": "io1",
           "volume_size": 40,
           "iops": 2000

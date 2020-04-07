@@ -49,8 +49,10 @@ sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
        -e '/.-.cudatoolkit.*/ d' /etc/cloud/cloud.cfg
 
 yum install -y python27-devel python27-pip gcc
+yum install -y python36 python36-pip
 
 pip install --upgrade awscli
+pip-3.6 install --upgrade awscli
 
 # Install acm cert helper
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -d'"' -f4)

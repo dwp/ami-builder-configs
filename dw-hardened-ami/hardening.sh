@@ -564,203 +564,203 @@ find /var/log -type f -exec chmod 0640 {} \;
 echo "#############################################################"
 echo "4.3 Ensure logrotate is configured"
 echo "Exemption: userdata is used to configure log rotation via logrotate"
-#
-#echo "#############################################################"
-#echo "5.1.2 Ensure permissions on /etc/crontab are configured"
-#echo "5.1.3 Ensure permissions on /etc/cron.hourly are configured"
-#echo "5.1.4 Ensure permissions on /etc/cron.daily are configured"
-#echo "5.1.5 Ensure permissions on /etc/cron.weekly are configured"
-#echo "5.1.6 Ensure permissions on /etc/cron.monthly are configured"
-#chmod 0600 /etc/crontab
-#chmod 0600 /etc/cron.hourly
-#chmod 0600 /etc/cron.daily
-#chmod 0600 /etc/cron.weekly
-#chmod 0600 /etc/cron.monthly
-#
-#echo "#############################################################"
-#echo "5.1.7 Ensure permissions on /etc/cron.d are configured"
-#chmod 0700 /etc/cron.d
-#
-#echo "#############################################################"
-#echo "5.1.8 Ensure at/cron is restricted to authorized users"
-#rm -f /etc/cron.deny /etc/at.deny
-#touch /etc/cron.allow /etc/at.allow
-#chmod 0600 /etc/cron.allow /etc/at.allow
-#chown root:root /etc/cron.allow /etc/at.allow
-#
-#echo "#############################################################"
-#echo "5.2.1 Ensure permissions on /etc/ssh/sshd_config are configured"
-#chown root:root /etc/ssh/sshd_config
-#chmod 0600 /etc/ssh/sshd_config
-#
-#echo "#############################################################"
-#echo "5.2.2 Ensure SSH Protocol is set to 2"
-#echo "5.2.3 Ensure SSH LogLevel is set to INFO"
-#echo "5.2.4 Ensure SSH X11 forwarding is disabled"
-#echo "5.2.5 Ensure SSH MaxAuthTries is set to 4 or less"
-#echo "5.2.6 Ensure SSH IgnoreRhosts is enabled"
-#echo "5.2.7 Ensure SSH HostbasedAuthentication is disabled"
-#echo "5.2.8 Ensure SSH root login is disabled"
-#echo "5.2.9 Ensure SSH PermitEmptyPasswords is disabled"
-#echo "5.2.10 Ensure SSH PermitUserEnvironment is disabled"
-#echo "5.2.11 Ensure only approved MAC algorithms are used"
-#echo "5.2.12 Ensure SSH Idle Timeout Interval is configured"
-#echo "5.2.13 Ensure SSH LoginGraceTime is set to one minute or less"
-#echo "5.2.14 Ensure SSH access is limited"
-#echo "5.2.15 Ensure SSH warning banner is configured"
-#echo "Configuring SSH"
-#echo Create sshusers and no-ssh-access groups
-#groupadd sshusers || true
-#groupadd no-ssh-access || true
-#
-#echo add ec2-user to sshusers group to allow access
-#usermod -a -G sshusers ec2-user
-#
-#echo apply hardened SSHD config
-#cat > /etc/ssh/sshd_config << SSHCONFIG
-#Port 22
-#ListenAddress 0.0.0.0
-#Protocol 2
-#HostKey /etc/ssh/ssh_host_rsa_key
-#HostKey /etc/ssh/ssh_host_dsa_key
-#HostKey /etc/ssh/ssh_host_ecdsa_key
-#HostKey /etc/ssh/ssh_host_ed25519_key
-#UsePrivilegeSeparation yes
-#KeyRegenerationInterval 3600
-#ServerKeyBits 2048
-#SyslogFacility AUTH
-#LogLevel INFO
-#ClientAliveInterval 300
-#ClientAliveCountMax 0
-#LoginGraceTime 60
-#PermitRootLogin no
-#StrictModes yes
-#MaxAuthTries 4
-#MaxSessions 10
-#RSAAuthentication yes
-#PubkeyAuthentication yes
-#AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys
-#AuthorizedKeysCommandUser nobody
-#IgnoreRhosts yes
-#RhostsRSAAuthentication no
-#HostbasedAuthentication no
-#PermitEmptyPasswords no
-#ChallengeResponseAuthentication no
-#PasswordAuthentication no
-#KerberosAuthentication no
-#GSSAPIAuthentication yes
-#GSSAPICleanupCredentials yes
-#X11Forwarding no
-#X11DisplayOffset 10
-#PrintMotd no
-#PrintLastLog yes
-#TCPKeepAlive yes
-#Banner /etc/issue
-#AcceptEnv LANG LC_* XMODIFIERS
-#Subsystem sftp    /usr/libexec/openssh/sftp-server
-#UsePAM yes
-#UseDNS no
-#DenyUsers no-ssh-access
-#AllowGroups sshusers
-## OpenSCAP Rule ID sshd_use_approved_ciphers
-## OpenSCAP will fail with this cipher set, but ours is more strict
-#Ciphers aes256-ctr,aes192-ctr,aes128-ctr
-#MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
-#PermitUserEnvironment no
-#SSHCONFIG
-#
-#echo "#############################################################"
-#echo "5.3.1 Ensure password creation requirements are configured"
-#echo "5.3.2 Ensure lockout for failed password attempts is configured"
-#echo "5.3.3 Ensure password reuse is limited"
-#echo "5.3.4 Ensure password hashing algorithm is SHA-512"
-## See https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#regular-users
-#sed -i 's/^# minlen.*$/minlen = 24/' /etc/security/pwquality.conf
-#sed -i 's/^# difok.*$/difok = 1/' /etc/security/pwquality.conf
-## AL1 defaults are generally better than CIS requirements
-## 5.3.1 - Check /etc/pam.d/password-auth and /etc/pam.d/system-auth contain:
-## password requisite pam_pwquality.so try_first_pass retry=3
-## 5.3.2 - Ensure lockout for failed password attempts is configured
-## auth required pam_faillock.so preauth audit silent deny=10 unlock_time=900
-## auth [success=1 default=bad] pam_unix.so
-## auth [default=die] pam_faillock.so authfail audit deny=10 unlock_time=900
-## auth sufficient pam_faillock.so authsucc audit deny=10 unlock_time=900
-## OpenSCAP Rule ID accounts_passwords_pam_faillock_deny will fail (we deny at 10 in line with our policy)
-## OpenSCAP Rule ID removed nullok entries
-#cat > /etc/pam.d/system-auth << PAMSYSCONFIG
-#auth        required                   pam_env.so
-#auth        required                   pam_faildelay.so delay=2000000
-#auth        required                   pam_faillock.so preauth audit silent deny=10 unlock_time=900
-#auth        sufficient                 pam_unix.so try_first_pass
-#auth        sufficient                 pam_faillock.so authsucc audit deny=10 unlock_time=900
-#auth        requisite                  pam_succeed_if.so uid >= 500 quiet_success
-#auth        required                   pam_deny.so
-#auth        [success=1 default=bad]    pam_unix.so
-#auth        [default=die]              pam_faillock.so authfail audit deny=10 unlock_time=900
-#
-#account     required                   pam_faillock.so
-#account     required                   pam_unix.so
-#account     sufficient                 pam_localuser.so
-#account     sufficient                 pam_succeed_if.so uid < 500 quiet
-#account     required                   pam_permit.so
-#
-#password    requisite                  pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
-#password    sufficient                 pam_unix.so sha512 shadow try_first_pass use_authtok remember=5
-#password    required                   pam_deny.so
-#
-#session     optional                   pam_keyinit.so revoke
-#session     required                   pam_limits.so
-#-session    optional                   pam_systemd.so
-#session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
-#session     required                   pam_unix.so
-#PAMSYSCONFIG
-#
-#echo "#############################################################"
-#echo "5.4.1.1 Ensure password expiration is 365 days or less"
-#echo "Whilst no users will be logging on to this system, our policy is 90 days for regular users and 365 for machine users"
-## Refs: https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#regular-users
-##       https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#machine-accounts
-#sed -i 's/^PASS_MAX_DAYS.*$/PASS_MAX_DAYS 90/' /etc/login.defs
-#
-#echo "#############################################################"
-#echo "5.4.1.2 Ensure minimum days between password changes is 7 or more"
-#sed -i 's/^PASS_MIN_DAYS.*$/PASS_MIN_DAYS 7/' /etc/login.defs
-#
-#echo "#############################################################"
-#echo "5.4.1.3 Ensure password expiration warning days is 7 or more"
-#sed -i 's/^PASS_WARN_AGE.*$/PASS_WARN_AGE 7/' /etc/login.defs
-#
-#echo "#############################################################"
-#echo "5.4.1.4 Ensure inactive password lock is 30 days or less"
-#useradd -D -f 30
-#
-#echo "#############################################################"
-#echo "5.4.1.5 Ensure all users last password change date is in the past"
-#echo "Exemption: we have no users that we configure with passwords"
-#
-#echo "#############################################################"
-#echo "5.4.2 Ensure system accounts are non-login"
-#echo "Exemption: No users in AL1 have this, CWA adds it later but we have dealt with this upstream"
-#
-#echo "#############################################################"
-#echo "5.4.3 Ensure default group for the root account is GID 0"
-#usermod -g 0 root
-#
-#echo "#############################################################"
-#echo "5.4.4 Ensure default user umask is 027 or more restrictive"
-#sed -i 's/^.*umask 0.*$/umask 027/' /etc/bashrc
-#sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile
-#sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile.d/*.sh
-#
-#echo "#############################################################"
-#echo "5.4.5 Ensure default user shell timeout is 900 seconds or less"
-#echo 'TMOUT=600' >> /etc/bashrc
-#echo 'TMOUT=600' >> /etc/profile
-#
-#echo "#############################################################"
-#echo "5.5 Ensure access to the su command is restricted"
-#sed -i '/#auth.*required.*pam_wheel.so/s/^# *//' /etc/pam.d/su
-#
+
+echo "#############################################################"
+echo "5.1.2 Ensure permissions on /etc/crontab are configured"
+echo "5.1.3 Ensure permissions on /etc/cron.hourly are configured"
+echo "5.1.4 Ensure permissions on /etc/cron.daily are configured"
+echo "5.1.5 Ensure permissions on /etc/cron.weekly are configured"
+echo "5.1.6 Ensure permissions on /etc/cron.monthly are configured"
+chmod 0600 /etc/crontab
+chmod 0600 /etc/cron.hourly
+chmod 0600 /etc/cron.daily
+chmod 0600 /etc/cron.weekly
+chmod 0600 /etc/cron.monthly
+
+echo "#############################################################"
+echo "5.1.7 Ensure permissions on /etc/cron.d are configured"
+chmod 0700 /etc/cron.d
+
+echo "#############################################################"
+echo "5.1.8 Ensure at/cron is restricted to authorized users"
+rm -f /etc/cron.deny /etc/at.deny
+touch /etc/cron.allow /etc/at.allow
+chmod 0600 /etc/cron.allow /etc/at.allow
+chown root:root /etc/cron.allow /etc/at.allow
+
+echo "#############################################################"
+echo "5.2.1 Ensure permissions on /etc/ssh/sshd_config are configured"
+chown root:root /etc/ssh/sshd_config
+chmod 0600 /etc/ssh/sshd_config
+
+echo "#############################################################"
+echo "5.2.2 Ensure SSH Protocol is set to 2"
+echo "5.2.3 Ensure SSH LogLevel is set to INFO"
+echo "5.2.4 Ensure SSH X11 forwarding is disabled"
+echo "5.2.5 Ensure SSH MaxAuthTries is set to 4 or less"
+echo "5.2.6 Ensure SSH IgnoreRhosts is enabled"
+echo "5.2.7 Ensure SSH HostbasedAuthentication is disabled"
+echo "5.2.8 Ensure SSH root login is disabled"
+echo "5.2.9 Ensure SSH PermitEmptyPasswords is disabled"
+echo "5.2.10 Ensure SSH PermitUserEnvironment is disabled"
+echo "5.2.11 Ensure only approved MAC algorithms are used"
+echo "5.2.12 Ensure SSH Idle Timeout Interval is configured"
+echo "5.2.13 Ensure SSH LoginGraceTime is set to one minute or less"
+echo "5.2.14 Ensure SSH access is limited"
+echo "5.2.15 Ensure SSH warning banner is configured"
+echo "Configuring SSH"
+echo Create sshusers and no-ssh-access groups
+groupadd sshusers || true
+groupadd no-ssh-access || true
+
+echo add ec2-user to sshusers group to allow access
+usermod -a -G sshusers ec2-user
+
+echo apply hardened SSHD config
+cat > /etc/ssh/sshd_config << SSHCONFIG
+Port 22
+ListenAddress 0.0.0.0
+Protocol 2
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+UsePrivilegeSeparation yes
+KeyRegenerationInterval 3600
+ServerKeyBits 2048
+SyslogFacility AUTH
+LogLevel INFO
+ClientAliveInterval 300
+ClientAliveCountMax 0
+LoginGraceTime 60
+PermitRootLogin no
+StrictModes yes
+MaxAuthTries 4
+MaxSessions 10
+RSAAuthentication yes
+PubkeyAuthentication yes
+AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys
+AuthorizedKeysCommandUser nobody
+IgnoreRhosts yes
+RhostsRSAAuthentication no
+HostbasedAuthentication no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+PasswordAuthentication no
+KerberosAuthentication no
+GSSAPIAuthentication yes
+GSSAPICleanupCredentials yes
+X11Forwarding no
+X11DisplayOffset 10
+PrintMotd no
+PrintLastLog yes
+TCPKeepAlive yes
+Banner /etc/issue
+AcceptEnv LANG LC_* XMODIFIERS
+Subsystem sftp    /usr/libexec/openssh/sftp-server
+UsePAM yes
+UseDNS no
+DenyUsers no-ssh-access
+AllowGroups sshusers
+# OpenSCAP Rule ID sshd_use_approved_ciphers
+# OpenSCAP will fail with this cipher set, but ours is more strict
+Ciphers aes256-ctr,aes192-ctr,aes128-ctr
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
+PermitUserEnvironment no
+SSHCONFIG
+
+echo "#############################################################"
+echo "5.3.1 Ensure password creation requirements are configured"
+echo "5.3.2 Ensure lockout for failed password attempts is configured"
+echo "5.3.3 Ensure password reuse is limited"
+echo "5.3.4 Ensure password hashing algorithm is SHA-512"
+# See https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#regular-users
+sed -i 's/^# minlen.*$/minlen = 24/' /etc/security/pwquality.conf
+sed -i 's/^# difok.*$/difok = 1/' /etc/security/pwquality.conf
+# AL1 defaults are generally better than CIS requirements
+# 5.3.1 - Check /etc/pam.d/password-auth and /etc/pam.d/system-auth contain:
+# password requisite pam_pwquality.so try_first_pass retry=3
+# 5.3.2 - Ensure lockout for failed password attempts is configured
+# auth required pam_faillock.so preauth audit silent deny=10 unlock_time=900
+# auth [success=1 default=bad] pam_unix.so
+# auth [default=die] pam_faillock.so authfail audit deny=10 unlock_time=900
+# auth sufficient pam_faillock.so authsucc audit deny=10 unlock_time=900
+# OpenSCAP Rule ID accounts_passwords_pam_faillock_deny will fail (we deny at 10 in line with our policy)
+# OpenSCAP Rule ID removed nullok entries
+cat > /etc/pam.d/system-auth << PAMSYSCONFIG
+auth        required                   pam_env.so
+auth        required                   pam_faildelay.so delay=2000000
+auth        required                   pam_faillock.so preauth audit silent deny=10 unlock_time=900
+auth        sufficient                 pam_unix.so try_first_pass
+auth        sufficient                 pam_faillock.so authsucc audit deny=10 unlock_time=900
+auth        requisite                  pam_succeed_if.so uid >= 500 quiet_success
+auth        required                   pam_deny.so
+auth        [success=1 default=bad]    pam_unix.so
+auth        [default=die]              pam_faillock.so authfail audit deny=10 unlock_time=900
+
+account     required                   pam_faillock.so
+account     required                   pam_unix.so
+account     sufficient                 pam_localuser.so
+account     sufficient                 pam_succeed_if.so uid < 500 quiet
+account     required                   pam_permit.so
+
+password    requisite                  pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
+password    sufficient                 pam_unix.so sha512 shadow try_first_pass use_authtok remember=5
+password    required                   pam_deny.so
+
+session     optional                   pam_keyinit.so revoke
+session     required                   pam_limits.so
+-session    optional                   pam_systemd.so
+session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+session     required                   pam_unix.so
+PAMSYSCONFIG
+
+echo "#############################################################"
+echo "5.4.1.1 Ensure password expiration is 365 days or less"
+echo "Whilst no users will be logging on to this system, our policy is 90 days for regular users and 365 for machine users"
+# Refs: https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#regular-users
+#       https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#machine-accounts
+sed -i 's/^PASS_MAX_DAYS.*$/PASS_MAX_DAYS 90/' /etc/login.defs
+
+echo "#############################################################"
+echo "5.4.1.2 Ensure minimum days between password changes is 7 or more"
+sed -i 's/^PASS_MIN_DAYS.*$/PASS_MIN_DAYS 7/' /etc/login.defs
+
+echo "#############################################################"
+echo "5.4.1.3 Ensure password expiration warning days is 7 or more"
+sed -i 's/^PASS_WARN_AGE.*$/PASS_WARN_AGE 7/' /etc/login.defs
+
+echo "#############################################################"
+echo "5.4.1.4 Ensure inactive password lock is 30 days or less"
+useradd -D -f 30
+
+echo "#############################################################"
+echo "5.4.1.5 Ensure all users last password change date is in the past"
+echo "Exemption: we have no users that we configure with passwords"
+
+echo "#############################################################"
+echo "5.4.2 Ensure system accounts are non-login"
+echo "Exemption: No users in AL1 have this, CWA adds it later but we have dealt with this upstream"
+
+echo "#############################################################"
+echo "5.4.3 Ensure default group for the root account is GID 0"
+usermod -g 0 root
+
+echo "#############################################################"
+echo "5.4.4 Ensure default user umask is 027 or more restrictive"
+sed -i 's/^.*umask 0.*$/umask 027/' /etc/bashrc
+sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile
+sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile.d/*.sh
+
+echo "#############################################################"
+echo "5.4.5 Ensure default user shell timeout is 900 seconds or less"
+echo 'TMOUT=600' >> /etc/bashrc
+echo 'TMOUT=600' >> /etc/profile
+
+echo "#############################################################"
+echo "5.5 Ensure access to the su command is restricted"
+sed -i '/#auth.*required.*pam_wheel.so/s/^# *//' /etc/pam.d/su
+
 #echo "#############################################################"
 #echo "6.1.1 Audit system file permissions"
 #echo "Exemption: We are not auditing all system files, unscored"

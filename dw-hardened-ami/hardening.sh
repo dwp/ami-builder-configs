@@ -669,59 +669,59 @@ MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@op
 PermitUserEnvironment no
 SSHCONFIG
 
-#echo "#############################################################"
-#echo "5.3.1 Ensure password creation requirements are configured"
-#echo "5.3.2 Ensure lockout for failed password attempts is configured"
-#echo "5.3.3 Ensure password reuse is limited"
-#echo "5.3.4 Ensure password hashing algorithm is SHA-512"
-## See https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#regular-users
-#sed -i 's/^# minlen.*$/minlen = 24/' /etc/security/pwquality.conf
-#sed -i 's/^# difok.*$/difok = 1/' /etc/security/pwquality.conf
-## AL1 defaults are generally better than CIS requirements
-## 5.3.1 - Check /etc/pam.d/password-auth and /etc/pam.d/system-auth contain:
-## password requisite pam_pwquality.so try_first_pass retry=3
-## 5.3.2 - Ensure lockout for failed password attempts is configured
-## auth required pam_faillock.so preauth audit silent deny=10 unlock_time=900
-## auth [success=1 default=bad] pam_unix.so
-## auth [default=die] pam_faillock.so authfail audit deny=10 unlock_time=900
-## auth sufficient pam_faillock.so authsucc audit deny=10 unlock_time=900
-## OpenSCAP Rule ID accounts_passwords_pam_faillock_deny will fail (we deny at 10 in line with our policy)
-## OpenSCAP Rule ID removed nullok entries
-#cat > /etc/pam.d/system-auth << PAMSYSCONFIG
-#auth        required                   pam_env.so
-#auth        required                   pam_faildelay.so delay=2000000
-#auth        required                   pam_faillock.so preauth audit silent deny=10 unlock_time=900
-#auth        sufficient                 pam_unix.so try_first_pass
-#auth        sufficient                 pam_faillock.so authsucc audit deny=10 unlock_time=900
-#auth        requisite                  pam_succeed_if.so uid >= 500 quiet_success
-#auth        required                   pam_deny.so
-#auth        [success=1 default=bad]    pam_unix.so
-#auth        [default=die]              pam_faillock.so authfail audit deny=10 unlock_time=900
-#
-#account     required                   pam_faillock.so
-#account     required                   pam_unix.so
-#account     sufficient                 pam_localuser.so
-#account     sufficient                 pam_succeed_if.so uid < 500 quiet
-#account     required                   pam_permit.so
-#
-#password    requisite                  pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
-#password    sufficient                 pam_unix.so sha512 shadow try_first_pass use_authtok remember=5
-#password    required                   pam_deny.so
-#
-#session     optional                   pam_keyinit.so revoke
-#session     required                   pam_limits.so
-#-session    optional                   pam_systemd.so
-#session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
-#session     required                   pam_unix.so
-#PAMSYSCONFIG
-#
-#echo "#############################################################"
-#echo "5.4.1.1 Ensure password expiration is 365 days or less"
-#echo "Whilst no users will be logging on to this system, our policy is 90 days for regular users and 365 for machine users"
-## Refs: https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#regular-users
-##       https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#machine-accounts
-#sed -i 's/^PASS_MAX_DAYS.*$/PASS_MAX_DAYS 90/' /etc/login.defs
-#
+echo "#############################################################"
+echo "5.3.1 Ensure password creation requirements are configured"
+echo "5.3.2 Ensure lockout for failed password attempts is configured"
+echo "5.3.3 Ensure password reuse is limited"
+echo "5.3.4 Ensure password hashing algorithm is SHA-512"
+# See https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#regular-users
+sed -i 's/^# minlen.*$/minlen = 24/' /etc/security/pwquality.conf
+sed -i 's/^# difok.*$/difok = 1/' /etc/security/pwquality.conf
+# AL1 defaults are generally better than CIS requirements
+# 5.3.1 - Check /etc/pam.d/password-auth and /etc/pam.d/system-auth contain:
+# password requisite pam_pwquality.so try_first_pass retry=3
+# 5.3.2 - Ensure lockout for failed password attempts is configured
+# auth required pam_faillock.so preauth audit silent deny=10 unlock_time=900
+# auth [success=1 default=bad] pam_unix.so
+# auth [default=die] pam_faillock.so authfail audit deny=10 unlock_time=900
+# auth sufficient pam_faillock.so authsucc audit deny=10 unlock_time=900
+# OpenSCAP Rule ID accounts_passwords_pam_faillock_deny will fail (we deny at 10 in line with our policy)
+# OpenSCAP Rule ID removed nullok entries
+cat > /etc/pam.d/system-auth << PAMSYSCONFIG
+auth        required                   pam_env.so
+auth        required                   pam_faildelay.so delay=2000000
+auth        required                   pam_faillock.so preauth audit silent deny=10 unlock_time=900
+auth        sufficient                 pam_unix.so try_first_pass
+auth        sufficient                 pam_faillock.so authsucc audit deny=10 unlock_time=900
+auth        requisite                  pam_succeed_if.so uid >= 500 quiet_success
+auth        required                   pam_deny.so
+auth        [success=1 default=bad]    pam_unix.so
+auth        [default=die]              pam_faillock.so authfail audit deny=10 unlock_time=900
+
+account     required                   pam_faillock.so
+account     required                   pam_unix.so
+account     sufficient                 pam_localuser.so
+account     sufficient                 pam_succeed_if.so uid < 500 quiet
+account     required                   pam_permit.so
+
+password    requisite                  pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=
+password    sufficient                 pam_unix.so sha512 shadow try_first_pass use_authtok remember=5
+password    required                   pam_deny.so
+
+session     optional                   pam_keyinit.so revoke
+session     required                   pam_limits.so
+-session    optional                   pam_systemd.so
+session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+session     required                   pam_unix.so
+PAMSYSCONFIG
+
+echo "#############################################################"
+echo "5.4.1.1 Ensure password expiration is 365 days or less"
+echo "Whilst no users will be logging on to this system, our policy is 90 days for regular users and 365 for machine users"
+# Refs: https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#regular-users
+#       https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#machine-accounts
+sed -i 's/^PASS_MAX_DAYS.*$/PASS_MAX_DAYS 90/' /etc/login.defs
+
 #echo "#############################################################"
 #echo "5.4.1.2 Ensure minimum days between password changes is 7 or more"
 #sed -i 's/^PASS_MIN_DAYS.*$/PASS_MIN_DAYS 7/' /etc/login.defs

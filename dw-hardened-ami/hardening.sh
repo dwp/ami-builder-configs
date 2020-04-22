@@ -722,40 +722,40 @@ echo "Whilst no users will be logging on to this system, our policy is 90 days f
 #       https://git.ucd.gpn.gov.uk/dip/aws-common-infrastructure/wiki/Access-Management-Policy#machine-accounts
 sed -i 's/^PASS_MAX_DAYS.*$/PASS_MAX_DAYS 90/' /etc/login.defs
 
-#echo "#############################################################"
-#echo "5.4.1.2 Ensure minimum days between password changes is 7 or more"
-#sed -i 's/^PASS_MIN_DAYS.*$/PASS_MIN_DAYS 7/' /etc/login.defs
-#
-#echo "#############################################################"
-#echo "5.4.1.3 Ensure password expiration warning days is 7 or more"
-#sed -i 's/^PASS_WARN_AGE.*$/PASS_WARN_AGE 7/' /etc/login.defs
-#
-#echo "#############################################################"
-#echo "5.4.1.4 Ensure inactive password lock is 30 days or less"
-#useradd -D -f 30
-#
-#echo "#############################################################"
-#echo "5.4.1.5 Ensure all users last password change date is in the past"
-#echo "Exemption: we have no users that we configure with passwords"
-#
-#echo "#############################################################"
-#echo "5.4.2 Ensure system accounts are non-login"
-#echo "Exemption: No users in AL1 have this, CWA adds it later but we have dealt with this upstream"
-#
-#echo "#############################################################"
-#echo "5.4.3 Ensure default group for the root account is GID 0"
-#usermod -g 0 root
-#
-#echo "#############################################################"
-#echo "5.4.4 Ensure default user umask is 027 or more restrictive"
-#sed -i 's/^.*umask 0.*$/umask 027/' /etc/bashrc
-#sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile
-#sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile.d/*.sh
-#
-#echo "#############################################################"
-#echo "5.4.5 Ensure default user shell timeout is 900 seconds or less"
-#echo 'TMOUT=600' >> /etc/bashrc
-#echo 'TMOUT=600' >> /etc/profile
+echo "#############################################################"
+echo "5.4.1.2 Ensure minimum days between password changes is 7 or more"
+sed -i 's/^PASS_MIN_DAYS.*$/PASS_MIN_DAYS 7/' /etc/login.defs
+
+echo "#############################################################"
+echo "5.4.1.3 Ensure password expiration warning days is 7 or more"
+sed -i 's/^PASS_WARN_AGE.*$/PASS_WARN_AGE 7/' /etc/login.defs
+
+echo "#############################################################"
+echo "5.4.1.4 Ensure inactive password lock is 30 days or less"
+useradd -D -f 30
+
+echo "#############################################################"
+echo "5.4.1.5 Ensure all users last password change date is in the past"
+echo "Exemption: we have no users that we configure with passwords"
+
+echo "#############################################################"
+echo "5.4.2 Ensure system accounts are non-login"
+echo "Exemption: No users in AL1 have this, CWA adds it later but we have dealt with this upstream"
+
+echo "#############################################################"
+echo "5.4.3 Ensure default group for the root account is GID 0"
+usermod -g 0 root
+
+echo "#############################################################"
+echo "5.4.4 Ensure default user umask is 027 or more restrictive"
+sed -i 's/^.*umask 0.*$/umask 027/' /etc/bashrc
+sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile
+sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile.d/*.sh
+
+echo "#############################################################"
+echo "5.4.5 Ensure default user shell timeout is 900 seconds or less"
+echo 'TMOUT=600' >> /etc/bashrc
+echo 'TMOUT=600' >> /etc/profile
 #
 #echo "#############################################################"
 #echo "5.5 Ensure access to the su command is restricted"

@@ -564,111 +564,111 @@ find /var/log -type f -exec chmod 0640 {} \;
 echo "#############################################################"
 echo "4.3 Ensure logrotate is configured"
 echo "Exemption: userdata is used to configure log rotation via logrotate"
-#
-#echo "#############################################################"
-#echo "5.1.2 Ensure permissions on /etc/crontab are configured"
-#echo "5.1.3 Ensure permissions on /etc/cron.hourly are configured"
-#echo "5.1.4 Ensure permissions on /etc/cron.daily are configured"
-#echo "5.1.5 Ensure permissions on /etc/cron.weekly are configured"
-#echo "5.1.6 Ensure permissions on /etc/cron.monthly are configured"
-#chmod 0600 /etc/crontab
-#chmod 0600 /etc/cron.hourly
-#chmod 0600 /etc/cron.daily
-#chmod 0600 /etc/cron.weekly
-#chmod 0600 /etc/cron.monthly
-#
-#echo "#############################################################"
-#echo "5.1.7 Ensure permissions on /etc/cron.d are configured"
-#chmod 0700 /etc/cron.d
-#
-#echo "#############################################################"
-#echo "5.1.8 Ensure at/cron is restricted to authorized users"
-#rm -f /etc/cron.deny /etc/at.deny
-#touch /etc/cron.allow /etc/at.allow
-#chmod 0600 /etc/cron.allow /etc/at.allow
-#chown root:root /etc/cron.allow /etc/at.allow
-#
-#echo "#############################################################"
-#echo "5.2.1 Ensure permissions on /etc/ssh/sshd_config are configured"
-#chown root:root /etc/ssh/sshd_config
-#chmod 0600 /etc/ssh/sshd_config
-#
-#echo "#############################################################"
-#echo "5.2.2 Ensure SSH Protocol is set to 2"
-#echo "5.2.3 Ensure SSH LogLevel is set to INFO"
-#echo "5.2.4 Ensure SSH X11 forwarding is disabled"
-#echo "5.2.5 Ensure SSH MaxAuthTries is set to 4 or less"
-#echo "5.2.6 Ensure SSH IgnoreRhosts is enabled"
-#echo "5.2.7 Ensure SSH HostbasedAuthentication is disabled"
-#echo "5.2.8 Ensure SSH root login is disabled"
-#echo "5.2.9 Ensure SSH PermitEmptyPasswords is disabled"
-#echo "5.2.10 Ensure SSH PermitUserEnvironment is disabled"
-#echo "5.2.11 Ensure only approved MAC algorithms are used"
-#echo "5.2.12 Ensure SSH Idle Timeout Interval is configured"
-#echo "5.2.13 Ensure SSH LoginGraceTime is set to one minute or less"
-#echo "5.2.14 Ensure SSH access is limited"
-#echo "5.2.15 Ensure SSH warning banner is configured"
-#echo "Configuring SSH"
-#echo Create sshusers and no-ssh-access groups
-#groupadd sshusers || true
-#groupadd no-ssh-access || true
-#
-#echo add ec2-user to sshusers group to allow access
-#usermod -a -G sshusers ec2-user
-#
-#echo apply hardened SSHD config
-#cat > /etc/ssh/sshd_config << SSHCONFIG
-#Port 22
-#ListenAddress 0.0.0.0
-#Protocol 2
-#HostKey /etc/ssh/ssh_host_rsa_key
-#HostKey /etc/ssh/ssh_host_dsa_key
-#HostKey /etc/ssh/ssh_host_ecdsa_key
-#HostKey /etc/ssh/ssh_host_ed25519_key
-#UsePrivilegeSeparation yes
-#KeyRegenerationInterval 3600
-#ServerKeyBits 2048
-#SyslogFacility AUTH
-#LogLevel INFO
-#ClientAliveInterval 300
-#ClientAliveCountMax 0
-#LoginGraceTime 60
-#PermitRootLogin no
-#StrictModes yes
-#MaxAuthTries 4
-#MaxSessions 10
-#RSAAuthentication yes
-#PubkeyAuthentication yes
-#AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys
-#AuthorizedKeysCommandUser nobody
-#IgnoreRhosts yes
-#RhostsRSAAuthentication no
-#HostbasedAuthentication no
-#PermitEmptyPasswords no
-#ChallengeResponseAuthentication no
-#PasswordAuthentication no
-#KerberosAuthentication no
-#GSSAPIAuthentication yes
-#GSSAPICleanupCredentials yes
-#X11Forwarding no
-#X11DisplayOffset 10
-#PrintMotd no
-#PrintLastLog yes
-#TCPKeepAlive yes
-#Banner /etc/issue
-#AcceptEnv LANG LC_* XMODIFIERS
-#Subsystem sftp    /usr/libexec/openssh/sftp-server
-#UsePAM yes
-#UseDNS no
-#DenyUsers no-ssh-access
-#AllowGroups sshusers
-## OpenSCAP Rule ID sshd_use_approved_ciphers
-## OpenSCAP will fail with this cipher set, but ours is more strict
-#Ciphers aes256-ctr,aes192-ctr,aes128-ctr
-#MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
-#PermitUserEnvironment no
-#SSHCONFIG
-#
+
+echo "#############################################################"
+echo "5.1.2 Ensure permissions on /etc/crontab are configured"
+echo "5.1.3 Ensure permissions on /etc/cron.hourly are configured"
+echo "5.1.4 Ensure permissions on /etc/cron.daily are configured"
+echo "5.1.5 Ensure permissions on /etc/cron.weekly are configured"
+echo "5.1.6 Ensure permissions on /etc/cron.monthly are configured"
+chmod 0600 /etc/crontab
+chmod 0600 /etc/cron.hourly
+chmod 0600 /etc/cron.daily
+chmod 0600 /etc/cron.weekly
+chmod 0600 /etc/cron.monthly
+
+echo "#############################################################"
+echo "5.1.7 Ensure permissions on /etc/cron.d are configured"
+chmod 0700 /etc/cron.d
+
+echo "#############################################################"
+echo "5.1.8 Ensure at/cron is restricted to authorized users"
+rm -f /etc/cron.deny /etc/at.deny
+touch /etc/cron.allow /etc/at.allow
+chmod 0600 /etc/cron.allow /etc/at.allow
+chown root:root /etc/cron.allow /etc/at.allow
+
+echo "#############################################################"
+echo "5.2.1 Ensure permissions on /etc/ssh/sshd_config are configured"
+chown root:root /etc/ssh/sshd_config
+chmod 0600 /etc/ssh/sshd_config
+
+echo "#############################################################"
+echo "5.2.2 Ensure SSH Protocol is set to 2"
+echo "5.2.3 Ensure SSH LogLevel is set to INFO"
+echo "5.2.4 Ensure SSH X11 forwarding is disabled"
+echo "5.2.5 Ensure SSH MaxAuthTries is set to 4 or less"
+echo "5.2.6 Ensure SSH IgnoreRhosts is enabled"
+echo "5.2.7 Ensure SSH HostbasedAuthentication is disabled"
+echo "5.2.8 Ensure SSH root login is disabled"
+echo "5.2.9 Ensure SSH PermitEmptyPasswords is disabled"
+echo "5.2.10 Ensure SSH PermitUserEnvironment is disabled"
+echo "5.2.11 Ensure only approved MAC algorithms are used"
+echo "5.2.12 Ensure SSH Idle Timeout Interval is configured"
+echo "5.2.13 Ensure SSH LoginGraceTime is set to one minute or less"
+echo "5.2.14 Ensure SSH access is limited"
+echo "5.2.15 Ensure SSH warning banner is configured"
+echo "Configuring SSH"
+echo Create sshusers and no-ssh-access groups
+groupadd sshusers || true
+groupadd no-ssh-access || true
+
+echo add ec2-user to sshusers group to allow access
+usermod -a -G sshusers ec2-user
+
+echo apply hardened SSHD config
+cat > /etc/ssh/sshd_config << SSHCONFIG
+Port 22
+ListenAddress 0.0.0.0
+Protocol 2
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+UsePrivilegeSeparation yes
+KeyRegenerationInterval 3600
+ServerKeyBits 2048
+SyslogFacility AUTH
+LogLevel INFO
+ClientAliveInterval 300
+ClientAliveCountMax 0
+LoginGraceTime 60
+PermitRootLogin no
+StrictModes yes
+MaxAuthTries 4
+MaxSessions 10
+RSAAuthentication yes
+PubkeyAuthentication yes
+AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys
+AuthorizedKeysCommandUser nobody
+IgnoreRhosts yes
+RhostsRSAAuthentication no
+HostbasedAuthentication no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+PasswordAuthentication no
+KerberosAuthentication no
+GSSAPIAuthentication yes
+GSSAPICleanupCredentials yes
+X11Forwarding no
+X11DisplayOffset 10
+PrintMotd no
+PrintLastLog yes
+TCPKeepAlive yes
+Banner /etc/issue
+AcceptEnv LANG LC_* XMODIFIERS
+Subsystem sftp    /usr/libexec/openssh/sftp-server
+UsePAM yes
+UseDNS no
+DenyUsers no-ssh-access
+AllowGroups sshusers
+# OpenSCAP Rule ID sshd_use_approved_ciphers
+# OpenSCAP will fail with this cipher set, but ours is more strict
+Ciphers aes256-ctr,aes192-ctr,aes128-ctr
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
+PermitUserEnvironment no
+SSHCONFIG
+
 #echo "#############################################################"
 #echo "5.3.1 Ensure password creation requirements are configured"
 #echo "5.3.2 Ensure lockout for failed password attempts is configured"

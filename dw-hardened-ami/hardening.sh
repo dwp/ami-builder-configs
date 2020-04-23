@@ -738,14 +738,14 @@ echo "#############################################################"
 echo "5.4.1.5 Ensure all users last password change date is in the past"
 echo "Exemption: we have no users that we configure with passwords"
 
-#echo "#############################################################"
-#echo "5.4.2 Ensure system accounts are non-login"
-#echo "Exemption: No users in AL1 have this, CWA adds it later but we have dealt with this upstream"
-#
-#echo "#############################################################"
-#echo "5.4.3 Ensure default group for the root account is GID 0"
-#usermod -g 0 root
-#
+echo "#############################################################"
+echo "5.4.2 Ensure system accounts are non-login"
+echo "Exemption: No users in AL1 have this, CWA adds it later but we have dealt with this upstream"
+
+echo "#############################################################"
+echo "5.4.3 Ensure default group for the root account is GID 0"
+usermod -g 0 root
+
 #echo "#############################################################"
 #echo "5.4.4 Ensure default user umask is 027 or more restrictive"
 #sed -i 's/^.*umask 0.*$/umask 027/' /etc/bashrc

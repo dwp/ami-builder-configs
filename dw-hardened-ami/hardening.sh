@@ -746,11 +746,11 @@ echo "#############################################################"
 echo "5.4.3 Ensure default group for the root account is GID 0"
 usermod -g 0 root
 
-#echo "#############################################################"
-#echo "5.4.4 Ensure default user umask is 027 or more restrictive"
-#sed -i 's/^.*umask 0.*$/umask 027/' /etc/bashrc
-#sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile
-#sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile.d/*.sh
+echo "#############################################################"
+echo "5.4.4 Ensure default user umask is 027 or more restrictive"
+sed -i 's/^.*umask 0.*$/umask 027/' /etc/bashrc
+sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile
+sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile.d/*.sh
 
 echo "#############################################################"
 echo "5.4.5 Ensure default user shell timeout is 900 seconds or less"

@@ -756,7 +756,7 @@ sed -i 's/^.*umask 0.*$/umask 027/' /etc/profile.d/*.sh
 #echo "5.4.5 Ensure default user shell timeout is 900 seconds or less"
 #echo 'TMOUT=600' >> /etc/bashrc
 #echo 'TMOUT=600' >> /etc/profile
-#
+
 #echo "#############################################################"
 #echo "5.5 Ensure access to the su command is restricted"
 #sed -i '/#auth.*required.*pam_wheel.so/s/^# *//' /etc/pam.d/su

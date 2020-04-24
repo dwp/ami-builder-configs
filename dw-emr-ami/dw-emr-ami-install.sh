@@ -11,7 +11,7 @@ EOF
 sed -i -e 's/selinux=0/selinux=1 enforcing=0/' /boot/grub/menu.lst
 
 # Relax umask settings and defaults
-sed -i 's/^.*umask 0.*$/umask 022/' /etc/bashrc
-sed -i 's/^.*umask 0.*$/umask 022/' /etc/profile
-sed -i 's/^.*umask 0.*$/umask 022/' /etc/profile.d/*.sh
-sed -i 's/^umask 027/umask 022/' /etc/init.d/functions
+sed -i 's/^.*umask 0.*$/umask 002/' /etc/bashrc
+sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile
+sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile.d/*.sh
+sed -i 's/^umask 027/umask 002/' /etc/init.d/functions

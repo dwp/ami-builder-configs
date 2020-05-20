@@ -27,10 +27,6 @@ sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
 # Download and Install Concourse
 concourse_version=6.1.0
 concourse_tarball="concourse-$concourse_version-linux-amd64.tgz"
-hostname -i
-echo "Downloading $concourse_tarball"
-curl -L -O https://github.com/concourse/concourse/releases/download/v$concourse_version/$concourse_tarball
-echo "Downloaded $concourse_tarball"
-
-tar -xvf $concourse_tarball -C /usr/local
+curl -s -L -O https://github.com/concourse/concourse/releases/download/v$concourse_version/$concourse_tarball
+tar -xzf $concourse_tarball -C /usr/local
 rm $concourse_tarball

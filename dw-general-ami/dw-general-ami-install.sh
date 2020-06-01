@@ -34,19 +34,19 @@ curl -x $http_proxy -O https://inspector-agent.amazonaws.com/linux/latest/instal
 echo "Running AWS Inspector Agent installer"
 bash install
 if [[ $? -eq 0 ]]; then
-  echo "AWS Inspector Agent install successful"
+    echo "AWS Inspector Agent install successful"
 else
-  echo "AWS Inspector Agent install failed"
+    echo "AWS Inspector Agent install failed"
 fi
 rm install
 rm /etc/init.d/awsagent.env
 
 # Tidy cloud.cfg to prevent yum locks in hardened AMI builds
 sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
-       -e 's/repo_upgrade_exclude:/repo_update: false/' \
-       -e '/.-.nvidia.*/ d' \
-       -e '/.-.kernel.*/ d' \
-       -e '/.-.cudatoolkit.*/ d' /etc/cloud/cloud.cfg
+-e 's/repo_upgrade_exclude:/repo_update: false/' \
+-e '/.-.nvidia.*/ d' \
+-e '/.-.kernel.*/ d' \
+-e '/.-.cudatoolkit.*/ d' /etc/cloud/cloud.cfg
 
 yum install -y python27-devel python27-pip gcc
 
@@ -79,3 +79,32 @@ cat > /etc/cloud/cloud.cfg.d/15_yum_proxy.cfg << CLOUDCFG
 bootcmd:
  - [ cloud-init-per, once, set-yum-proxy, /usr/local/bin/set_yum_proxy.sh ]
 CLOUDCFG
+
+# Install node-exporter
+
+useradd -m -s /bin/bash prometheus
+
+# Download node_exporter release from original repo
+curl -L -O  https://github.com/prometheus/node_exporter/releases/download/v1.0.0/node_exporter-1.0.0.linux-amd64.tar.gz
+
+tar -xzvf node_exporter-1.0.0.linux-amd64.tar.gz
+mv node_exporter-1.0.0.linux-amd64 /home/prometheus/node_exporter
+rm node_exporter-1.0.0.linux-amd64.tar.gz
+chown -R prometheus:prometheus /home/prometheus/node_exporter
+
+# Add node_exporter as systemd service
+tee -a /etc/systemd/system/node_exporter.service << END
+[Unit]
+Description=Node Exportews
+Wants=network-online.target
+After=network-online.target
+[Service]
+User=prometheus
+ExecStart=/home/prometheus/node_exporter/node_exporter
+[Install]
+WantedBy=default.target
+END
+
+systemctl daemon-reload
+systemctl start node_exporter
+systemctl enable node_exporter

@@ -19,6 +19,7 @@ EOF
 sed -i -e 's/selinux=0/selinux=1 enforcing=0/' /boot/grub/menu.lst
 
 # Download and Install ECS Agent
+yum update
 yum install -y ecs-init
 service docker start
 start ecs

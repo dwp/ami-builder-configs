@@ -93,9 +93,10 @@ rm node_exporter-1.0.0.linux-amd64.tar.gz
 chown -R prometheus:prometheus /home/prometheus/node_exporter
 
 # Add node_exporter as systemd service
+touch /etc/systemd/system/node_exporter.service
 cat > /etc/systemd/system/node_exporter.service << SERVICE
 [Unit]
-Description=Node Exportews
+Description=Node Exporter
 Wants=network-online.target
 After=network-online.target
 [Service]
@@ -105,6 +106,7 @@ ExecStart=/home/prometheus/node_exporter/node_exporter
 WantedBy=default.target
 SERVICE
 
+touch /etc/init/node_exporter.conf
 cat > /etc/init/node_exporter.conf << INIT
 description "Node Exporter"
 

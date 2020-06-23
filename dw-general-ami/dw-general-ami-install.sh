@@ -105,6 +105,18 @@ ExecStart=/home/prometheus/node_exporter/node_exporter
 WantedBy=default.target
 END
 
-systemctl daemon-reload
-systemctl start node_exporter
-systemctl enable node_exporter
+tee -a /etc/init/node_exporter.conf << END
+description "Node Exporter"
+
+start on runlevel [2345]
+stop on shutdown
+
+script
+  exec /bin/bash << 'EOT'
+
+  sudo -E /home/prometheus/node_exporter/node_exporter > /var/log/node_exporter.log 2>&1
+  EOT
+end script
+END
+
+initctl start node_exporter

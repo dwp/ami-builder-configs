@@ -94,7 +94,6 @@ chown -R prometheus:prometheus /home/prometheus/node_exporter
 
 # Add node_exporter as systemd service
 mkdir -p /etc/systemd/system/
-touch /etc/systemd/system/node_exporter.service
 
 cat > /etc/systemd/system/node_exporter.service << SERVICE
 [Unit]
@@ -109,7 +108,6 @@ WantedBy=default.target
 SERVICE
 chmod 0644 /etc/systemd/system/node_exporter.service
 
-touch /etc/init/node_exporter.conf
 cat > /etc/init/node_exporter.conf << INIT
 description "Node Exporter"
 

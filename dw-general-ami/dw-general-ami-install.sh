@@ -85,15 +85,17 @@ CLOUDCFG
 useradd -m -s /bin/bash prometheus
 
 # Download node_exporter release from original repo
-curl -L -O  https://github.com/prometheus/node_exporter/releases/download/v1.0.0/node_exporter-1.0.0.linux-amd64.tar.gz
+curl -L -O  https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz
 
-tar -xzvf node_exporter-1.0.0.linux-amd64.tar.gz
-mv node_exporter-1.0.0.linux-amd64 /home/prometheus/node_exporter
-rm node_exporter-1.0.0.linux-amd64.tar.gz
+tar -xzvf node_exporter-1.0.1.linux-amd64.tar.gz
+mv node_exporter-1.0.1.linux-amd64 /home/prometheus/node_exporter
+rm node_exporter-1.0.1.linux-amd64.tar.gz
 chown -R prometheus:prometheus /home/prometheus/node_exporter
 
 # Add node_exporter as systemd service
+mkdir -p /etc/systemd/system/
 touch /etc/systemd/system/node_exporter.service
+
 cat > /etc/systemd/system/node_exporter.service << SERVICE
 [Unit]
 Description=Node Exporter
@@ -105,6 +107,7 @@ ExecStart=/home/prometheus/node_exporter/node_exporter
 [Install]
 WantedBy=default.target
 SERVICE
+chmod 0644 /etc/systemd/system/node_exporter.service
 
 touch /etc/init/node_exporter.conf
 cat > /etc/init/node_exporter.conf << INIT
@@ -120,5 +123,6 @@ script
   EOT
 end script
 INIT
+chmod 0644 /etc/init/node_exporter.conf
 
 initctl start node_exporter

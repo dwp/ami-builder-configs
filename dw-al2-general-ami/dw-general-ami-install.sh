@@ -109,4 +109,5 @@ WantedBy=default.target
 SERVICE
 chmod 0644 /etc/systemd/system/node_exporter.service
 
+systemctl enable node_exporter
 systemctl start node_exporter

@@ -89,7 +89,7 @@ curl -L -O  https://github.com/prometheus/node_exporter/releases/download/v1.0.1
 
 tar -xzvf node_exporter-1.0.1.linux-amd64.tar.gz
 mv node_exporter-1.0.1.linux-amd64 /home/prometheus/node_exporter
-rm node_exporter-1.0.1.linux-amd64.tar.gz
+rm -f node_exporter-1.0.1.linux-amd64.tar.gz
 chown -R prometheus:prometheus /home/prometheus/node_exporter
 
 # Add node_exporter as systemd service
@@ -102,25 +102,10 @@ Wants=network-online.target
 After=network-online.target
 [Service]
 User=prometheus
-ExecStart=/home/prometheus/node_exporter/node_exporter
+ExecStart=/bin/bash -ce "exec /home/prometheus/node_exporter/node_exporter >> /var/log/node_exporter.log 2>&1"
 [Install]
 WantedBy=default.target
 SERVICE
 chmod 0644 /etc/systemd/system/node_exporter.service
 
-cat > /etc/init/node_exporter.conf << INIT
-description "Node Exporter"
-
-start on runlevel [2345]
-stop on shutdown
-
-script
-  exec /bin/bash << 'EOT'
-
-  sudo -E /home/prometheus/node_exporter/node_exporter > /var/log/node_exporter.log 2>&1
-  EOT
-end script
-INIT
-chmod 0644 /etc/init/node_exporter.conf
-
-initctl start node_exporter
+systemctl start node_exporter

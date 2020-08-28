@@ -48,7 +48,7 @@ sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
 -e '/.-.kernel.*/ d' \
 -e '/.-.cudatoolkit.*/ d' /etc/cloud/cloud.cfg
 
-yum install -y python-devel python-pip gcc yum-plugin-remove-with-leaves
+yum install -y python-devel python-pip gcc yum-plugin-remove-with-leaves sudo
 
 pip install --upgrade awscli
 

@@ -60,6 +60,7 @@ $(which aws) s3 cp s3://$ARTEFACT_BUCKET/acm-pca-cert-generator/acm_cert_helper-
 pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
 
 yum remove -y gcc python-devel java-1.7.0 --remove-leaves
+yum install -y sudo
 
 echo "export PATH=$PATH:/usr/local/bin" >> /etc/environment
 

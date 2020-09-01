@@ -108,5 +108,7 @@ WantedBy=default.target
 SERVICE
 chmod 0644 /etc/systemd/system/node_exporter.service
 
+touch /var/log/node_exporter.log && chown prometheus:prometheus /var/log/node_exporter.log
+
 systemctl enable node_exporter
 systemctl start node_exporter

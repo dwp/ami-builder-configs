@@ -48,7 +48,7 @@ sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
 -e '/.-.kernel.*/ d' \
 -e '/.-.cudatoolkit.*/ d' /etc/cloud/cloud.cfg
 
-yum install -y python-devel python-pip gcc yum-plugin-remove-with-leaves sudo
+yum install -y python-pip gcc yum-plugin-remove-with-leaves sudo
 
 pip install --upgrade awscli
 
@@ -59,8 +59,7 @@ acm_cert_helper_version=0.28.0
 $(which aws) s3 cp s3://$ARTEFACT_BUCKET/acm-pca-cert-generator/acm_cert_helper-${acm_cert_helper_version}.tar.gz .
 pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
 
-yum remove -y gcc python-devel java-1.7.0 --remove-leaves
-yum install -y sudo
+yum remove -y gcc --remove-leaves
 
 echo "export PATH=$PATH:/usr/local/bin" >> /etc/environment
 

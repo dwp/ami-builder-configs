@@ -267,8 +267,6 @@ echo "Expect: no output"
 ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk" | tr ':' ' ' | awk '{ print $NF }'
 
 
-sleep 60
-echo wakey
 
 
 echo "#############################################################"
@@ -312,11 +310,6 @@ echo "1.7.1.3 Ensure remote login warning banner is configured properly"
 # ensures compliance with DWP norms if we do decide to enable remote logins
 cp /etc/issue /etc/issue.net
 
-
-sleep 60
-echo wakey
-
-
 echo "#############################################################"
 echo "1.7.1.4 Ensure permissions on /etc/motd are configured"
 echo "1.7.1.5 Ensure permissions on /etc/issue are configured"
@@ -333,12 +326,7 @@ echo "Excluded from hardening.sh, added to Userdata in General AMI due to build 
 echo "#############################################################"
 echo "2.2.1.2 Ensure ntp is configured"
 # AL1 defaults to pre-hardened ntpd configuration
-sed -i -e '/^pool/d' /etc/ntp.conf
-
-
-sleep 60
-echo wakey
-
+# sed -i -e '/^pool/d' /etc/ntp.conf
 
 echo "#############################################################"
 echo "2.2.1.3 Ensure chrony is configured"
@@ -350,16 +338,11 @@ echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
 # AL1 appears to use sendmail rather than postfix
 # netstat -an | grep LIST | grep ":25[[:space:]]" <- to check sendmail is in local-only mode, is default for AL1
 echo "Expect 'DaemonPortOptions=Port=smtp,Addr=127.0.0.1, Name=MTA'"
-cat /etc/mail/sendmail.cf | grep DaemonPortOptions
+#cat /etc/mail/sendmail.cf | grep DaemonPortOptions
 
 echo "#############################################################"
 echo "3.3.3 Disable ipv6"
-sed -i -e '/^kernel/ s/$/ ipv6.disable=1/' /boot/grub/grub.conf
-
-
-sleep 60
-echo wakey
-
+#sed -i -e '/^kernel/ s/$/ ipv6.disable=1/' /boot/grub/grub.conf
 
 echo "#############################################################"
 echo "3.4.2 Ensure /etc/hosts.allow is configured"
@@ -410,7 +393,7 @@ done
 
 echo "#############################################################"
 echo "4.1.3 Ensure auditing for processes that start prior to auditd is enabled"
-sed -i -e '/^kernel/ s/$/ audit=1/' /boot/grub/grub.conf
+#sed -i -e '/^kernel/ s/$/ audit=1/' /boot/grub/grub.conf
 sed -i -e '/^-a never,task/ s/$/# /' /etc/audit/audit.rules
 
 
@@ -748,7 +731,7 @@ sed -i 's/^PASS_MIN_DAYS.*$/PASS_MIN_DAYS 7/' /etc/login.defs
 
 echo "#############################################################"
 echo "5.4.1.3 Ensure password expiration warning days is 7 or more"
-sed -i 's/^PASS_WARN_AGE.*$/PASS_WARN_AGE 7/' /etc/login.defs
+    sed -i 's/^PASS_WARN_AGE.*$/PASS_WARN_AGE 7/' /etc/login.defs
 
 echo "#############################################################"
 echo "5.4.1.4 Ensure inactive password lock is 30 days or less"
@@ -1104,8 +1087,8 @@ sed -i 's/^weekly/daily/' /etc/logrotate.conf
 
 
 # OpenSCAP Rule ID service_ip6tables_enabled
-service ip6tables stop
-chkconfig ip6tables off
+#service ip6tables stop
+#chkconfig ip6tables off
 
 # OpenSCAP Rule ID umask_for_daemons
 sed -i 's/^umask 022/umask 027/' /etc/init.d/functions

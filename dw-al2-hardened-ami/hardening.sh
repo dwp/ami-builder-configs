@@ -105,7 +105,7 @@ echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
 echo "2.2.16 Ensure NIS Server is not enabled"
 echo "Disabling unnecessary services"
 echo "Only installed services are rpcbind and rsync"
-for svc in rpcbind rsync; do
+for svc in rpcbind; do
     chkconfig $svc off
 done;
 

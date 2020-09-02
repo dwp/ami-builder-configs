@@ -212,10 +212,6 @@ echo "1.5.2 Ensure XD/NX support is enabled"
 echo "Expect: active"
 dmesg | grep NX
 
-sleep 60
-echo wakey
-
-
 echo "#############################################################"
 echo "1.5.4 Ensure prelink is disabled"
 echo "1.6.1.4 Ensure SETroubleshoot is not installed"
@@ -260,7 +256,7 @@ SELINUX=enforcing
 SELINUXTYPE=targeted
 EOF
 
-sed -i -e 's/selinux=0/selinux=1 enforcing=1/' /boot/grub/menu.lst
+# sed -i -e 's/selinux=0/selinux=1 enforcing=1/' /boot/grub/menu.lst
 
 # Create AutoRelabel
 touch /.autorelabel
@@ -269,6 +265,11 @@ echo "#############################################################"
 echo "1.6.1.6 - Ensure no unconfined daemons exist"
 echo "Expect: no output"
 ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk" | tr ':' ' ' | awk '{ print $NF }'
+
+
+sleep 60
+echo wakey
+
 
 echo "#############################################################"
 echo "1.7 Warning Banners"
@@ -311,6 +312,11 @@ echo "1.7.1.3 Ensure remote login warning banner is configured properly"
 # ensures compliance with DWP norms if we do decide to enable remote logins
 cp /etc/issue /etc/issue.net
 
+
+sleep 60
+echo wakey
+
+
 echo "#############################################################"
 echo "1.7.1.4 Ensure permissions on /etc/motd are configured"
 echo "1.7.1.5 Ensure permissions on /etc/issue are configured"
@@ -329,6 +335,11 @@ echo "2.2.1.2 Ensure ntp is configured"
 # AL1 defaults to pre-hardened ntpd configuration
 sed -i -e '/^pool/d' /etc/ntp.conf
 
+
+sleep 60
+echo wakey
+
+
 echo "#############################################################"
 echo "2.2.1.3 Ensure chrony is configured"
 echo "Chrony not installed"
@@ -344,6 +355,11 @@ cat /etc/mail/sendmail.cf | grep DaemonPortOptions
 echo "#############################################################"
 echo "3.3.3 Disable ipv6"
 sed -i -e '/^kernel/ s/$/ ipv6.disable=1/' /boot/grub/grub.conf
+
+
+sleep 60
+echo wakey
+
 
 echo "#############################################################"
 echo "3.4.2 Ensure /etc/hosts.allow is configured"

@@ -23,9 +23,6 @@ for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
     echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
 done
 
-sleep 60
-echo wakey
-
 echo "#############################################################"
 echo "1.1.2 Ensure separate partition exists for /tmp"
 echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
@@ -75,18 +72,9 @@ echo "1.1.17 Ensure noexec option set on /dev/shm partition"
 # OpenSCAP Rule ID mount_option_dev_shm_nosuid
 sed -i 's|tmpfs       /dev/shm    tmpfs   defaults        0   0|tmpfs       /dev/shm    tmpfs   defaults,nodev,nosuid,noexec        0   0|' /etc/fstab
 
-
-sleep 60
-echo wakey
-
-
 echo "#############################################################"
 echo "1.1.18 Set sticky bit on all world-writable directories"
 df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
-
-
-sleep 60
-echo wakey
 
 echo "#############################################################"
 echo "1.1.19 Disable Automounting"
@@ -158,8 +146,8 @@ echo "0 5 * * * root /usr/sbin/aide --check" > /etc/cron.d/99-CIS
 echo "#############################################################"
 echo "1.4 Secure Boot Settings"
 echo "1.4.1 Ensure permissions on bootloader config are configured"
-chown root:root /boot/grub/menu.lst
-chmod 0600 /boot/grub/menu.lst
+#chown root:root /boot/grub/menu.lst
+#chmod 0600 /boot/grub/menu.lst
 
 echo "#############################################################"
 echo "1.4.2 Ensure authentication required for single user mode"
@@ -224,6 +212,10 @@ echo "1.5.2 Ensure XD/NX support is enabled"
 echo "Expect: active"
 dmesg | grep NX
 
+sleep 60
+echo wakey
+
+
 echo "#############################################################"
 echo "1.5.4 Ensure prelink is disabled"
 echo "1.6.1.4 Ensure SETroubleshoot is not installed"
@@ -250,7 +242,7 @@ yum remove -y  \
 echo "#############################################################"
 echo "1.6.1.1 - Ensure SELinux is not disabled in bootloader configuration"
 echo "Expect: no setting with selinux=0 or enforcing=0"
-grep "^\s*kernel" /boot/grub/menu.lst
+# grep "^\s*kernel" /boot/grub/menu.lst
 
 echo "#############################################################"
 echo "1.6.1.2 Ensure the SELinux state is enforcing"

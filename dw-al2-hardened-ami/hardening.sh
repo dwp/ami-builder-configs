@@ -128,7 +128,7 @@ echo "1.2.2 Ensure GPG keys are configured"
 echo "1.2.3 Ensure gpgcheck is globally activated"
 # OpenSCAP Rule ID ensure_gpgcheck_never_disabled
 # Fixing gpgcheck in one file
-sed -i 's/gpgcheck=0/gpgcheck=1/' /etc/yum.repos.d/amzn-nosrc.repo
+#### sed -i 's/gpgcheck=0/gpgcheck=1/' /etc/yum.repos.d/amzn-nosrc.repo
 echo "Exemption: in-life instances require no access to package repositories; they'll be rebuilt from refreshed AMIs"
 
 echo "#############################################################"

@@ -23,6 +23,9 @@ for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
     echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
 done
 
+sleep 60
+echo wakey
+
 echo "#############################################################"
 echo "1.1.2 Ensure separate partition exists for /tmp"
 echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
@@ -72,9 +75,18 @@ echo "1.1.17 Ensure noexec option set on /dev/shm partition"
 # OpenSCAP Rule ID mount_option_dev_shm_nosuid
 sed -i 's|tmpfs       /dev/shm    tmpfs   defaults        0   0|tmpfs       /dev/shm    tmpfs   defaults,nodev,nosuid,noexec        0   0|' /etc/fstab
 
+
+sleep 60
+echo wakey
+
+
 echo "#############################################################"
 echo "1.1.18 Set sticky bit on all world-writable directories"
 df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+
+
+sleep 60
+echo wakey
 
 echo "#############################################################"
 echo "1.1.19 Disable Automounting"

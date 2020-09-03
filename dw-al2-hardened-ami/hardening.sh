@@ -67,10 +67,7 @@ echo "#############################################################"
 echo "1.1.15 Ensure nodev option set on /dev/shm partition"
 echo "1.1.16 Ensure nosuid option set on /dev/shm partition"
 echo "1.1.17 Ensure noexec option set on /dev/shm partition"
-# OpenSCAP Rule ID mount_option_dev_shm_noexec
-# OpenSCAP Rule ID mount_option_dev_shm_nosuid
-# OpenSCAP Rule ID mount_option_dev_shm_nosuid
-sed -i 's|tmpfs       /dev/shm    tmpfs   defaults        0   0|tmpfs       /dev/shm    tmpfs   defaults,nodev,nosuid,noexec        0   0|' /etc/fstab
+echo "tmpfs /dev/shm tmpfs defaults,nodev,nosuid,noexec 0 0" > /etc/fstab
 
 echo "#############################################################"
 echo "1.1.18 Set sticky bit on all world-writable directories"
@@ -104,7 +101,7 @@ echo "2.2.14 Ensure SNMP Server is not enabled"
 echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
 echo "2.2.16 Ensure NIS Server is not enabled"
 echo "Disabling unnecessary services"
-echo "Only installed services are rpcbind and rsync"
+echo "Only installed service is rpcbind"
 for svc in rpcbind; do
     chkconfig $svc off
 done;
@@ -114,9 +111,6 @@ echo "1.2 Configure Software Updates"
 echo "1.2.1 Ensure package manager repositories are configured"
 echo "1.2.2 Ensure GPG keys are configured"
 echo "1.2.3 Ensure gpgcheck is globally activated"
-# OpenSCAP Rule ID ensure_gpgcheck_never_disabled
-# Fixing gpgcheck in one file
-#### sed -i 's/gpgcheck=0/gpgcheck=1/' /etc/yum.repos.d/amzn-nosrc.repo
 echo "Exemption: in-life instances require no access to package repositories; they'll be rebuilt from refreshed AMIs"
 
 echo "#############################################################"
@@ -146,8 +140,6 @@ echo "0 5 * * * root /usr/sbin/aide --check" > /etc/cron.d/99-CIS
 echo "#############################################################"
 echo "1.4 Secure Boot Settings"
 echo "1.4.1 Ensure permissions on bootloader config are configured"
-#chown root:root /boot/grub/menu.lst
-#chmod 0600 /boot/grub/menu.lst
 
 echo "#############################################################"
 echo "1.4.2 Ensure authentication required for single user mode"
@@ -238,7 +230,6 @@ yum remove -y  \
 echo "#############################################################"
 echo "1.6.1.1 - Ensure SELinux is not disabled in bootloader configuration"
 echo "Expect: no setting with selinux=0 or enforcing=0"
-# grep "^\s*kernel" /boot/grub/menu.lst
 
 echo "#############################################################"
 echo "1.6.1.2 Ensure the SELinux state is enforcing"
@@ -256,8 +247,6 @@ SELINUX=enforcing
 SELINUXTYPE=targeted
 EOF
 
-# sed -i -e 's/selinux=0/selinux=1 enforcing=1/' /boot/grub/menu.lst
-
 # Create AutoRelabel
 touch /.autorelabel
 
@@ -265,8 +254,6 @@ echo "#############################################################"
 echo "1.6.1.6 - Ensure no unconfined daemons exist"
 echo "Expect: no output"
 ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk" | tr ':' ' ' | awk '{ print $NF }'
-
-
 
 
 echo "#############################################################"
@@ -325,8 +312,7 @@ echo "Excluded from hardening.sh, added to Userdata in General AMI due to build 
 
 echo "#############################################################"
 echo "2.2.1.2 Ensure ntp is configured"
-# AL1 defaults to pre-hardened ntpd configuration
-# sed -i -e '/^pool/d' /etc/ntp.conf
+echo "ntp not installed"
 
 echo "#############################################################"
 echo "2.2.1.3 Ensure chrony is configured"
@@ -334,15 +320,11 @@ echo "Chrony not installed"
 
 echo "#############################################################"
 echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
-# Check inet_interfaces = loopback-only exists in /etc/postfix/main.cf <- File not present on default AL1 instance
-# AL1 appears to use sendmail rather than postfix
-# netstat -an | grep LIST | grep ":25[[:space:]]" <- to check sendmail is in local-only mode, is default for AL1
-echo "Expect 'DaemonPortOptions=Port=smtp,Addr=127.0.0.1, Name=MTA'"
-#cat /etc/mail/sendmail.cf | grep DaemonPortOptions
 
 echo "#############################################################"
 echo "3.3.3 Disable ipv6"
-#sed -i -e '/^kernel/ s/$/ ipv6.disable=1/' /boot/grub/grub.conf
+sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="/GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1 /' /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg
 
 echo "#############################################################"
 echo "3.4.2 Ensure /etc/hosts.allow is configured"
@@ -393,7 +375,6 @@ done
 
 echo "#############################################################"
 echo "4.1.3 Ensure auditing for processes that start prior to auditd is enabled"
-#sed -i -e '/^kernel/ s/$/ audit=1/' /boot/grub/grub.conf
 sed -i -e '/^-a never,task/ s/$/# /' /etc/audit/audit.rules
 
 

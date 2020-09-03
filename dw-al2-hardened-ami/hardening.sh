@@ -1074,4 +1074,4 @@ sed -i 's/^weekly/daily/' /etc/logrotate.conf
 # OpenSCAP Rule ID umask_for_daemons
 sed -i 's/^umask 022/umask 027/' /etc/init.d/functions
 
-sed -i 's/^SELINUX=enforcing/SELINUX=permissive/'
+sed -i 's/^SELINUX=enforcing/SELINUX=permissive/' /etc/sysconfig/selinux

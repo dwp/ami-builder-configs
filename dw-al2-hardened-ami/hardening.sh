@@ -2,77 +2,77 @@
 
 # Hardens an Amazon Linux AMI according to CIS Amazon Linux Benchmark v2.1.0
 
-##abh set -eEu
-##abh
-##abh echo "#############################################################"
-##abh echo "1.1.1.1 Ensure mounting of cramfs filesystems is disabled"
-##abh echo "1.1.1.2 Ensure mounting of freevxfs filesystems is disabled"
-##abh echo "1.1.1.3 Ensure mounting of jffs2 filesystems is disabled"
-##abh echo "1.1.1.4 Ensure mounting of hfs filesystems is disabled"
-##abh echo "1.1.1.5 Ensure mounting of hfsplus filesystems is disabled"
-##abh echo "1.1.1.6 Ensure mounting of squashfs filesystems is disabled"
-##abh echo "1.1.1.7 Ensure mounting of udf filesystems is disabled"
-##abh echo "1.1.1.8 Ensure mounting of FAT filesystems is disabled"
-##abh echo "3.5.1 Ensure DCCP is disabled"
-##abh echo "3.5.2 Ensure SCTP is disabled"
-##abh echo "3.5.3 Ensure RDS is disabled"
-##abh echo "3.5.4 Ensure TIPC is disabled"
-##abh > /etc/modprobe.d/CIS.conf
-##abh for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
-##abh     dccp sctp rds tipc; do
-##abh     echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
-##abh done
-##abh
-##abh echo "#############################################################"
-##abh echo "1.1.2 Ensure separate partition exists for /tmp"
-##abh echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-##abh
-##abh echo "#############################################################"
-##abh echo "1.1.3 Ensure nodev option set on /tmp partition"
-##abh echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-##abh
-##abh echo "#############################################################"
-##abh echo "1.1.4 Ensure nosuid option set on /tmp partition"
-##abh echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-##abh
-##abh echo "#############################################################"
-##abh echo "1.1.5 Ensure noexec option set on /tmp partition"
-##abh echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-##abh
-##abh echo "#############################################################"
-##abh echo "1.1.6 Ensure separate partition exists for /var"
-##abh echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-##abh
-##abh echo "#############################################################"
-##abh echo "1.1.7 Ensure separate partition exists for /var/tmp"
-##abh echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-##abh
-##abh echo "#############################################################"
-##abh echo "1.1.8 Ensure nodev option set on /var/tmp partition"
-##abh echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-##abh
-##abh echo "#############################################################"
-##abh echo "1.1.9 Ensure nosuid option set on /var/tmp partition"
-##abh echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-##abh
-##abh echo "#############################################################"
-##abh echo "1.1.10 Ensure noexec option set on /var/tmp partition"
-##abh echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-##abh
-##abh echo "#############################################################"
-##abh echo "1.1.11 Ensure separate partition exists for /var/log"
-##abh echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-##abh
-##abh echo "#############################################################"
-##abh echo "1.1.15 Ensure nodev option set on /dev/shm partition"
-##abh echo "1.1.16 Ensure nosuid option set on /dev/shm partition"
-##abh echo "1.1.17 Ensure noexec option set on /dev/shm partition"
-##abh echo "tmpfs /dev/shm tmpfs defaults,nodev,nosuid,noexec 0 0" > /etc/fstab
-##abh
-##abh echo "#############################################################"
-##abh echo "1.1.18 Set sticky bit on all world-writable directories"
-##abh df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
-##abh
+set -eEu
+
+echo "#############################################################"
+echo "1.1.1.1 Ensure mounting of cramfs filesystems is disabled"
+echo "1.1.1.2 Ensure mounting of freevxfs filesystems is disabled"
+echo "1.1.1.3 Ensure mounting of jffs2 filesystems is disabled"
+echo "1.1.1.4 Ensure mounting of hfs filesystems is disabled"
+echo "1.1.1.5 Ensure mounting of hfsplus filesystems is disabled"
+echo "1.1.1.6 Ensure mounting of squashfs filesystems is disabled"
+echo "1.1.1.7 Ensure mounting of udf filesystems is disabled"
+echo "1.1.1.8 Ensure mounting of FAT filesystems is disabled"
+echo "3.5.1 Ensure DCCP is disabled"
+echo "3.5.2 Ensure SCTP is disabled"
+echo "3.5.3 Ensure RDS is disabled"
+echo "3.5.4 Ensure TIPC is disabled"
+> /etc/modprobe.d/CIS.conf
+for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
+    dccp sctp rds tipc; do
+    echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
+done
+
+echo "#############################################################"
+echo "1.1.2 Ensure separate partition exists for /tmp"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.3 Ensure nodev option set on /tmp partition"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.4 Ensure nosuid option set on /tmp partition"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.5 Ensure noexec option set on /tmp partition"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.6 Ensure separate partition exists for /var"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.7 Ensure separate partition exists for /var/tmp"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.8 Ensure nodev option set on /var/tmp partition"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.9 Ensure nosuid option set on /var/tmp partition"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.10 Ensure noexec option set on /var/tmp partition"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.11 Ensure separate partition exists for /var/log"
+echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+
+echo "#############################################################"
+echo "1.1.15 Ensure nodev option set on /dev/shm partition"
+echo "1.1.16 Ensure nosuid option set on /dev/shm partition"
+echo "1.1.17 Ensure noexec option set on /dev/shm partition"
+echo "tmpfs /dev/shm tmpfs defaults,nodev,nosuid,noexec 0 0" > /etc/fstab
+
+echo "#############################################################"
+echo "1.1.18 Set sticky bit on all world-writable directories"
+df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+
 ##abh echo "#############################################################"
 ##abh echo "1.1.19 Disable Automounting"
 ##abh echo "2.1.1 Ensure chargen services are not enabled"

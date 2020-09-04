@@ -17,11 +17,11 @@ echo "3.5.1 Ensure DCCP is disabled"
 echo "3.5.2 Ensure SCTP is disabled"
 echo "3.5.3 Ensure RDS is disabled"
 echo "3.5.4 Ensure TIPC is disabled"
-> /etc/modprobe.d/CIS.conf
-for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
-    dccp sctp rds tipc; do
-    echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
-done
+##abk  > /etc/modprobe.d/CIS.conf
+##abk  for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
+##abk      dccp sctp rds tipc; do
+##abk      echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
+##abk  done
 
 echo "#############################################################"
 echo "1.1.2 Ensure separate partition exists for /tmp"
@@ -71,7 +71,7 @@ echo "tmpfs /dev/shm tmpfs defaults,nodev,nosuid,noexec 0 0" > /etc/fstab
 
 echo "#############################################################"
 echo "1.1.18 Set sticky bit on all world-writable directories"
-##abj df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
 
 ##abh echo "#############################################################"
 ##abh echo "1.1.19 Disable Automounting"

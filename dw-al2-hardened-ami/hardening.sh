@@ -105,14 +105,14 @@ echo "Only installed service is rpcbind"
 for svc in rpcbind; do
     chkconfig $svc off
 done;
-##abh
+
 echo "#############################################################"
 echo "1.2 Configure Software Updates"
 echo "1.2.1 Ensure package manager repositories are configured"
 echo "1.2.2 Ensure GPG keys are configured"
 echo "1.2.3 Ensure gpgcheck is globally activated"
 echo "Exemption: in-life instances require no access to package repositories; they'll be rebuilt from refreshed AMIs"
-##abh
+
 echo "#############################################################"
 echo "1.3.1 Ensure AIDE is installed"
 echo "1.6.2 Ensure SELinux is installed"
@@ -127,35 +127,35 @@ yum install -y \
   tcp_wrappers \
   iptables \
   rsyslog
-##abh
+
 echo "#############################################################"
 echo "1.3.1 Ensure AIDE is installed"
 aide --init
 mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
-##abh
+
 echo "#############################################################"
 echo "1.3.2 Ensure filesystem integrity is regularly checked"
 echo "0 5 * * * root /usr/sbin/aide --check" > /etc/cron.d/99-CIS
-##abh
+
 echo "#############################################################"
 echo "1.4 Secure Boot Settings"
 echo "1.4.1 Ensure permissions on bootloader config are configured"
-##abh
+
 echo "#############################################################"
 echo "1.4.2 Ensure authentication required for single user mode"
 echo "Exemption: AWS instances do not allow access to the bootloader or console when the instance is started."
-##abh
+
 echo "#############################################################"
 echo "1.4.3 Ensure interactive boot is not enabled"
 echo "PROMPT=NO" >> /etc/sysconfig/init
 # OpenSCAP Rule ID require_singleuser_auth
 echo "SINGLE=/sbin/sulogin" >> /etc/sysconfig/init
-##abh
+
 echo "#############################################################"
 echo "1.5 Additional process hardening"
 echo "1.5.1 Ensure core dumps are restricted"
 echo "* hard core 0" > /etc/security/limits.d/CIS.conf
-##abh
+
 echo "#############################################################"
 echo "1.5.1 Ensure core dumps are restricted"
 echo "1.5.3 Ensure address space layout randomization (ASLR) is enabled"
@@ -198,12 +198,12 @@ net.ipv6.conf.default.accept_ra = 0
 net.ipv6.conf.all.accept_redirects = 0
 net.ipv6.conf.default.accept_redirects = 0
 SYSCTL
-##abg
+
 echo "#############################################################"
 echo "1.5.2 Ensure XD/NX support is enabled"
 echo "Expect: active"
 dmesg | grep NX
-##abg
+
 echo "#############################################################"
 echo "1.5.4 Ensure prelink is disabled"
 echo "1.6.1.4 Ensure SETroubleshoot is not installed"
@@ -226,11 +226,11 @@ yum remove -y  \
     talk \
     telnet \
     openldap-clients --remove-leaves
-##abg
+
 echo "#############################################################"
 echo "1.6.1.1 - Ensure SELinux is not disabled in bootloader configuration"
 echo "Expect: no setting with selinux=0 or enforcing=0"
-##abg
+
 echo "#############################################################"
 echo "1.6.1.2 Ensure the SELinux state is enforcing"
 echo "1.6.1.3 Ensure SELinux policy is configured"
@@ -250,77 +250,77 @@ yum install -y \
 ##abe # Create AutoRelabel
 ##abe touch /.autorelabel
 
-##abf echo "#############################################################"
-##abf echo "1.6.1.6 - Ensure no unconfined daemons exist"
-##abf echo "Expect: no output"
-##abf ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk" | tr ':' ' ' | awk '{ print $NF }'
-##abf
-##abf
-##abf echo "#############################################################"
-##abf echo "1.7 Warning Banners"
-##abf echo "1.7.1 Command Line Warning Banners"
-##abf echo "1.7.1.1 Ensure message of the day is configured properly"
-##abf # Ensure /etc/motd contains nothing; we want to display a warning *before* login
-##abf # in compliance with DWP norms (see 1.7.1.2 below)
-##abf > /etc/motd
-##abf
-##abf # OpenSCAP Rule ID banner_etc_issue will fail (requires a DOD banner)
-##abf echo "#############################################################"
-##abf echo "1.7.1.2 Ensure local login warning banner is configured properly"
-##abf cat > /etc/issue << BANNER
-##abf /------------------------------------------------------------------------------\
-##abf |                              ***** WARNING *****                             |
-##abf |                                                                              |
-##abf | UNAUTHORISED ACCESS TO THIS DEVICE IS PROHIBITED                             |
-##abf |                                                                              |
-##abf | You must have explicit, authorised permission to access or configure this    |
-##abf | device. Unauthorised use of this device is a criminal offence under the      |
-##abf | Computer Misuse Act 1990. Unauthorized attempts and actions to access or use |
-##abf | this system may result in civil and/or criminal penalties.                   |
-##abf |                                                                              |
-##abf | All actions performed on this system must be in accordance with the          |
-##abf | Department's Acceptable Use Policy and Security Operating Procedures         |
-##abf | (SyOps). You must ensure you have read and understand these before           |
-##abf | attempting to log  |on to this system. Use of this system constitutes        |
-##abf | acceptance by you of the provisions of the SyOPs with immediate effect.      |
-##abf |                                                                              |
-##abf | All activities performed on this device are logged and monitored.            |
-##abf |                                                                              |
-##abf | If you do not understand any part of this message then please ask your line  |
-##abf | manager for further guidance before proceeding.                              |
-##abf \------------------------------------------------------------------------------/
-##abf BANNER
-##abf
-##abf echo "#############################################################"
-##abf echo "1.7.1.3 Ensure remote login warning banner is configured properly"
-##abf # We don't intend to allow remote logins, but this meets CIS compliance and
-##abf # ensures compliance with DWP norms if we do decide to enable remote logins
-##abf cp /etc/issue /etc/issue.net
-##abf
-##abf echo "#############################################################"
-##abf echo "1.7.1.4 Ensure permissions on /etc/motd are configured"
-##abf echo "1.7.1.5 Ensure permissions on /etc/issue are configured"
-##abf echo "1.7.1.6 Ensure permissions on /etc/issue.net are configured"
-##abf chmod 0644 /etc/motd
-##abf chmod 0644 /etc/issue
-##abf chmod 0644 /etc/issue.net
-##abf
-##abf echo "#############################################################"
-##abf echo "1.8 Ensure patches, updates, and additional security software are installed"
-##abf echo "Excluded from hardening.sh, added to Userdata in General AMI due to build time constraints"
-##abf # yum update -y
-##abf
-##abf echo "#############################################################"
-##abf echo "2.2.1.2 Ensure ntp is configured"
-##abf echo "ntp not installed"
-##abf
-##abf echo "#############################################################"
-##abf echo "2.2.1.3 Ensure chrony is configured"
-##abf echo "Chrony not installed"
-##abf
-##abf echo "#############################################################"
-##abf echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
-##abf
+echo "#############################################################"
+echo "1.6.1.6 - Ensure no unconfined daemons exist"
+echo "Expect: no output"
+ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk" | tr ':' ' ' | awk '{ print $NF }'
+
+
+echo "#############################################################"
+echo "1.7 Warning Banners"
+echo "1.7.1 Command Line Warning Banners"
+echo "1.7.1.1 Ensure message of the day is configured properly"
+# Ensure /etc/motd contains nothing; we want to display a warning *before* login
+# in compliance with DWP norms (see 1.7.1.2 below)
+> /etc/motd
+
+# OpenSCAP Rule ID banner_etc_issue will fail (requires a DOD banner)
+echo "#############################################################"
+echo "1.7.1.2 Ensure local login warning banner is configured properly"
+cat > /etc/issue << BANNER
+/------------------------------------------------------------------------------\
+|                              ***** WARNING *****                             |
+|                                                                              |
+| UNAUTHORISED ACCESS TO THIS DEVICE IS PROHIBITED                             |
+|                                                                              |
+| You must have explicit, authorised permission to access or configure this    |
+| device. Unauthorised use of this device is a criminal offence under the      |
+| Computer Misuse Act 1990. Unauthorized attempts and actions to access or use |
+| this system may result in civil and/or criminal penalties.                   |
+|                                                                              |
+| All actions performed on this system must be in accordance with the          |
+| Department's Acceptable Use Policy and Security Operating Procedures         |
+| (SyOps). You must ensure you have read and understand these before           |
+| attempting to log  |on to this system. Use of this system constitutes        |
+| acceptance by you of the provisions of the SyOPs with immediate effect.      |
+|                                                                              |
+| All activities performed on this device are logged and monitored.            |
+|                                                                              |
+| If you do not understand any part of this message then please ask your line  |
+| manager for further guidance before proceeding.                              |
+\------------------------------------------------------------------------------/
+BANNER
+
+echo "#############################################################"
+echo "1.7.1.3 Ensure remote login warning banner is configured properly"
+# We don't intend to allow remote logins, but this meets CIS compliance and
+# ensures compliance with DWP norms if we do decide to enable remote logins
+cp /etc/issue /etc/issue.net
+
+echo "#############################################################"
+echo "1.7.1.4 Ensure permissions on /etc/motd are configured"
+echo "1.7.1.5 Ensure permissions on /etc/issue are configured"
+echo "1.7.1.6 Ensure permissions on /etc/issue.net are configured"
+chmod 0644 /etc/motd
+chmod 0644 /etc/issue
+chmod 0644 /etc/issue.net
+
+echo "#############################################################"
+echo "1.8 Ensure patches, updates, and additional security software are installed"
+echo "Excluded from hardening.sh, added to Userdata in General AMI due to build time constraints"
+# yum update -y
+
+echo "#############################################################"
+echo "2.2.1.2 Ensure ntp is configured"
+echo "ntp not installed"
+
+echo "#############################################################"
+echo "2.2.1.3 Ensure chrony is configured"
+echo "Chrony not installed"
+
+echo "#############################################################"
+echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
+
 ##abd echo "#############################################################"
 ##abd echo "3.3.3 Disable ipv6"
 ##abd sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="/GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1 /' /etc/default/grub

@@ -173,73 +173,73 @@ echo "3.3.1 Ensure IPv6 router advertisements are not accepted"
 echo "3.3.2 Ensure IPv6 redirects are not accepted"
 echo "Tweaking sysctl knobs"
 
-##abg # OpenSCAP sysctl_net_ipv6_conf_default_accept_ra, sysctl_net_ipv6_conf_default_accept_redirects
-##abg cat >> /etc/sysctl.conf << SYSCTL
-##abg fs.suid_dumpable = 0
-##abg kernel.randomize_va_space = 2
-##abg net.ipv4.ip_forward = 0
-##abg net.ipv4.conf.all.send_redirects = 0
-##abg net.ipv4.conf.default.send_redirects = 0
-##abg net.ipv4.conf.all.accept_source_route = 0
-##abg net.ipv4.conf.default.accept_source_route = 0
-##abg net.ipv4.conf.all.accept_redirects = 0
-##abg net.ipv4.conf.default.accept_redirects = 0
-##abg net.ipv4.conf.all.secure_redirects = 0
-##abg net.ipv4.conf.default.secure_redirects = 0
-##abg net.ipv4.conf.all.log_martians = 1
-##abg net.ipv4.conf.default.log_martians = 1
-##abg net.ipv4.icmp_echo_ignore_broadcasts = 1
-##abg net.ipv4.icmp_ignore_bogus_error_responses = 1
-##abg net.ipv4.conf.all.rp_filter = 1
-##abg net.ipv4.conf.default.rp_filter = 1
-##abg net.ipv4.tcp_syncookies = 1
-##abg net.ipv6.conf.all.accept_ra = 0
-##abg net.ipv6.conf.default.accept_ra = 0
-##abg net.ipv6.conf.all.accept_redirects = 0
-##abg net.ipv6.conf.default.accept_redirects = 0
-##abg SYSCTL
+# OpenSCAP sysctl_net_ipv6_conf_default_accept_ra, sysctl_net_ipv6_conf_default_accept_redirects
+cat >> /etc/sysctl.conf << SYSCTL
+fs.suid_dumpable = 0
+kernel.randomize_va_space = 2
+net.ipv4.ip_forward = 0
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.default.send_redirects = 0
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv4.conf.default.accept_source_route = 0
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.default.accept_redirects = 0
+net.ipv4.conf.all.secure_redirects = 0
+net.ipv4.conf.default.secure_redirects = 0
+net.ipv4.conf.all.log_martians = 1
+net.ipv4.conf.default.log_martians = 1
+net.ipv4.icmp_echo_ignore_broadcasts = 1
+net.ipv4.icmp_ignore_bogus_error_responses = 1
+net.ipv4.conf.all.rp_filter = 1
+net.ipv4.conf.default.rp_filter = 1
+net.ipv4.tcp_syncookies = 1
+net.ipv6.conf.all.accept_ra = 0
+net.ipv6.conf.default.accept_ra = 0
+net.ipv6.conf.all.accept_redirects = 0
+net.ipv6.conf.default.accept_redirects = 0
+SYSCTL
 ##abg
-##abg echo "#############################################################"
-##abg echo "1.5.2 Ensure XD/NX support is enabled"
-##abg echo "Expect: active"
-##abg dmesg | grep NX
+echo "#############################################################"
+echo "1.5.2 Ensure XD/NX support is enabled"
+echo "Expect: active"
+dmesg | grep NX
 ##abg
-##abg echo "#############################################################"
-##abg echo "1.5.4 Ensure prelink is disabled"
-##abg echo "1.6.1.4 Ensure SETroubleshoot is not installed"
-##abg echo "1.6.1.5 Ensure the MCS Translation Service (mcstrans) is not installed"
-##abg echo "2.2.1.1 Ensure time synchronization is in use"
-##abg echo "2.2.2 Ensure X Window System is not installed"
-##abg echo "2.3.1 Ensure NIS Client is not installed"
-##abg echo "2.3.2 Ensure rsh client is not installed"
-##abg echo "2.3.3 Ensure talk client is not installed"
-##abg echo "2.3.4 Ensure telnet client is not installed"
-##abg echo "2.3.5 Ensure LDAP client is not installed"
-##abg echo "Removing unneccessary packages"
-##abg yum remove -y  \
-##abg     prelink \
-##abg     setroubleshoot \
-##abg     mcstrans \
-##abg     xorg-x11* \
-##abg     ypbind \
-##abg     rsh \
-##abg     talk \
-##abg     telnet \
-##abg     openldap-clients --remove-leaves
+echo "#############################################################"
+echo "1.5.4 Ensure prelink is disabled"
+echo "1.6.1.4 Ensure SETroubleshoot is not installed"
+echo "1.6.1.5 Ensure the MCS Translation Service (mcstrans) is not installed"
+echo "2.2.1.1 Ensure time synchronization is in use"
+echo "2.2.2 Ensure X Window System is not installed"
+echo "2.3.1 Ensure NIS Client is not installed"
+echo "2.3.2 Ensure rsh client is not installed"
+echo "2.3.3 Ensure talk client is not installed"
+echo "2.3.4 Ensure telnet client is not installed"
+echo "2.3.5 Ensure LDAP client is not installed"
+echo "Removing unneccessary packages"
+yum remove -y  \
+    prelink \
+    setroubleshoot \
+    mcstrans \
+    xorg-x11* \
+    ypbind \
+    rsh \
+    talk \
+    telnet \
+    openldap-clients --remove-leaves
 ##abg
-##abg echo "#############################################################"
-##abg echo "1.6.1.1 - Ensure SELinux is not disabled in bootloader configuration"
-##abg echo "Expect: no setting with selinux=0 or enforcing=0"
+echo "#############################################################"
+echo "1.6.1.1 - Ensure SELinux is not disabled in bootloader configuration"
+echo "Expect: no setting with selinux=0 or enforcing=0"
 ##abg
-##abg echo "#############################################################"
-##abg echo "1.6.1.2 Ensure the SELinux state is enforcing"
-##abg echo "1.6.1.3 Ensure SELinux policy is configured"
-##abg echo "Configuring SELinux"
-##abg # Install pre-requisites
-##abg yum install -y \
-##abg     selinux-policy \
-##abg     selinux-policy-targeted \
-##abg     policycoreutils-python
+echo "#############################################################"
+echo "1.6.1.2 Ensure the SELinux state is enforcing"
+echo "1.6.1.3 Ensure SELinux policy is configured"
+echo "Configuring SELinux"
+# Install pre-requisites
+yum install -y \
+    selinux-policy \
+    selinux-policy-targeted \
+    policycoreutils-python
 
 ##abe #create config file
 ##abe cat > /etc/selinux/config << EOF

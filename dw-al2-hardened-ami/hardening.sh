@@ -71,7 +71,7 @@ echo "tmpfs /dev/shm tmpfs defaults,nodev,nosuid,noexec 0 0" > /etc/fstab
 
 echo "#############################################################"
 echo "1.1.18 Set sticky bit on all world-writable directories"
-df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+##abj df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
 
 ##abh echo "#############################################################"
 ##abh echo "1.1.19 Disable Automounting"

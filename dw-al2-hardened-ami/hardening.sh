@@ -172,74 +172,74 @@ echo "3.2.8 Ensure TCP SYN Cookies is enabled"
 echo "3.3.1 Ensure IPv6 router advertisements are not accepted"
 echo "3.3.2 Ensure IPv6 redirects are not accepted"
 echo "Tweaking sysctl knobs"
-
-# OpenSCAP sysctl_net_ipv6_conf_default_accept_ra, sysctl_net_ipv6_conf_default_accept_redirects
-cat >> /etc/sysctl.conf << SYSCTL
-fs.suid_dumpable = 0
-kernel.randomize_va_space = 2
-net.ipv4.ip_forward = 0
-net.ipv4.conf.all.send_redirects = 0
-net.ipv4.conf.default.send_redirects = 0
-net.ipv4.conf.all.accept_source_route = 0
-net.ipv4.conf.default.accept_source_route = 0
-net.ipv4.conf.all.accept_redirects = 0
-net.ipv4.conf.default.accept_redirects = 0
-net.ipv4.conf.all.secure_redirects = 0
-net.ipv4.conf.default.secure_redirects = 0
-net.ipv4.conf.all.log_martians = 1
-net.ipv4.conf.default.log_martians = 1
-net.ipv4.icmp_echo_ignore_broadcasts = 1
-net.ipv4.icmp_ignore_bogus_error_responses = 1
-net.ipv4.conf.all.rp_filter = 1
-net.ipv4.conf.default.rp_filter = 1
-net.ipv4.tcp_syncookies = 1
-net.ipv6.conf.all.accept_ra = 0
-net.ipv6.conf.default.accept_ra = 0
-net.ipv6.conf.all.accept_redirects = 0
-net.ipv6.conf.default.accept_redirects = 0
-SYSCTL
-
-echo "#############################################################"
-echo "1.5.2 Ensure XD/NX support is enabled"
-echo "Expect: active"
-dmesg | grep NX
-
-echo "#############################################################"
-echo "1.5.4 Ensure prelink is disabled"
-echo "1.6.1.4 Ensure SETroubleshoot is not installed"
-echo "1.6.1.5 Ensure the MCS Translation Service (mcstrans) is not installed"
-echo "2.2.1.1 Ensure time synchronization is in use"
-echo "2.2.2 Ensure X Window System is not installed"
-echo "2.3.1 Ensure NIS Client is not installed"
-echo "2.3.2 Ensure rsh client is not installed"
-echo "2.3.3 Ensure talk client is not installed"
-echo "2.3.4 Ensure telnet client is not installed"
-echo "2.3.5 Ensure LDAP client is not installed"
-echo "Removing unneccessary packages"
-yum remove -y  \
-    prelink \
-    setroubleshoot \
-    mcstrans \
-    xorg-x11* \
-    ypbind \
-    rsh \
-    talk \
-    telnet \
-    openldap-clients --remove-leaves
-
-echo "#############################################################"
-echo "1.6.1.1 - Ensure SELinux is not disabled in bootloader configuration"
-echo "Expect: no setting with selinux=0 or enforcing=0"
-
-echo "#############################################################"
-echo "1.6.1.2 Ensure the SELinux state is enforcing"
-echo "1.6.1.3 Ensure SELinux policy is configured"
-echo "Configuring SELinux"
-# Install pre-requisites
-yum install -y \
-    selinux-policy \
-    selinux-policy-targeted \
-    policycoreutils-python
+##abg
+##abg # OpenSCAP sysctl_net_ipv6_conf_default_accept_ra, sysctl_net_ipv6_conf_default_accept_redirects
+##abg cat >> /etc/sysctl.conf << SYSCTL
+##abg fs.suid_dumpable = 0
+##abg kernel.randomize_va_space = 2
+##abg net.ipv4.ip_forward = 0
+##abg net.ipv4.conf.all.send_redirects = 0
+##abg net.ipv4.conf.default.send_redirects = 0
+##abg net.ipv4.conf.all.accept_source_route = 0
+##abg net.ipv4.conf.default.accept_source_route = 0
+##abg net.ipv4.conf.all.accept_redirects = 0
+##abg net.ipv4.conf.default.accept_redirects = 0
+##abg net.ipv4.conf.all.secure_redirects = 0
+##abg net.ipv4.conf.default.secure_redirects = 0
+##abg net.ipv4.conf.all.log_martians = 1
+##abg net.ipv4.conf.default.log_martians = 1
+##abg net.ipv4.icmp_echo_ignore_broadcasts = 1
+##abg net.ipv4.icmp_ignore_bogus_error_responses = 1
+##abg net.ipv4.conf.all.rp_filter = 1
+##abg net.ipv4.conf.default.rp_filter = 1
+##abg net.ipv4.tcp_syncookies = 1
+##abg net.ipv6.conf.all.accept_ra = 0
+##abg net.ipv6.conf.default.accept_ra = 0
+##abg net.ipv6.conf.all.accept_redirects = 0
+##abg net.ipv6.conf.default.accept_redirects = 0
+##abg SYSCTL
+##abg
+##abg echo "#############################################################"
+##abg echo "1.5.2 Ensure XD/NX support is enabled"
+##abg echo "Expect: active"
+##abg dmesg | grep NX
+##abg
+##abg echo "#############################################################"
+##abg echo "1.5.4 Ensure prelink is disabled"
+##abg echo "1.6.1.4 Ensure SETroubleshoot is not installed"
+##abg echo "1.6.1.5 Ensure the MCS Translation Service (mcstrans) is not installed"
+##abg echo "2.2.1.1 Ensure time synchronization is in use"
+##abg echo "2.2.2 Ensure X Window System is not installed"
+##abg echo "2.3.1 Ensure NIS Client is not installed"
+##abg echo "2.3.2 Ensure rsh client is not installed"
+##abg echo "2.3.3 Ensure talk client is not installed"
+##abg echo "2.3.4 Ensure telnet client is not installed"
+##abg echo "2.3.5 Ensure LDAP client is not installed"
+##abg echo "Removing unneccessary packages"
+##abg yum remove -y  \
+##abg     prelink \
+##abg     setroubleshoot \
+##abg     mcstrans \
+##abg     xorg-x11* \
+##abg     ypbind \
+##abg     rsh \
+##abg     talk \
+##abg     telnet \
+##abg     openldap-clients --remove-leaves
+##abg
+##abg echo "#############################################################"
+##abg echo "1.6.1.1 - Ensure SELinux is not disabled in bootloader configuration"
+##abg echo "Expect: no setting with selinux=0 or enforcing=0"
+##abg
+##abg echo "#############################################################"
+##abg echo "1.6.1.2 Ensure the SELinux state is enforcing"
+##abg echo "1.6.1.3 Ensure SELinux policy is configured"
+##abg echo "Configuring SELinux"
+##abg # Install pre-requisites
+##abg yum install -y \
+##abg     selinux-policy \
+##abg     selinux-policy-targeted \
+##abg     policycoreutils-python
 
 ##abe #create config file
 ##abe cat > /etc/selinux/config << EOF
@@ -250,77 +250,77 @@ yum install -y \
 ##abe # Create AutoRelabel
 ##abe touch /.autorelabel
 
-echo "#############################################################"
-echo "1.6.1.6 - Ensure no unconfined daemons exist"
-echo "Expect: no output"
-ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk" | tr ':' ' ' | awk '{ print $NF }'
-
-
-echo "#############################################################"
-echo "1.7 Warning Banners"
-echo "1.7.1 Command Line Warning Banners"
-echo "1.7.1.1 Ensure message of the day is configured properly"
-# Ensure /etc/motd contains nothing; we want to display a warning *before* login
-# in compliance with DWP norms (see 1.7.1.2 below)
-> /etc/motd
-
-# OpenSCAP Rule ID banner_etc_issue will fail (requires a DOD banner)
-echo "#############################################################"
-echo "1.7.1.2 Ensure local login warning banner is configured properly"
-cat > /etc/issue << BANNER
-/------------------------------------------------------------------------------\
-|                              ***** WARNING *****                             |
-|                                                                              |
-| UNAUTHORISED ACCESS TO THIS DEVICE IS PROHIBITED                             |
-|                                                                              |
-| You must have explicit, authorised permission to access or configure this    |
-| device. Unauthorised use of this device is a criminal offence under the      |
-| Computer Misuse Act 1990. Unauthorized attempts and actions to access or use |
-| this system may result in civil and/or criminal penalties.                   |
-|                                                                              |
-| All actions performed on this system must be in accordance with the          |
-| Department's Acceptable Use Policy and Security Operating Procedures         |
-| (SyOps). You must ensure you have read and understand these before           |
-| attempting to log  |on to this system. Use of this system constitutes        |
-| acceptance by you of the provisions of the SyOPs with immediate effect.      |
-|                                                                              |
-| All activities performed on this device are logged and monitored.            |
-|                                                                              |
-| If you do not understand any part of this message then please ask your line  |
-| manager for further guidance before proceeding.                              |
-\------------------------------------------------------------------------------/
-BANNER
-
-echo "#############################################################"
-echo "1.7.1.3 Ensure remote login warning banner is configured properly"
-# We don't intend to allow remote logins, but this meets CIS compliance and
-# ensures compliance with DWP norms if we do decide to enable remote logins
-cp /etc/issue /etc/issue.net
-
-echo "#############################################################"
-echo "1.7.1.4 Ensure permissions on /etc/motd are configured"
-echo "1.7.1.5 Ensure permissions on /etc/issue are configured"
-echo "1.7.1.6 Ensure permissions on /etc/issue.net are configured"
-chmod 0644 /etc/motd
-chmod 0644 /etc/issue
-chmod 0644 /etc/issue.net
-
-echo "#############################################################"
-echo "1.8 Ensure patches, updates, and additional security software are installed"
-echo "Excluded from hardening.sh, added to Userdata in General AMI due to build time constraints"
-# yum update -y
-
-echo "#############################################################"
-echo "2.2.1.2 Ensure ntp is configured"
-echo "ntp not installed"
-
-echo "#############################################################"
-echo "2.2.1.3 Ensure chrony is configured"
-echo "Chrony not installed"
-
-echo "#############################################################"
-echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
-
+##abf echo "#############################################################"
+##abf echo "1.6.1.6 - Ensure no unconfined daemons exist"
+##abf echo "Expect: no output"
+##abf ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk" | tr ':' ' ' | awk '{ print $NF }'
+##abf
+##abf
+##abf echo "#############################################################"
+##abf echo "1.7 Warning Banners"
+##abf echo "1.7.1 Command Line Warning Banners"
+##abf echo "1.7.1.1 Ensure message of the day is configured properly"
+##abf # Ensure /etc/motd contains nothing; we want to display a warning *before* login
+##abf # in compliance with DWP norms (see 1.7.1.2 below)
+##abf > /etc/motd
+##abf
+##abf # OpenSCAP Rule ID banner_etc_issue will fail (requires a DOD banner)
+##abf echo "#############################################################"
+##abf echo "1.7.1.2 Ensure local login warning banner is configured properly"
+##abf cat > /etc/issue << BANNER
+##abf /------------------------------------------------------------------------------\
+##abf |                              ***** WARNING *****                             |
+##abf |                                                                              |
+##abf | UNAUTHORISED ACCESS TO THIS DEVICE IS PROHIBITED                             |
+##abf |                                                                              |
+##abf | You must have explicit, authorised permission to access or configure this    |
+##abf | device. Unauthorised use of this device is a criminal offence under the      |
+##abf | Computer Misuse Act 1990. Unauthorized attempts and actions to access or use |
+##abf | this system may result in civil and/or criminal penalties.                   |
+##abf |                                                                              |
+##abf | All actions performed on this system must be in accordance with the          |
+##abf | Department's Acceptable Use Policy and Security Operating Procedures         |
+##abf | (SyOps). You must ensure you have read and understand these before           |
+##abf | attempting to log  |on to this system. Use of this system constitutes        |
+##abf | acceptance by you of the provisions of the SyOPs with immediate effect.      |
+##abf |                                                                              |
+##abf | All activities performed on this device are logged and monitored.            |
+##abf |                                                                              |
+##abf | If you do not understand any part of this message then please ask your line  |
+##abf | manager for further guidance before proceeding.                              |
+##abf \------------------------------------------------------------------------------/
+##abf BANNER
+##abf
+##abf echo "#############################################################"
+##abf echo "1.7.1.3 Ensure remote login warning banner is configured properly"
+##abf # We don't intend to allow remote logins, but this meets CIS compliance and
+##abf # ensures compliance with DWP norms if we do decide to enable remote logins
+##abf cp /etc/issue /etc/issue.net
+##abf
+##abf echo "#############################################################"
+##abf echo "1.7.1.4 Ensure permissions on /etc/motd are configured"
+##abf echo "1.7.1.5 Ensure permissions on /etc/issue are configured"
+##abf echo "1.7.1.6 Ensure permissions on /etc/issue.net are configured"
+##abf chmod 0644 /etc/motd
+##abf chmod 0644 /etc/issue
+##abf chmod 0644 /etc/issue.net
+##abf
+##abf echo "#############################################################"
+##abf echo "1.8 Ensure patches, updates, and additional security software are installed"
+##abf echo "Excluded from hardening.sh, added to Userdata in General AMI due to build time constraints"
+##abf # yum update -y
+##abf
+##abf echo "#############################################################"
+##abf echo "2.2.1.2 Ensure ntp is configured"
+##abf echo "ntp not installed"
+##abf
+##abf echo "#############################################################"
+##abf echo "2.2.1.3 Ensure chrony is configured"
+##abf echo "Chrony not installed"
+##abf
+##abf echo "#############################################################"
+##abf echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
+##abf
 ##abd echo "#############################################################"
 ##abd echo "3.3.3 Disable ipv6"
 ##abd sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="/GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1 /' /etc/default/grub

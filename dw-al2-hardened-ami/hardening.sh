@@ -241,14 +241,14 @@ yum install -y \
     selinux-policy-targeted \
     policycoreutils-python
 
-##abe #create config file
-##abe cat > /etc/selinux/config << EOF
-##abe SELINUX=enforcing
-##abe SELINUXTYPE=targeted
-##abe EOF
-##abe
-##abe # Create AutoRelabel
-##abe touch /.autorelabel
+#create config file
+cat > /etc/selinux/config << EOF
+SELINUX=enforcing
+SELINUXTYPE=targeted
+EOF
+
+# Create AutoRelabel
+touch /.autorelabel
 
 echo "#############################################################"
 echo "1.6.1.6 - Ensure no unconfined daemons exist"
@@ -1089,6 +1089,3 @@ echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
 ##abc
 ##abc # OpenSCAP Rule ID umask_for_daemons
 ##abc sed -i 's/^umask 022/umask 027/' /etc/init.d/functions
-##abc
-##abc sed -i 's/^SELINUX=enforcing/SELINUX=permissive/' /etc/sysconfig/selinux
-##abc

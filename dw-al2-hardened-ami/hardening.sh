@@ -4,174 +4,174 @@
 
 set -eEu
 
-echo "#############################################################"
-echo "1.1.1.1 Ensure mounting of cramfs filesystems is disabled"
-echo "1.1.1.2 Ensure mounting of freevxfs filesystems is disabled"
-echo "1.1.1.3 Ensure mounting of jffs2 filesystems is disabled"
-echo "1.1.1.4 Ensure mounting of hfs filesystems is disabled"
-echo "1.1.1.5 Ensure mounting of hfsplus filesystems is disabled"
-echo "1.1.1.6 Ensure mounting of squashfs filesystems is disabled"
-echo "1.1.1.7 Ensure mounting of udf filesystems is disabled"
-echo "1.1.1.8 Ensure mounting of FAT filesystems is disabled"
-echo "3.5.1 Ensure DCCP is disabled"
-echo "3.5.2 Ensure SCTP is disabled"
-echo "3.5.3 Ensure RDS is disabled"
-echo "3.5.4 Ensure TIPC is disabled"
-##abk  > /etc/modprobe.d/CIS.conf
-##abk  for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
-##abk      dccp sctp rds tipc; do
-##abk      echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
-##abk  done
+##ex1 echo "#############################################################"
+##ex1 echo "1.1.1.1 Ensure mounting of cramfs filesystems is disabled"
+##ex1 echo "1.1.1.2 Ensure mounting of freevxfs filesystems is disabled"
+##ex1 echo "1.1.1.3 Ensure mounting of jffs2 filesystems is disabled"
+##ex1 echo "1.1.1.4 Ensure mounting of hfs filesystems is disabled"
+##ex1 echo "1.1.1.5 Ensure mounting of hfsplus filesystems is disabled"
+##ex1 echo "1.1.1.6 Ensure mounting of squashfs filesystems is disabled"
+##ex1 echo "1.1.1.7 Ensure mounting of udf filesystems is disabled"
+##ex1 echo "1.1.1.8 Ensure mounting of FAT filesystems is disabled"
+##ex1 echo "3.5.1 Ensure DCCP is disabled"
+##ex1 echo "3.5.2 Ensure SCTP is disabled"
+##ex1 echo "3.5.3 Ensure RDS is disabled"
+##ex1 echo "3.5.4 Ensure TIPC is disabled"
+##ex1 > /etc/modprobe.d/CIS.conf
+##ex1 for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
+##ex1     dccp sctp rds tipc; do
+##ex1     echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
+##ex1 done
+##ex1 
+##ex1 echo "#############################################################"
+##ex1 echo "1.1.2 Ensure separate partition exists for /tmp"
+##ex1 echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+##ex1 
+##ex1 echo "#############################################################"
+##ex1 echo "1.1.3 Ensure nodev option set on /tmp partition"
+##ex1 echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+##ex1 
+##ex1 echo "#############################################################"
+##ex1 echo "1.1.4 Ensure nosuid option set on /tmp partition"
+##ex1 echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+##ex1 
+##ex1 echo "#############################################################"
+##ex1 echo "1.1.5 Ensure noexec option set on /tmp partition"
+##ex1 echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+##ex1 
+##ex1 echo "#############################################################"
+##ex1 echo "1.1.6 Ensure separate partition exists for /var"
+##ex1 echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+##ex1 
+##ex1 echo "#############################################################"
+##ex1 echo "1.1.7 Ensure separate partition exists for /var/tmp"
+##ex1 echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+##ex1 
+##ex1 echo "#############################################################"
+##ex1 echo "1.1.8 Ensure nodev option set on /var/tmp partition"
+##ex1 echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+##ex1 
+##ex1 echo "#############################################################"
+##ex1 echo "1.1.9 Ensure nosuid option set on /var/tmp partition"
+##ex1 echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+##ex1 
+##ex1 echo "#############################################################"
+##ex1 echo "1.1.10 Ensure noexec option set on /var/tmp partition"
+##ex1 echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+##ex1 
+##ex1 echo "#############################################################"
+##ex1 echo "1.1.11 Ensure separate partition exists for /var/log"
+##ex1 echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
+##ex1 
+##ex1 echo "#############################################################"
+##ex1 echo "1.1.15 Ensure nodev option set on /dev/shm partition"
+##ex1 echo "1.1.16 Ensure nosuid option set on /dev/shm partition"
+##ex1 echo "1.1.17 Ensure noexec option set on /dev/shm partition"
+##ex1 echo "tmpfs /dev/shm tmpfs defaults,nodev,nosuid,noexec 0 0" > /etc/fstab
+##ex1 
+##ex1 echo "#############################################################"
+##ex1 echo "1.1.18 Set sticky bit on all world-writable directories"
+##ex1 df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
 
 echo "#############################################################"
-echo "1.1.2 Ensure separate partition exists for /tmp"
-echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-
-echo "#############################################################"
-echo "1.1.3 Ensure nodev option set on /tmp partition"
-echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-
-echo "#############################################################"
-echo "1.1.4 Ensure nosuid option set on /tmp partition"
-echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-
-echo "#############################################################"
-echo "1.1.5 Ensure noexec option set on /tmp partition"
-echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-
-echo "#############################################################"
-echo "1.1.6 Ensure separate partition exists for /var"
-echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-
-echo "#############################################################"
-echo "1.1.7 Ensure separate partition exists for /var/tmp"
-echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-
-echo "#############################################################"
-echo "1.1.8 Ensure nodev option set on /var/tmp partition"
-echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-
-echo "#############################################################"
-echo "1.1.9 Ensure nosuid option set on /var/tmp partition"
-echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-
-echo "#############################################################"
-echo "1.1.10 Ensure noexec option set on /var/tmp partition"
-echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-
-echo "#############################################################"
-echo "1.1.11 Ensure separate partition exists for /var/log"
-echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
-
-echo "#############################################################"
-echo "1.1.15 Ensure nodev option set on /dev/shm partition"
-echo "1.1.16 Ensure nosuid option set on /dev/shm partition"
-echo "1.1.17 Ensure noexec option set on /dev/shm partition"
-echo "tmpfs /dev/shm tmpfs defaults,nodev,nosuid,noexec 0 0" > /etc/fstab
-
-echo "#############################################################"
-echo "1.1.18 Set sticky bit on all world-writable directories"
-df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
-
-##abh echo "#############################################################"
-##abh echo "1.1.19 Disable Automounting"
-##abh echo "2.1.1 Ensure chargen services are not enabled"
-##abh echo "2.1.2 Ensure daytime services are not enabled"
-##abh echo "2.1.3 Ensure discard services are not enabled"
-##abh echo "2.1.4 Ensure echo services are not enabled"
-##abh echo "2.1.5 Ensure time services are not enabled"
-##abh echo "2.1.6 Ensure rsh server is not enabled"
-##abh echo "2.1.7 Ensure talk server is not enabled"
-##abh echo "2.1.8 Ensure telnet server is not enabled"
-##abh echo "2.1.9 Ensure tftp server is not enabled"
-##abh echo "2.1.10 Ensure rsync service is not enabled"
-##abh echo "2.1.11 Ensure xinetd is not enabled"
-##abh echo "2.2.3 Ensure Avahi Server is not enabled"
-##abh echo "2.2.4 Ensure CUPS is not enabled"
-##abh echo "2.2.5 Ensure DHCP Server is not enabled"
-##abh echo "2.2.6 Ensure LDAP server is not enabled"
-##abh echo "2.2.7 Ensure NFS and RPC are not enabled"
-##abh echo "2.2.8 Ensure DNS Server is not enabled"
-##abh echo "2.2.9 Ensure FTP Server is not enabled"
-##abh echo "2.2.10 Ensure HTTP server is not enabled"
-##abh echo "2.2.11 Ensure IMAP and POP3 server is not enabled"
-##abh echo "2.2.12 Ensure Samba is not enabled"
-##abh echo "2.2.13 Ensure HTTP Proxy Server is not enabled"
-##abh echo "2.2.14 Ensure SNMP Server is not enabled"
-##abh echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
-##abh echo "2.2.16 Ensure NIS Server is not enabled"
-##abh echo "Disabling unnecessary services"
-##abh echo "Only installed service is rpcbind"
-##abh for svc in rpcbind; do
-##abh     chkconfig $svc off
-##abh done;
+echo "1.1.19 Disable Automounting"
+echo "2.1.1 Ensure chargen services are not enabled"
+echo "2.1.2 Ensure daytime services are not enabled"
+echo "2.1.3 Ensure discard services are not enabled"
+echo "2.1.4 Ensure echo services are not enabled"
+echo "2.1.5 Ensure time services are not enabled"
+echo "2.1.6 Ensure rsh server is not enabled"
+echo "2.1.7 Ensure talk server is not enabled"
+echo "2.1.8 Ensure telnet server is not enabled"
+echo "2.1.9 Ensure tftp server is not enabled"
+echo "2.1.10 Ensure rsync service is not enabled"
+echo "2.1.11 Ensure xinetd is not enabled"
+echo "2.2.3 Ensure Avahi Server is not enabled"
+echo "2.2.4 Ensure CUPS is not enabled"
+echo "2.2.5 Ensure DHCP Server is not enabled"
+echo "2.2.6 Ensure LDAP server is not enabled"
+echo "2.2.7 Ensure NFS and RPC are not enabled"
+echo "2.2.8 Ensure DNS Server is not enabled"
+echo "2.2.9 Ensure FTP Server is not enabled"
+echo "2.2.10 Ensure HTTP server is not enabled"
+echo "2.2.11 Ensure IMAP and POP3 server is not enabled"
+echo "2.2.12 Ensure Samba is not enabled"
+echo "2.2.13 Ensure HTTP Proxy Server is not enabled"
+echo "2.2.14 Ensure SNMP Server is not enabled"
+echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
+echo "2.2.16 Ensure NIS Server is not enabled"
+echo "Disabling unnecessary services"
+echo "Only installed service is rpcbind"
+for svc in rpcbind; do
+    chkconfig $svc off
+done;
 ##abh
-##abh echo "#############################################################"
-##abh echo "1.2 Configure Software Updates"
-##abh echo "1.2.1 Ensure package manager repositories are configured"
-##abh echo "1.2.2 Ensure GPG keys are configured"
-##abh echo "1.2.3 Ensure gpgcheck is globally activated"
-##abh echo "Exemption: in-life instances require no access to package repositories; they'll be rebuilt from refreshed AMIs"
+echo "#############################################################"
+echo "1.2 Configure Software Updates"
+echo "1.2.1 Ensure package manager repositories are configured"
+echo "1.2.2 Ensure GPG keys are configured"
+echo "1.2.3 Ensure gpgcheck is globally activated"
+echo "Exemption: in-life instances require no access to package repositories; they'll be rebuilt from refreshed AMIs"
 ##abh
-##abh echo "#############################################################"
-##abh echo "1.3.1 Ensure AIDE is installed"
-##abh echo "1.6.2 Ensure SELinux is installed"
-##abh echo "2.2.1.1 Ensure time synchronization is in use"
-##abh echo "3.4.1 Ensure TCP Wrappers is installed"
-##abh echo "3.6.1 Ensure iptables is installed"
-##abh echo "4.2.3 Ensure rsyslog or syslog-ng is installed"
-##abh echo "Installing required packages"
-##abh yum install -y \
-##abh   aide \
-##abh   libselinux \
-##abh   tcp_wrappers \
-##abh   iptables \
-##abh   rsyslog
+echo "#############################################################"
+echo "1.3.1 Ensure AIDE is installed"
+echo "1.6.2 Ensure SELinux is installed"
+echo "2.2.1.1 Ensure time synchronization is in use"
+echo "3.4.1 Ensure TCP Wrappers is installed"
+echo "3.6.1 Ensure iptables is installed"
+echo "4.2.3 Ensure rsyslog or syslog-ng is installed"
+echo "Installing required packages"
+yum install -y \
+  aide \
+  libselinux \
+  tcp_wrappers \
+  iptables \
+  rsyslog
 ##abh
-##abh echo "#############################################################"
-##abh echo "1.3.1 Ensure AIDE is installed"
-##abh aide --init
-##abh mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+echo "#############################################################"
+echo "1.3.1 Ensure AIDE is installed"
+aide --init
+mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
 ##abh
-##abh echo "#############################################################"
-##abh echo "1.3.2 Ensure filesystem integrity is regularly checked"
-##abh echo "0 5 * * * root /usr/sbin/aide --check" > /etc/cron.d/99-CIS
+echo "#############################################################"
+echo "1.3.2 Ensure filesystem integrity is regularly checked"
+echo "0 5 * * * root /usr/sbin/aide --check" > /etc/cron.d/99-CIS
 ##abh
-##abh echo "#############################################################"
-##abh echo "1.4 Secure Boot Settings"
-##abh echo "1.4.1 Ensure permissions on bootloader config are configured"
+echo "#############################################################"
+echo "1.4 Secure Boot Settings"
+echo "1.4.1 Ensure permissions on bootloader config are configured"
 ##abh
-##abh echo "#############################################################"
-##abh echo "1.4.2 Ensure authentication required for single user mode"
-##abh echo "Exemption: AWS instances do not allow access to the bootloader or console when the instance is started."
+echo "#############################################################"
+echo "1.4.2 Ensure authentication required for single user mode"
+echo "Exemption: AWS instances do not allow access to the bootloader or console when the instance is started."
 ##abh
-##abh echo "#############################################################"
-##abh echo "1.4.3 Ensure interactive boot is not enabled"
-##abh echo "PROMPT=NO" >> /etc/sysconfig/init
-##abh # OpenSCAP Rule ID require_singleuser_auth
-##abh echo "SINGLE=/sbin/sulogin" >> /etc/sysconfig/init
+echo "#############################################################"
+echo "1.4.3 Ensure interactive boot is not enabled"
+echo "PROMPT=NO" >> /etc/sysconfig/init
+# OpenSCAP Rule ID require_singleuser_auth
+echo "SINGLE=/sbin/sulogin" >> /etc/sysconfig/init
 ##abh
-##abh echo "#############################################################"
-##abh echo "1.5 Additional process hardening"
-##abh echo "1.5.1 Ensure core dumps are restricted"
-##abh echo "* hard core 0" > /etc/security/limits.d/CIS.conf
+echo "#############################################################"
+echo "1.5 Additional process hardening"
+echo "1.5.1 Ensure core dumps are restricted"
+echo "* hard core 0" > /etc/security/limits.d/CIS.conf
 ##abh
-##abh echo "#############################################################"
-##abh echo "1.5.1 Ensure core dumps are restricted"
-##abh echo "1.5.3 Ensure address space layout randomization (ASLR) is enabled"
-##abh echo "3.1.1 Ensure IP forwarding is disabled"
-##abh echo "3.1.2 Ensure packet redirect sending is disabled"
-##abh echo "3.2.1 Ensure source routed packets are not accepted"
-##abh echo "3.2.2 Ensure ICMP redirects are not accepted"
-##abh echo "3.2.3 Ensure secure ICMP redirects are not accepted"
-##abh echo "3.2.4 Ensure suspicious packets are logged"
-##abh echo "3.2.5 Ensure broadcast ICMP requests are ignored"
-##abh echo "3.2.6 Ensure bogus ICMP responses are ignored"
-##abh echo "3.2.7 Ensure Reverse Path Filtering is enabled"
-##abh echo "3.2.8 Ensure TCP SYN Cookies is enabled"
-##abh echo "3.3.1 Ensure IPv6 router advertisements are not accepted"
-##abh echo "3.3.2 Ensure IPv6 redirects are not accepted"
-##abh echo "Tweaking sysctl knobs"
+echo "#############################################################"
+echo "1.5.1 Ensure core dumps are restricted"
+echo "1.5.3 Ensure address space layout randomization (ASLR) is enabled"
+echo "3.1.1 Ensure IP forwarding is disabled"
+echo "3.1.2 Ensure packet redirect sending is disabled"
+echo "3.2.1 Ensure source routed packets are not accepted"
+echo "3.2.2 Ensure ICMP redirects are not accepted"
+echo "3.2.3 Ensure secure ICMP redirects are not accepted"
+echo "3.2.4 Ensure suspicious packets are logged"
+echo "3.2.5 Ensure broadcast ICMP requests are ignored"
+echo "3.2.6 Ensure bogus ICMP responses are ignored"
+echo "3.2.7 Ensure Reverse Path Filtering is enabled"
+echo "3.2.8 Ensure TCP SYN Cookies is enabled"
+echo "3.3.1 Ensure IPv6 router advertisements are not accepted"
+echo "3.3.2 Ensure IPv6 redirects are not accepted"
+echo "Tweaking sysctl knobs"
 
 ##abg # OpenSCAP sysctl_net_ipv6_conf_default_accept_ra, sysctl_net_ipv6_conf_default_accept_redirects
 ##abg cat >> /etc/sysctl.conf << SYSCTL

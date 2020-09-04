@@ -378,6 +378,21 @@ echo "4.1.3 Ensure auditing for processes that start prior to auditd is enabled"
 sed -i -e '/^-a never,task/ s/$/# /' /etc/audit/audit.rules
 
 
+
+# pointless change
+
+
+
+
+
+
+
+
+
+
+
+
+
 echo "#############################################################"
 echo "4.1.4 Ensure events that modify date and time information are collected"
 echo "4.1.5 Ensure events that modify user/group information are collected"

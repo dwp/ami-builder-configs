@@ -321,193 +321,194 @@ echo "Chrony not installed"
 echo "#############################################################"
 echo "2.2.15 Ensure mail transfer agent is configured for local-only mode"
 
-echo "#############################################################"
-echo "3.3.3 Disable ipv6"
-sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="/GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1 /' /etc/default/grub
-grub2-mkconfig -o /boot/grub2/grub.cfg
+##abd echo "#############################################################"
+##abd echo "3.3.3 Disable ipv6"
+##abd sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="/GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1 /' /etc/default/grub
+##abd grub2-mkconfig -o /boot/grub2/grub.cfg
+##abd
+##abd echo "#############################################################"
+##abd echo "3.4.2 Ensure /etc/hosts.allow is configured"
+##abd echo "3.4.3 Ensure /etc/hosts.deny is configured"
+##abd echo "3.4.4 Ensure permissions on /etc/hosts.allow are configured"
+##abd echo "3.4.5 Ensure permissions on /etc/hosts.deny are configured"
+##abd echo "Exemption: Disable host-based connection blocking as SGs do what we need"
+##abd echo "ALL: ALL" > /etc/hosts.allow
+##abd > /etc/hosts.deny
+##abd chmod 0644 /etc/hosts.allow
+##abd chmod 0644 /etc/hosts.deny
+##abd
+##abd echo "#############################################################"
+##abd echo "3.6 Firewall Configuration"
+##abd echo "3.6.1 Ensure iptables is installed"
+##abd echo "3.6.2 Ensure default deny firewall policy"
+##abd echo "3.6.3 Ensure loopback traffic is configured"
+##abd echo "3.6.4 Ensure outbound and established connections are configured"
+##abd echo "3.6.5 Ensure firewall rules exist for all open ports"
+##abd echo "Configuring iptables"
+##abd echo "Exemption:  SGs do what we need"
+##abd
+##abd echo "#############################################################"
+##abd echo "4.1.1.1 Ensure audit log storage size is configured"
+##abd echo "4.1.1.2 Ensure system is disabled when audit logs are full"
+##abd # Note that in order to not fill disks with Audit Logs (which will be shipped to
+##abd # CloudWatch), we explicitly fail to meet 4.1.1.2. Instead of keeping all logs,
+##abd # we just keep the last 3 files.
+##abd echo "Configuring Auditing & Logging"
+##abd cat > /etc/audit/auditd.conf << AUDITD
+##abd max_log_file = 100
+##abd max_log_file_action = rotate
+##abd num_logs = 3
+##abd space_left_action = email
+##abd action_mail_acct = root
+##abd # OpenSCAP Rule ID auditd_data_retention_admin_space_left_action
+##abd # OpenSCAP will fail as wants "single" but CIS specifies "halt"
+##abd admin_space_left_action = halt
+##abd AUDITD
+##abd
+##abd echo "#############################################################"
+##abd echo "4.1.2 Ensure auditd service is enabled"
+##abd echo "4.2.1.1 Ensure rsyslog Service is enabled"
+##abd echo "5.1.1 Ensure cron daemon is enabled"
+##abd for svc in auditd rsyslog crond; do
+##abd     chkconfig $svc on
+##abd done
+##abd
+##abd echo "#############################################################"
+##abd echo "4.1.3 Ensure auditing for processes that start prior to auditd is enabled"
+##abd sed -i -e '/^-a never,task/ s/$/# /' /etc/audit/audit.rules
+##abd
+##abd
+##abd
+##abd # pointless change
+##abd
+##abd
+##abd
+##abd
+##abd
+##abd
+##abd
+##abd
+##abd
+##abd
+##abd
+##abd
+##abd
+##abd echo "#############################################################"
+##abd echo "4.1.4 Ensure events that modify date and time information are collected"
+##abd echo "4.1.5 Ensure events that modify user/group information are collected"
+##abd echo "4.1.6 Ensure events that modify the system's network environment are collected"
+##abd echo "4.1.7 Ensure events that modify the system's Mandatory Access Controls are collected"
+##abd echo "4.1.8 Ensure login and logout events are collected"
+##abd echo "4.1.9 Ensure session initiation information is collected"
+##abd echo "4.1.10 Ensure discretionary access control permission modification events are collected"
+##abd echo "4.1.11 Ensure unsuccessful unauthorized file access attempts are collected"
+##abd echo "4.1.12 Ensure use of privileged commands is collected"
+##abd echo "4.1.13 Ensure successful file system mounts are collected"
+##abd echo "4.1.14 Ensure file deletion events by users are collected"
+##abd echo "4.1.15 Ensure changes to system administration scope (sudoers) is collected"
+##abd echo "4.1.16 Ensure system administrator actions (sudolog) are collected"
+##abd echo "4.1.17 Ensure kernel module loading and unloading is collected"
+##abd echo "4.1.18 Ensure the audit configuration is immutable"
+##abd # see https://github.com/dwp/packer-infrastructure/blob/master/amazon-ebs-builder/scripts/centos7/generic/090-harden.sh#L114
+##abd cat >> /etc/audit/audit.rules << AUDITRULES
+##abd # CIS 4.1.4
+##abd # OpenSCAP Rule ID audit_rules_time_settimeofday
+##abd # OpenSCAP Rule ID audit_rules_time_stime
+##abd # Also 64bit does not have stime syscall
+##abd # OpenSCAP Rule ID audit_rules_time_adjtimex
+##abd -a always,exit -F arch=b64 -S adjtimex,settimeofday -F key=audit_time_rules
+##abd -a always,exit -F arch=b32 -S adjtimex,settimeofday -F key=audit_time_rules
+##abd -a always,exit -F arch=b32 -S stime -F key=audit_time_rules
+##abd -a always,exit -F arch=b64 -S clock_settime -F key=audit_time_rules
+##abd -a always,exit -F arch=b32 -S clock_settime -F key=audit_time_rules
+##abd -w /etc/localtime -p wa -F key=audit_time_rules
+##abd
+##abd # CIS 4.1.5
+##abd # Key name is changed to match OpenSCAP requirements, but functionally is the same
+##abd -w /etc/group -p wa -k audit_rules_usergroup_modification
+##abd -w /etc/passwd -p wa -k audit_rules_usergroup_modification
+##abd -w /etc/gshadow -p wa -k audit_rules_usergroup_modification
+##abd -w /etc/shadow -p wa -k audit_rules_usergroup_modification
+##abd -w /etc/security/opasswd -p wa -k audit_rules_usergroup_modification
+##abd
+##abd # CIS 4.1.6
+##abd # Key name is changed to match OpenSCAP requirements, but functionally is the same
+##abd -a always,exit -F arch=b64 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
+##abd -a always,exit -F arch=b32 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
+##abd -w /etc/issue -p wa -k audit_rules_networkconfig_modification
+##abd -w /etc/issue.net -p wa -k audit_rules_networkconfig_modification
+##abd -w /etc/hosts -p wa -k audit_rules_networkconfig_modification
+##abd -w /etc/sysconfig/network -p wa -k audit_rules_networkconfig_modification
+##abd -w /etc/sysconfig/network-scripts/ -p wa -k audit_rules_networkconfig_modification
+##abd
+##abd # CIS 4.1.7
+##abd -w /etc/selinux/ -p wa -k MAC-policy
+##abd -w /usr/share/selinux/ -p wa -k MAC-policy
+##abd
+##abd # CIS 4.1.8
+##abd # OpenSCAP Rule ID audit_rules_login_events
+##abd # OpenSCAP added tallylog
+##abd -w /var/log/tallylog -p wa -k logins
+##abd -w /var/run/faillock/ -p wa -k logins
+##abd -w /var/log/lastlog -p wa -k logins
+##abd
+##abd # CIS 4.1.9
+##abd # Key name is changed to match OpenSCAP requirements, but functionally is the same
+##abd -w /var/run/utmp -p wa -k session
+##abd -w /var/log/wtmp -p wa -k session
+##abd -w /var/log/btmp -p wa -k session
+##abd
+##abd # CIS 4.1.10
+##abd -a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=500 -F
+##abd auid!=4294967295 -k perm_mod
+##abd -a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=500 -F auid!=4294967295 -k perm_mod
+##abd -a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=500 -F auid!=4294967295 -k perm_mod
+##abd -a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=500 -F auid!=4294967295 -k perm_mod
+##abd -a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=500 -F auid!=4294967295 -k perm_mod
+##abd -a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=500 -F auid!=4294967295 -k perm_mod
+##abd
+##abd # CIS 4.1.11
+##abd # OpenSCAP Rule ID audit_rules_unsuccessful_file_modification
+##abd # OpenSCAP will fail on this point as expects auid>=1000 which is less secure
+##abd -a always,exit -F arch=b32 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -F key=access
+##abd -a always,exit -F arch=b32 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -F key=access
+##abd -a always,exit -F arch=b64 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -F key=access
+##abd -a always,exit -F arch=b64 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -F key=access
+##abd
+##abd # CIS 4.1.13
+##abd # OpenSCAP will fail on this point as expects auid>=1000 which is less secure
+##abd -a always,exit -F arch=b64 -S mount -F auid>=500 -F auid!=4294967295 -k mounts
+##abd -a always,exit -F arch=b32 -S mount -F auid>=500 -F auid!=4294967295 -k mounts
+##abd
+##abd # CIS 4.1.14
+##abd # OpenSCAP Rule ID audit_rules_file_deletion_events
+##abd # OpenSCAP will fail on this point as expects auid>=1000 which is less secure
+##abd -a always,exit -F arch=b32 -S rmdir,unlink,unlinkat,rename -S renameat -F auid>=500 -F auid!=4294967295 -F key=delete
+##abd -a always,exit -F arch=b64 -S rmdir,unlink,unlinkat,rename -S renameat -F auid>=500 -F auid!=4294967295 -F key=delete
+##abd
+##abd # CIS 4.1.15
+##abd -w /etc/sudoers -p wa -k scope
+##abd -w /etc/sudoers.d/ -p wa -k scope
+##abd
+##abd # CIS 4.1.16
+##abd -w /var/log/sudo.log -p wa -k actions
+##abd
+##abd # CIS 4.1.17
+##abd # OpenSCAP Rule ID audit_rules_kernel_module_loading
+##abd # CIS requires /sbin/* but OpenSCAP wants /usr/sbin and they both symlink to same place
+##abd -w /usr/sbin/insmod -p x -k modules
+##abd -w /usr/sbin/rmmod -p x -k modules
+##abd -w /usr/sbin/modprobe -p x -k modules
+##abd -a always,exit -F arch=b64 -S init_module,delete_module -F key=modules
+##abd
+##abd # OpenSCAP remediation Rule ID audit_rules_sysadmin_actions
+##abd -w /etc/sudoers -p wa -k actions
+##abd -w /etc/sudoers.d/ -p wa -k actions
+##abd
+##abd # CIS 4.1.18
+##abd -e 2
+##abd AUDITRULES
 
-echo "#############################################################"
-echo "3.4.2 Ensure /etc/hosts.allow is configured"
-echo "3.4.3 Ensure /etc/hosts.deny is configured"
-echo "3.4.4 Ensure permissions on /etc/hosts.allow are configured"
-echo "3.4.5 Ensure permissions on /etc/hosts.deny are configured"
-echo "Exemption: Disable host-based connection blocking as SGs do what we need"
-echo "ALL: ALL" > /etc/hosts.allow
-> /etc/hosts.deny
-chmod 0644 /etc/hosts.allow
-chmod 0644 /etc/hosts.deny
-
-echo "#############################################################"
-echo "3.6 Firewall Configuration"
-echo "3.6.1 Ensure iptables is installed"
-echo "3.6.2 Ensure default deny firewall policy"
-echo "3.6.3 Ensure loopback traffic is configured"
-echo "3.6.4 Ensure outbound and established connections are configured"
-echo "3.6.5 Ensure firewall rules exist for all open ports"
-echo "Configuring iptables"
-echo "Exemption:  SGs do what we need"
-
-echo "#############################################################"
-echo "4.1.1.1 Ensure audit log storage size is configured"
-echo "4.1.1.2 Ensure system is disabled when audit logs are full"
-# Note that in order to not fill disks with Audit Logs (which will be shipped to
-# CloudWatch), we explicitly fail to meet 4.1.1.2. Instead of keeping all logs,
-# we just keep the last 3 files.
-echo "Configuring Auditing & Logging"
-cat > /etc/audit/auditd.conf << AUDITD
-max_log_file = 100
-max_log_file_action = rotate
-num_logs = 3
-space_left_action = email
-action_mail_acct = root
-# OpenSCAP Rule ID auditd_data_retention_admin_space_left_action
-# OpenSCAP will fail as wants "single" but CIS specifies "halt"
-admin_space_left_action = halt
-AUDITD
-
-echo "#############################################################"
-echo "4.1.2 Ensure auditd service is enabled"
-echo "4.2.1.1 Ensure rsyslog Service is enabled"
-echo "5.1.1 Ensure cron daemon is enabled"
-for svc in auditd rsyslog crond; do
-    chkconfig $svc on
-done
-
-echo "#############################################################"
-echo "4.1.3 Ensure auditing for processes that start prior to auditd is enabled"
-sed -i -e '/^-a never,task/ s/$/# /' /etc/audit/audit.rules
-
-
-
-# pointless change
-
-
-
-
-
-
-
-
-
-
-
-
-
-echo "#############################################################"
-echo "4.1.4 Ensure events that modify date and time information are collected"
-echo "4.1.5 Ensure events that modify user/group information are collected"
-echo "4.1.6 Ensure events that modify the system's network environment are collected"
-echo "4.1.7 Ensure events that modify the system's Mandatory Access Controls are collected"
-echo "4.1.8 Ensure login and logout events are collected"
-echo "4.1.9 Ensure session initiation information is collected"
-echo "4.1.10 Ensure discretionary access control permission modification events are collected"
-echo "4.1.11 Ensure unsuccessful unauthorized file access attempts are collected"
-echo "4.1.12 Ensure use of privileged commands is collected"
-echo "4.1.13 Ensure successful file system mounts are collected"
-echo "4.1.14 Ensure file deletion events by users are collected"
-echo "4.1.15 Ensure changes to system administration scope (sudoers) is collected"
-echo "4.1.16 Ensure system administrator actions (sudolog) are collected"
-echo "4.1.17 Ensure kernel module loading and unloading is collected"
-echo "4.1.18 Ensure the audit configuration is immutable"
-# see https://github.com/dwp/packer-infrastructure/blob/master/amazon-ebs-builder/scripts/centos7/generic/090-harden.sh#L114
-cat >> /etc/audit/audit.rules << AUDITRULES
-# CIS 4.1.4
-# OpenSCAP Rule ID audit_rules_time_settimeofday
-# OpenSCAP Rule ID audit_rules_time_stime
-# Also 64bit does not have stime syscall
-# OpenSCAP Rule ID audit_rules_time_adjtimex
--a always,exit -F arch=b64 -S adjtimex,settimeofday -F key=audit_time_rules
--a always,exit -F arch=b32 -S adjtimex,settimeofday -F key=audit_time_rules
--a always,exit -F arch=b32 -S stime -F key=audit_time_rules
--a always,exit -F arch=b64 -S clock_settime -F key=audit_time_rules
--a always,exit -F arch=b32 -S clock_settime -F key=audit_time_rules
--w /etc/localtime -p wa -F key=audit_time_rules
-
-# CIS 4.1.5
-# Key name is changed to match OpenSCAP requirements, but functionally is the same
--w /etc/group -p wa -k audit_rules_usergroup_modification
--w /etc/passwd -p wa -k audit_rules_usergroup_modification
--w /etc/gshadow -p wa -k audit_rules_usergroup_modification
--w /etc/shadow -p wa -k audit_rules_usergroup_modification
--w /etc/security/opasswd -p wa -k audit_rules_usergroup_modification
-
-# CIS 4.1.6
-# Key name is changed to match OpenSCAP requirements, but functionally is the same
--a always,exit -F arch=b64 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
--a always,exit -F arch=b32 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
--w /etc/issue -p wa -k audit_rules_networkconfig_modification
--w /etc/issue.net -p wa -k audit_rules_networkconfig_modification
--w /etc/hosts -p wa -k audit_rules_networkconfig_modification
--w /etc/sysconfig/network -p wa -k audit_rules_networkconfig_modification
--w /etc/sysconfig/network-scripts/ -p wa -k audit_rules_networkconfig_modification
-
-# CIS 4.1.7
--w /etc/selinux/ -p wa -k MAC-policy
--w /usr/share/selinux/ -p wa -k MAC-policy
-
-# CIS 4.1.8
-# OpenSCAP Rule ID audit_rules_login_events
-# OpenSCAP added tallylog
--w /var/log/tallylog -p wa -k logins
--w /var/run/faillock/ -p wa -k logins
--w /var/log/lastlog -p wa -k logins
-
-# CIS 4.1.9
-# Key name is changed to match OpenSCAP requirements, but functionally is the same
--w /var/run/utmp -p wa -k session
--w /var/log/wtmp -p wa -k session
--w /var/log/btmp -p wa -k session
-
-# CIS 4.1.10
--a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=500 -F
-auid!=4294967295 -k perm_mod
--a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=500 -F auid!=4294967295 -k perm_mod
--a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=500 -F auid!=4294967295 -k perm_mod
--a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=500 -F auid!=4294967295 -k perm_mod
--a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=500 -F auid!=4294967295 -k perm_mod
--a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=500 -F auid!=4294967295 -k perm_mod
-
-# CIS 4.1.11
-# OpenSCAP Rule ID audit_rules_unsuccessful_file_modification
-# OpenSCAP will fail on this point as expects auid>=1000 which is less secure
--a always,exit -F arch=b32 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -F key=access
--a always,exit -F arch=b32 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -F key=access
--a always,exit -F arch=b64 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -F key=access
--a always,exit -F arch=b64 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -F key=access
-
-# CIS 4.1.13
-# OpenSCAP will fail on this point as expects auid>=1000 which is less secure
--a always,exit -F arch=b64 -S mount -F auid>=500 -F auid!=4294967295 -k mounts
--a always,exit -F arch=b32 -S mount -F auid>=500 -F auid!=4294967295 -k mounts
-
-# CIS 4.1.14
-# OpenSCAP Rule ID audit_rules_file_deletion_events
-# OpenSCAP will fail on this point as expects auid>=1000 which is less secure
--a always,exit -F arch=b32 -S rmdir,unlink,unlinkat,rename -S renameat -F auid>=500 -F auid!=4294967295 -F key=delete
--a always,exit -F arch=b64 -S rmdir,unlink,unlinkat,rename -S renameat -F auid>=500 -F auid!=4294967295 -F key=delete
-
-# CIS 4.1.15
--w /etc/sudoers -p wa -k scope
--w /etc/sudoers.d/ -p wa -k scope
-
-# CIS 4.1.16
--w /var/log/sudo.log -p wa -k actions
-
-# CIS 4.1.17
-# OpenSCAP Rule ID audit_rules_kernel_module_loading
-# CIS requires /sbin/* but OpenSCAP wants /usr/sbin and they both symlink to same place
--w /usr/sbin/insmod -p x -k modules
--w /usr/sbin/rmmod -p x -k modules
--w /usr/sbin/modprobe -p x -k modules
--a always,exit -F arch=b64 -S init_module,delete_module -F key=modules
-
-# OpenSCAP remediation Rule ID audit_rules_sysadmin_actions
--w /etc/sudoers -p wa -k actions
--w /etc/sudoers.d/ -p wa -k actions
-
-# CIS 4.1.18
--e 2
-AUDITRULES
 ##abc
 ##abc # OpenSCAP Rule ID audit_rules_privileged_commands
 ##abc echo "# CIS 4.1.12" >> /etc/audit/audit.rules

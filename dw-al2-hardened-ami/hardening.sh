@@ -63,11 +63,11 @@ echo "#############################################################"
 echo "1.1.11 Ensure separate partition exists for /var/log"
 echo "Temporary Exemption: we're not sure that partioning provides much value for single-use instances"
 
-echo "#############################################################"
-echo "1.1.15 Ensure nodev option set on /dev/shm partition"
-echo "1.1.16 Ensure nosuid option set on /dev/shm partition"
-echo "1.1.17 Ensure noexec option set on /dev/shm partition"
-echo "tmpfs /dev/shm tmpfs defaults,nodev,nosuid,noexec 0 0" > /etc/fstab
+##AL2-incompatible echo "#############################################################"
+##AL2-incompatible echo "1.1.15 Ensure nodev option set on /dev/shm partition"
+##AL2-incompatible echo "1.1.16 Ensure nosuid option set on /dev/shm partition"
+##AL2-incompatible echo "1.1.17 Ensure noexec option set on /dev/shm partition"
+##AL2-incompatible echo "tmpfs /dev/shm tmpfs defaults,nodev,nosuid,noexec 0 0" > /etc/fstab
 
 ##AL2-incompatible echo "#############################################################"
 ##AL2-incompatible echo "1.1.18 Set sticky bit on all world-writable directories"
@@ -492,7 +492,6 @@ auid!=4294967295 -k perm_mod
 # CIS 4.1.18
 -e 2
 AUDITRULES
-
 
 # OpenSCAP Rule ID audit_rules_privileged_commands
 echo "# CIS 4.1.12" >> /etc/audit/audit.rules

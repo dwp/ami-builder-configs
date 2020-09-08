@@ -4,24 +4,24 @@
 
 set -eEu
 
-echo "#############################################################"
-echo "1.1.1.1 Ensure mounting of cramfs filesystems is disabled"
-echo "1.1.1.2 Ensure mounting of freevxfs filesystems is disabled"
-echo "1.1.1.3 Ensure mounting of jffs2 filesystems is disabled"
-echo "1.1.1.4 Ensure mounting of hfs filesystems is disabled"
-echo "1.1.1.5 Ensure mounting of hfsplus filesystems is disabled"
-echo "1.1.1.6 Ensure mounting of squashfs filesystems is disabled"
-echo "1.1.1.7 Ensure mounting of udf filesystems is disabled"
-echo "1.1.1.8 Ensure mounting of FAT filesystems is disabled"
-echo "3.5.1 Ensure DCCP is disabled"
-echo "3.5.2 Ensure SCTP is disabled"
-echo "3.5.3 Ensure RDS is disabled"
-echo "3.5.4 Ensure TIPC is disabled"
-> /etc/modprobe.d/CIS.conf
-for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
-    dccp sctp rds tipc; do
-    echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
-done
+##AL2-incompatible echo "#############################################################"
+##AL2-incompatible echo "1.1.1.1 Ensure mounting of cramfs filesystems is disabled"
+##AL2-incompatible echo "1.1.1.2 Ensure mounting of freevxfs filesystems is disabled"
+##AL2-incompatible echo "1.1.1.3 Ensure mounting of jffs2 filesystems is disabled"
+##AL2-incompatible echo "1.1.1.4 Ensure mounting of hfs filesystems is disabled"
+##AL2-incompatible echo "1.1.1.5 Ensure mounting of hfsplus filesystems is disabled"
+##AL2-incompatible echo "1.1.1.6 Ensure mounting of squashfs filesystems is disabled"
+##AL2-incompatible echo "1.1.1.7 Ensure mounting of udf filesystems is disabled"
+##AL2-incompatible echo "1.1.1.8 Ensure mounting of FAT filesystems is disabled"
+##AL2-incompatible echo "3.5.1 Ensure DCCP is disabled"
+##AL2-incompatible echo "3.5.2 Ensure SCTP is disabled"
+##AL2-incompatible echo "3.5.3 Ensure RDS is disabled"
+##AL2-incompatible echo "3.5.4 Ensure TIPC is disabled"
+##AL2-incompatible > /etc/modprobe.d/CIS.conf
+##AL2-incompatible for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
+##AL2-incompatible     dccp sctp rds tipc; do
+##AL2-incompatible     echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
+##AL2-incompatible done
 
 echo "#############################################################"
 echo "1.1.2 Ensure separate partition exists for /tmp"
@@ -69,9 +69,9 @@ echo "1.1.16 Ensure nosuid option set on /dev/shm partition"
 echo "1.1.17 Ensure noexec option set on /dev/shm partition"
 echo "tmpfs /dev/shm tmpfs defaults,nodev,nosuid,noexec 0 0" > /etc/fstab
 
-echo "#############################################################"
-echo "1.1.18 Set sticky bit on all world-writable directories"
-df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+##AL2-incompatible echo "#############################################################"
+##AL2-incompatible echo "1.1.18 Set sticky bit on all world-writable directories"
+##AL2-incompatible df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
 
 echo "#############################################################"
 echo "1.1.19 Disable Automounting"
@@ -377,7 +377,6 @@ echo "#############################################################"
 echo "4.1.3 Ensure auditing for processes that start prior to auditd is enabled"
 sed -i -e '/^-a never,task/ s/$/# /' /etc/audit/audit.rules
 
-
 echo "#############################################################"
 echo "4.1.4 Ensure events that modify date and time information are collected"
 echo "4.1.5 Ensure events that modify user/group information are collected"
@@ -493,6 +492,7 @@ auid!=4294967295 -k perm_mod
 # CIS 4.1.18
 -e 2
 AUDITRULES
+
 
 # OpenSCAP Rule ID audit_rules_privileged_commands
 echo "# CIS 4.1.12" >> /etc/audit/audit.rules
@@ -1073,5 +1073,3 @@ sed -i 's/^weekly/daily/' /etc/logrotate.conf
 
 # OpenSCAP Rule ID umask_for_daemons
 sed -i 's/^umask 022/umask 027/' /etc/init.d/functions
-
-sed -i 's/^SELINUX=enforcing/SELINUX=permissive/' /etc/sysconfig/selinux

@@ -4,24 +4,25 @@
 
 set -eEu
 
-##AL2-incompatible echo "#############################################################"
-##AL2-incompatible echo "1.1.1.1 Ensure mounting of cramfs filesystems is disabled"
-##AL2-incompatible echo "1.1.1.2 Ensure mounting of freevxfs filesystems is disabled"
-##AL2-incompatible echo "1.1.1.3 Ensure mounting of jffs2 filesystems is disabled"
-##AL2-incompatible echo "1.1.1.4 Ensure mounting of hfs filesystems is disabled"
-##AL2-incompatible echo "1.1.1.5 Ensure mounting of hfsplus filesystems is disabled"
-##AL2-incompatible echo "1.1.1.6 Ensure mounting of squashfs filesystems is disabled"
-##AL2-incompatible echo "1.1.1.7 Ensure mounting of udf filesystems is disabled"
-##AL2-incompatible echo "1.1.1.8 Ensure mounting of FAT filesystems is disabled"
-##AL2-incompatible echo "3.5.1 Ensure DCCP is disabled"
-##AL2-incompatible echo "3.5.2 Ensure SCTP is disabled"
-##AL2-incompatible echo "3.5.3 Ensure RDS is disabled"
-##AL2-incompatible echo "3.5.4 Ensure TIPC is disabled"
-##AL2-incompatible > /etc/modprobe.d/CIS.conf
-##AL2-incompatible for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
-##AL2-incompatible     dccp sctp rds tipc; do
-##AL2-incompatible     echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
-##AL2-incompatible done
+echo "#############################################################"
+echo "1.1.1.1 Ensure mounting of cramfs filesystems is disabled"
+echo "1.1.1.2 Ensure mounting of freevxfs filesystems is disabled"
+echo "1.1.1.3 Ensure mounting of jffs2 filesystems is disabled"
+echo "1.1.1.4 Ensure mounting of hfs filesystems is disabled"
+echo "1.1.1.5 Ensure mounting of hfsplus filesystems is disabled"
+echo "1.1.1.6 Ensure mounting of squashfs filesystems is disabled"
+echo "1.1.1.7 Ensure mounting of udf filesystems is disabled"
+echo "1.1.1.8 Ensure mounting of FAT filesystems is disabled"
+echo "3.5.1 Ensure DCCP is disabled"
+echo "3.5.2 Ensure SCTP is disabled"
+echo "3.5.3 Ensure RDS is disabled"
+echo "3.5.4 Ensure TIPC is disabled"
+> /etc/modprobe.d/CIS.conf
+for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
+    dccp sctp rds tipc; do
+    echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
+done
+chmod 0644 /etc/modprobe.d/CIS.conf
 
 echo "#############################################################"
 echo "1.1.2 Ensure separate partition exists for /tmp"

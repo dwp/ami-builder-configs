@@ -141,6 +141,7 @@ echo "0 5 * * * root /usr/sbin/aide --check" > /etc/cron.d/99-CIS
 echo "#############################################################"
 echo "1.4 Secure Boot Settings"
 echo "1.4.1 Ensure permissions on bootloader config are configured"
+chmod og-rwx /boot/grub2/grub.cfg
 
 echo "#############################################################"
 echo "1.4.2 Ensure authentication required for single user mode"

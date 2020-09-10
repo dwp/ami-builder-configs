@@ -4,24 +4,25 @@
 
 set -eEu
 
-##AL2-incompatible echo "#############################################################"
-##AL2-incompatible echo "1.1.1.1 Ensure mounting of cramfs filesystems is disabled"
-##AL2-incompatible echo "1.1.1.2 Ensure mounting of freevxfs filesystems is disabled"
-##AL2-incompatible echo "1.1.1.3 Ensure mounting of jffs2 filesystems is disabled"
-##AL2-incompatible echo "1.1.1.4 Ensure mounting of hfs filesystems is disabled"
-##AL2-incompatible echo "1.1.1.5 Ensure mounting of hfsplus filesystems is disabled"
-##AL2-incompatible echo "1.1.1.6 Ensure mounting of squashfs filesystems is disabled"
-##AL2-incompatible echo "1.1.1.7 Ensure mounting of udf filesystems is disabled"
-##AL2-incompatible echo "1.1.1.8 Ensure mounting of FAT filesystems is disabled"
-##AL2-incompatible echo "3.5.1 Ensure DCCP is disabled"
-##AL2-incompatible echo "3.5.2 Ensure SCTP is disabled"
-##AL2-incompatible echo "3.5.3 Ensure RDS is disabled"
-##AL2-incompatible echo "3.5.4 Ensure TIPC is disabled"
-##AL2-incompatible > /etc/modprobe.d/CIS.conf
-##AL2-incompatible for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
-##AL2-incompatible     dccp sctp rds tipc; do
-##AL2-incompatible     echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
-##AL2-incompatible done
+echo "#############################################################"
+echo "1.1.1.1 Ensure mounting of cramfs filesystems is disabled"
+echo "1.1.1.2 Ensure mounting of freevxfs filesystems is disabled"
+echo "1.1.1.3 Ensure mounting of jffs2 filesystems is disabled"
+echo "1.1.1.4 Ensure mounting of hfs filesystems is disabled"
+echo "1.1.1.5 Ensure mounting of hfsplus filesystems is disabled"
+echo "1.1.1.6 Ensure mounting of squashfs filesystems is disabled"
+echo "1.1.1.7 Ensure mounting of udf filesystems is disabled"
+echo "1.1.1.8 Ensure mounting of FAT filesystems is disabled"
+echo "3.5.1 Ensure DCCP is disabled"
+echo "3.5.2 Ensure SCTP is disabled"
+echo "3.5.3 Ensure RDS is disabled"
+echo "3.5.4 Ensure TIPC is disabled"
+> /etc/modprobe.d/CIS.conf
+for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
+    dccp sctp rds tipc; do
+    echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
+done
+chmod 0644 /etc/modprobe.d/CIS.conf
 
 echo "#############################################################"
 echo "1.1.2 Ensure separate partition exists for /tmp"
@@ -140,6 +141,7 @@ echo "0 5 * * * root /usr/sbin/aide --check" > /etc/cron.d/99-CIS
 echo "#############################################################"
 echo "1.4 Secure Boot Settings"
 echo "1.4.1 Ensure permissions on bootloader config are configured"
+chmod og-rwx /boot/grub2/grub.cfg
 
 echo "#############################################################"
 echo "1.4.2 Ensure authentication required for single user mode"
@@ -376,6 +378,8 @@ done
 echo "#############################################################"
 echo "4.1.3 Ensure auditing for processes that start prior to auditd is enabled"
 sed -i -e '/^-a never,task/ s/$/# /' /etc/audit/audit.rules
+sed -i '/GRUB_CMDLINE_LINUX_DEFAULT.*$/ s/"$/ audit=1"/'  /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg
 
 echo "#############################################################"
 echo "4.1.4 Ensure events that modify date and time information are collected"
@@ -649,6 +653,7 @@ AllowGroups sshusers
 # OpenSCAP will fail with this cipher set, but ours is more strict
 Ciphers aes256-ctr,aes192-ctr,aes128-ctr
 MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
+kexalgorithms curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256,diffie-hellman-group14-sha1
 PermitUserEnvironment no
 SSHCONFIG
 

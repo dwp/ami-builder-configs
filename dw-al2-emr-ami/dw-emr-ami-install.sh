@@ -8,7 +8,7 @@ cat > /etc/selinux/config << EOF
 SELINUX=permissive
 SELINUXTYPE=targeted
 EOF
-sed -i -e 's/selinux=0/selinux=1 enforcing=0/' /boot/grub/menu.lst
+#sed -i -e 's/selinux=0/selinux=1 enforcing=0/' /boot/grub/menu.lst
 
 # Relax umask settings and defaults
 sed -i 's/^.*umask 0.*$/umask 002/' /etc/bashrc

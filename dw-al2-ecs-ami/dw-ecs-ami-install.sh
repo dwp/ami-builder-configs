@@ -18,7 +18,6 @@ SELINUXTYPE=targeted
 EOF
 
 # Download and Install ECS Agent
-
 amazon-linux-extras disable docker
 amazon-linux-extras install -y ecs
 systemctl enable --now ecs

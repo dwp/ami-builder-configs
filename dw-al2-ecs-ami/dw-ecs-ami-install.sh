@@ -21,3 +21,10 @@ EOF
 amazon-linux-extras disable docker
 amazon-linux-extras install -y ecs
 systemctl enable --now ecs
+
+# Install Sysdig
+
+amazon-linux-extras install -y epel
+rpm --import https://download.sysdig.com/DRAIOS-GPG-KEY.public
+curl -s -o /etc/yum.repos.d/draios.repo https://download.sysdig.com/stable/rpm/draios.repo
+yum install -y sysdig

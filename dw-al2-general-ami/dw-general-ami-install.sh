@@ -114,7 +114,7 @@ systemctl enable node_exporter
 systemctl start node_exporter
 
 # Download and install CloudWatch Agent
-yum install amazon-cloudwatch-agent
+yum -y install amazon-cloudwatch-agent
 
 # To maintain CIS compliance
 usermod -s /sbin/nologin cwagent

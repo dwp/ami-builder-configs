@@ -3,7 +3,6 @@ set -eEu
 
 ## Script to prepare general Dataworks AMI
 
-export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -d'"' -f4)
 echo "HTTP_PROXY=$HTTP_PROXY"
 echo "HTTPS_PROXY=$HTTPS_PROXY"
 echo "http_proxy=$http_proxy"
@@ -115,7 +114,7 @@ systemctl enable node_exporter
 systemctl start node_exporter
 
 # Download and install CloudWatch Agent
-curl https://s3.${AWS_DEFAULT_REGION}.amazonaws.com/amazoncloudwatch-agent-${AWS_DEFAULT_REGION}/centos/amd64/latest/amazon-cloudwatch-agent.rpm -O
-rpm -U ./amazon-cloudwatch-agent.rpm
+yum install amazon-cloudwatch-agent
+
 # To maintain CIS compliance
 usermod -s /sbin/nologin cwagent

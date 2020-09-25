@@ -112,3 +112,9 @@ touch /var/log/node_exporter.log && chown prometheus:prometheus /var/log/node_ex
 
 systemctl enable node_exporter
 systemctl start node_exporter
+
+# Download and install CloudWatch Agent
+yum -y install amazon-cloudwatch-agent
+
+# To maintain CIS compliance
+usermod -s /sbin/nologin cwagent

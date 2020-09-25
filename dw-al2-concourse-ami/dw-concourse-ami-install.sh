@@ -9,7 +9,7 @@ echo "https_proxy=$https_proxy"
 echo "NO_PROXY=$NO_PROXY"
 echo "no_proxy=$no_proxy"
 
-# Make changes to hardened-ami that are required for EMR to work
+# Make changes to hardened-ami that are required for Concourse to work
 
 # Change SELinux config to be permissive
 cat > /etc/selinux/config << EOF

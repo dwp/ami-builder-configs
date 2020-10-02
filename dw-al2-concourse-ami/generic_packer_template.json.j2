@@ -79,7 +79,7 @@
         {
           "type": "shell",
           "inline": [
-            "sudo sh -c 'echo \"export CONCOURSE_VERSION="CONCOURSE_VERSION={% raw %}{{ user `concourse_version` }}{% endraw %}" \" >> /etc/environment'"
+            "sudo sh -c 'echo \"export CONCOURSE_VERSION={% raw %}{{ user `concourse_version` }}{% endraw %}" \" >> /etc/environment'"
           ]
         }
     {% else %}

@@ -25,7 +25,10 @@ sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile.d/*.sh
 sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
 
 # Download and Install Concourse
+CONCOURSE_VERSION=$CONCOURSE_VERSION
+echo "CONCOURSE_TARBALL='concourse-$CONCOURSE_VERSION-linux-amd64.tgz'"
 CONCOURSE_TARBALL="concourse-$CONCOURSE_VERSION-linux-amd64.tgz"
+echo "https://github.com/concourse/concourse/releases/download/v$CONCOURSE_VERSION/$CONCOURSE_TARBALL"
 curl -s -L -O https://github.com/concourse/concourse/releases/download/v$CONCOURSE_VERSION/$CONCOURSE_TARBALL
 tar -xzf $CONCOURSE_TARBALL -C /usr/local
 rm $CONCOURSE_TARBALL

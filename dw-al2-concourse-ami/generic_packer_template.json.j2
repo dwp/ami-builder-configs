@@ -40,7 +40,10 @@
       {% if 'run_tags' in event %}
       "run_tags": {{ event['run_tags']|tojson }},
       {% endif %}
-      "encrypt_boot": false
+      "encrypt_boot": false,
+      "tags": {
+        "Concourse_Version": "{{ event['concourse_version'] }}"
+      }
     }],
     "provisioners": [
     {% if 'set_proxy' in event and event['set_proxy'] == true %}

@@ -51,7 +51,7 @@
         {
           "type": "shell",
           "inline": [
-            "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
+            "sudo sh -c 'echo \"export HTTP_PROXY={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> >> /etc/profile.d/http_proxy.sh'",
             "sudo sh -c 'echo \"export http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
             "sudo sh -c 'echo \"export HTTPS_PROXY={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
             "sudo sh -c 'echo \"export https_proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/profile.d/http_proxy.sh'",
@@ -74,6 +74,21 @@
           ]
         }
     {% endif %}
+    {% if 'concourse_version' in event %}
+        {
+          "type": "shell",
+          "inline": [
+            "sudo sh -c 'echo \"export CONCOURSE_VERSION={% raw %}{{ user `concourse_version` }}{% endraw %} \" >> >> /etc/environment'"
+          ]
+        }
+    {% else %}
+        {
+          "type": "shell",
+          "inline": [
+            "echo \"concourse version not set\""
+          ]
+        }
+    {% endif %}
     {% if 'provision_scripts' in event and event['provision_scripts']|length > 0 %}
         {% for provisioner_script in event['provision_scripts'] %}
         ,
@@ -88,7 +103,8 @@
             "http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
             "https_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
             "NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %}",
-            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}"
+            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}",
+            "concourse_version": "{% raw %}{{ env `CONCOURSE_VERSION` }}{% endraw %}"
           ]
           {% endif %}
         }
@@ -115,7 +131,8 @@
             "http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
             "https_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
             "NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %}",
-            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}"
+            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}",
+            "concourse_version": "{% raw %}{{ env `CONCOURSE_VERSION` }}{% endraw %}"
           ]
           {% endif %}
         }

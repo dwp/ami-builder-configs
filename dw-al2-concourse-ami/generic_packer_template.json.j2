@@ -2,8 +2,7 @@
     "variables": {
         "http_proxy": "{% raw %}{{ env `HTTP_PROXY` }}{% endraw %}",
         "https_proxy": "{% raw %}{{ env `HTTPS_PROXY` }}{% endraw %}",
-        "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}",
-        "concourse_version": "{% raw %}{{ env `CONCOURSE_VERSION` }}{% endraw %}"
+        "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}"
     },
     "builders": [{
       "type": "amazon-ebs",
@@ -63,8 +62,7 @@
             "sudo sh -c 'echo \"export https_proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/environment'",
             "sudo sh -c 'echo \"export NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %} \" >> /etc/environment'",
             "sudo sh -c 'echo \"export no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %} \" >> /etc/environment'",
-            "sudo sh -c 'echo \"proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/yum.conf'",
-            "sudo sh -c 'echo \"export CONCOURSE_VERSION={% raw %}{{ user `concourse_version` }}{% endraw %} \" >> /etc/environment'"
+            "sudo sh -c 'echo \"proxy={% raw %}{{ user `https_proxy` }}{% endraw %} \" >> /etc/yum.conf'"
           ]
         }
     {% else %}
@@ -72,6 +70,21 @@
           "type": "shell",
           "inline": [
             "echo \"proxy settings not set\""
+          ]
+        }
+    {% endif %}
+    {% if 'concourse_version' in event %}
+        {
+          "type": "shell",
+          "inline": [
+            "sudo sh -c 'echo \"export CONCOURSE_VERSION={{ event['concourse_version'] }} \" >> /etc/environment'"
+          ]
+        }
+    {% else %}
+        {
+          "type": "shell",
+          "inline": [
+            "echo \"concourse version not set\""
           ]
         }
     {% endif %}
@@ -89,8 +102,7 @@
             "http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
             "https_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
             "NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %}",
-            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}",
-            "CONCOURSE_VERSION={% raw %}{{ user `concourse_version` }}{% endraw %}"
+            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}"
           ]
           {% endif %}
         }
@@ -117,8 +129,7 @@
             "http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
             "https_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
             "NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %}",
-            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}",
-            "CONCOURSE_VERSION={% raw %}{{ user `concourse_version` }}{% endraw %}"
+            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}"
           ]
           {% endif %}
         }

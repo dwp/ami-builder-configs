@@ -10,7 +10,7 @@ Building AMIs using a Lambda function
 
 ### Deploy the Lambda Code
 Step 1: Grab the latest Packer release [release zip file](https://github.com/dwp/ami-builder/blob/master/.circleci/config.yml)
-This is done via the CircleCI config.yml file, and then published on GitHub.
+This is done via the CircleCI `config.yml` file, and then published on GitHub.
 Example below:
 ```
 mkdir artifacts

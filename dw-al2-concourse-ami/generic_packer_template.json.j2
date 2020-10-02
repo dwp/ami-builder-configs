@@ -2,8 +2,7 @@
     "variables": {
         "http_proxy": "{% raw %}{{ env `HTTP_PROXY` }}{% endraw %}",
         "https_proxy": "{% raw %}{{ env `HTTPS_PROXY` }}{% endraw %}",
-        "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}",
-        "concourse_version": "{{ event['concourse_version'] }}"
+        "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}"
     },
     "builders": [{
       "type": "amazon-ebs",
@@ -79,7 +78,7 @@
         {
           "type": "shell",
           "inline": [
-            "sudo sh -c 'echo \"export CONCOURSE_VERSION={% raw %}{{ user `concourse_version` }}{% endraw %}" \" >> /etc/environment'"
+            "sudo sh -c 'echo \"export CONCOURSE_VERSION={{ event['concourse_version'] }} \" >> /etc/environment'"
           ]
         }
     {% else %}
@@ -105,7 +104,7 @@
             "https_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
             "NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %}",
             "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}",
-            "CONCOURSE_VERSION={% raw %}{{ user `concourse_version` }}{% endraw %}"
+            "CONCOURSE_VERSION={{ event['concourse_version'] }}"
             
           ]
           {% endif %}
@@ -134,7 +133,7 @@
             "https_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
             "NO_PROXY={% raw %}{{ user `no_proxy` }}{% endraw %}",
             "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}",
-            "CONCOURSE_VERSION={% raw %}{{ user `concourse_version` }}{% endraw %}"
+            "CONCOURSE_VERSION={{ event['concourse_version'] }}"
           ]
           {% endif %}
         }

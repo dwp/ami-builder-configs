@@ -3,6 +3,7 @@
         "http_proxy": "{% raw %}{{ env `HTTP_PROXY` }}{% endraw %}",
         "https_proxy": "{% raw %}{{ env `HTTPS_PROXY` }}{% endraw %}",
         "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}"
+        "concourse_version": "{% raw %}{{ env `CONCOURSE_VERSION` }}{% endraw %}"
     },
     "builders": [{
       "type": "amazon-ebs",

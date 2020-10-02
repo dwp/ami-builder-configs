@@ -15,3 +15,8 @@ sed -i 's/^.*umask 0.*$/umask 002/' /etc/bashrc
 sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile
 sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile.d/*.sh
 sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
+
+cat > /etc/security/limits.d/nofile.conf << EOF
+*  soft  nofile 65535
+*  hard  nofile 65535
+EOF

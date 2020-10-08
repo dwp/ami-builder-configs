@@ -1,0 +1,49 @@
+resources:
+  - name: dw-al2-general-ami
+    type: ami
+    check_every: 1h
+    source:
+      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+      region: ((dataworks.aws_region))
+      filters:
+        owner-id: ((dataworks.aws_management_acc))
+        is-public: false
+        state: available
+        name: dw-al2-general-ami-*
+
+  - name: dw-al2-untested-hardened-ami
+    type: ami
+    check_every: 1h
+    source:
+      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+      region: ((dataworks.aws_region))
+      filters:
+        owner-id: ((dataworks.aws_management_acc))
+        is-public: false
+        state: available
+        name: dw-al2-untested-hardened-ami-*
+
+  - name: dw-al2-hardened-ami
+    type: ami
+    check_every: 1h
+    source:
+      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+      region: ((dataworks.aws_region))
+      filters:
+        owner-id: ((dataworks.aws_management_acc))
+        is-public: false
+        state: available
+        name: dw-al2-hardened-ami-*
+
+  - name: weekly-wednesday
+    source:
+      location: Europe/London
+      start: 3:00 AM
+      stop: 4:00 AM
+      days: [Wednesday]
+    type: time
+
+  - name: slack
+    type: slack-notification
+    source:
+      url: ((dataworks.slack_webhook_url))

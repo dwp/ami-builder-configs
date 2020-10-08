@@ -1,0 +1,17 @@
+spruce:
+  - base: ci/infra/meta.yml
+    prune:
+      - meta
+    merge:
+      - with_in: ci/infra/
+        regexp: ".*yml"
+        except:
+          - credentials.yml.example
+          - credentials.yml
+      - with_in: ci/infra/jobs/build_amis/
+    to: aviator_pipeline.yml
+fly:
+  name: ami-builder
+  target: aws-concourse
+  expose: true
+  config: aviator_pipeline.yml

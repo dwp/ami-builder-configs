@@ -14,3 +14,7 @@ aviator_pipeline.yml
 .idea
 *.iml
 .DS_Store
+
+# local packer manifests
+manifest.json
+**/packer.json

@@ -1,16 +1,16 @@
 meta:
   resources:
-    - name: ami-builder-configs-repo
+    - name: ami-builder-configs
       type: git
       source:
-        branch: master
+        branch: dw_5093_packer-cli
         uri: https://github.com/dwp/ami-builder-configs.git
         username: ((dataworks.enterprise_github_username))
         password: ((dataworks-secrets.enterprise_github_pat))
       webhook_token: ((dataworks.concourse_github_webhook_token))
       check_every: 1h
 
-    - name: ami-builder-configs-repo-pr
+    - name: ami-builder-configs-pr
       type: pull-request
       source:
         access_token: ((dataworks-secrets.concourse_github_pat))
@@ -142,7 +142,7 @@ meta:
           PROVISION_SCRIPT_BUCKET: ((manifest.mgt-dev.bucket))
           SUBNET_ID: ((manifest.mgt-dev.subnet_id))
           SECURITY_GROUP_ID: ((manifest.mgt-dev.security_group_id))
-          PROVISIONER_TYPE_FILE_SOURCE: "/tmp/ami-builder/pr"
+          PROVISIONER_TYPE_FILE_SOURCE: "./pr"
 
     generate-manifest-mgt-dev:
       .: (( inject meta.plan.generate-manifest ))
@@ -161,19 +161,21 @@ meta:
           type: docker-image
           source:
             repository: dwpdigital/jinja-yaml-aws
-            version: 0.0.5
-            tag: 0.0.5
+            version: 0.0.19
+            tag: 0.0.19
         run:
           path: sh
           args:
             - -exc
             - |
-              cp manifest/manifest.json .
+              pwd
+              cp ../manifest/manifest.json .
               python3 bootstrap_packer.py
               cp packer.json ../packer-config
-          dir: manifest
+          dir: dw-al2-general-ami-change
         inputs:
           - name: manifest
+          - name: dw-al2-general-ami-change
         outputs:
           - name: packer-config
 

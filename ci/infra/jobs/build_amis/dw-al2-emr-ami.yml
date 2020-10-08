@@ -1,11 +1,11 @@
 resources:
   - name: dw-al2-emr-ami-change
-    .: (( inject meta.resources.ami-builder-configs-repo ))
+    .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
         - dw-al2-emr-ami/*
   - name: dw-al2-emr-ami-pr
-    .: (( inject meta.resources.ami-builder-configs-repo-pr ))
+    .: (( inject meta.resources.ami-builder-configs-pr ))
     source:
       paths:
         - dw-al2-emr-ami/*

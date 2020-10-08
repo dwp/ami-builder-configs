@@ -94,8 +94,8 @@
         ,
         {
           "type": "file",
-          "source": "{{ event['provisioner_type_file_source'] or '/tmp/ami-builder'}}",
-          "destination": "{{ event['provisioner_type_file_destination'] or '/tmp'}}"
+          "source": "{{ event['provisioner_type_file_source'] or '.'}}",
+          "destination": "{{ event['provisioner_type_file_destination'] or '.'}}"
         }
         {% for provisioner in event['provision_script_keys'] %}
         ,

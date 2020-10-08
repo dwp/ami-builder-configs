@@ -1,4 +1,24 @@
 resources:
+  - name: aws-management-infrastructure-pr
+    type: pull-request
+    source:
+      access_token: ((dataworks-secrets.enterprise_github_pat))
+      v3_endpoint: https://((dataworks.enterprise_github_url))/api/v3/
+      v4_endpoint: https://((dataworks.enterprise_github_url))/api/graphql
+      repository: dip/aws-management-infrastructure
+    check_every: 1m
+    webhook_token: ((dataworks.concourse_github_webhook_token))
+
+  - name: aws-management-infrastructure
+    type: git
+    source:
+      branch: master
+      uri: https://((dataworks.enterprise_github_url))/dip/aws-management-infrastructure.git
+      username: ((dataworks.enterprise_github_username))
+      password: ((dataworks-secrets.enterprise_github_pat))
+    check_every: 5m
+    webhook_token: ((dataworks.concourse_github_webhook_token))
+
   - name: dw-al2-general-ami
     type: ami
     check_every: 1h

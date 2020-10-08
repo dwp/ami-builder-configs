@@ -19,6 +19,39 @@ meta:
       check_every: 1m
 
   plan:
+    terraform-common-config:
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.terraform_repository))
+            version: ((dataworks.terraform_version))
+            tag: ((dataworks.terraform_version))
+        params:
+          TF_INPUT: false
+          TF_CLI_ARGS_apply: -lock-timeout=300s
+          TF_CLI_ARGS_plan: -lock-timeout=300s
+          TF_VAR_slack_webhook_url: ((dataworks.slack_webhook_url))
+
+    terraform-output-management:
+      task: terraform-output-management
+      .: (( inject meta.plan.terraform-common-config ))
+      config:
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              terraform init
+              terraform workspace show
+              terraform output --json > ../terraform-output-management/outputs.json
+          dir: aws-management-infrastructure
+        inputs:
+          - name: aws-management-infrastructure
+        outputs:
+          - name: terraform-output-management
+
     generate-manifest:
       task: generate-manifest
       config:

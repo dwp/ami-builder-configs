@@ -45,6 +45,8 @@ jobs:
         params:
           path: dw-al2-hardened-ami-pr
           status: pending
+      - get: aws-management-infrastructure
+      - .: (( inject meta.plan.terraform-output-management ))
       - .: (( inject meta.plan.generate-manifest-mgt-dev-pr ))
         input_mapping:
           source_ami: dw-al2-general-ami
@@ -81,6 +83,12 @@ jobs:
     plan:
       - get: dw-al2-untested-hardened-ami
         trigger: true
+      - get: aws-management-infrastructure
+        trigger: false
+      - .: (( inject meta.plan.terraform-output-management ))
+        config:
+          params:
+            TF_WORKSPACE: management
       - .: (( inject meta.plan.start-instance ))
         input_mapping:
           source_ami: dw-al2-untested-hardened-ami
@@ -109,6 +117,12 @@ jobs:
         trigger: true
       - get: dw-al2-untested-hardened-ami
         trigger: true
+      - get: aws-management-infrastructure
+        trigger: false
+      - .: (( inject meta.plan.terraform-output-management ))
+        config:
+          params:
+            TF_WORKSPACE: management
       - .: (( inject meta.plan.start-instance ))
         input_mapping:
           source_ami: dw-al2-untested-hardened-ami

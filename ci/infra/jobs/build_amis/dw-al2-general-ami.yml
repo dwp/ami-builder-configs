@@ -36,6 +36,8 @@ jobs:
         params:
           path: dw-al2-general-ami-pr
           status: pending
+      - get: aws-management-infrastructure
+      - .: (( inject meta.plan.terraform-output-management ))
       - .: (( inject meta.plan.generate-manifest-mgt-dev-pr ))
         config:
           params:

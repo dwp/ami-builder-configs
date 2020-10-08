@@ -65,7 +65,7 @@ jobs:
       - .: (( inject meta.plan.build-ami ))
         config:
           params:
-            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management_dev)):role/ci
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management-dev)):role/ci
         on_failure:
           put: dw-al2-ecs-ami-pr
           params:

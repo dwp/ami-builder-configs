@@ -22,11 +22,19 @@ jobs:
           params:
             AMI_NAME: packer-dw-al2-general-ami
             INSTANCE_TYPE: t2.micro
-            PACKER_TEMPLATE_KEY: ami-builder/dw-al2-general-ami/generic_packer_template.json.j2
-            PROVISION_SCRIPT_KEYS: '["ami-builder/dw-al2-general-ami/dw-general-ami-install.sh"]'
+            PACKER_TEMPLATE_KEY: dw-generic_packer_template.json.j2
+            PROVISION_SCRIPT_KEYS: '["dw-al2-general-ami/dw-general-ami-install.sh"]'
             SET_PROXY: true
       - .: (( inject meta.plan.packer-bootstrap ))
+        config:
+          run:
+            dir: dw-al2-general-ami-change
+          inputs:
+            - name: dw-al2-general-ami-change
       - .: (( inject meta.plan.build-ami ))
+        config:
+          inputs:
+            - name: dw-al2-general-ami-change
 
   - name: dw-al2-general-ami-pr
     max_in_flight: 1

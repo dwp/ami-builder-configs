@@ -70,7 +70,7 @@ meta:
           NO_PROXY: ((dataworks.proxy.no))
           PACKER_TEMPLATE_BUCKET: ((manifest.bucket))
           PACKER_TEMPLATE_BUCKET_REGION: "eu-west-2"
-          PACKER_TEMPLATE_KEY: "ami-builder/generic_packer_template.json.j2"
+          PACKER_TEMPLATE_KEY: "generic_packer_template.json.j2"
           PROVISION_SCRIPT_BUCKET_REGION: "eu-west-2"
           PROVISION_SCRIPT_BUCKET: ((manifest.bucket))
           PROVISION_SCRIPT_KEYS: "[]"
@@ -172,10 +172,8 @@ meta:
               cp ../manifest/manifest.json .
               python3 bootstrap_packer.py
               cp packer.json ../packer-config
-          dir: dw-al2-general-ami-change
         inputs:
           - name: manifest
-          - name: dw-al2-general-ami-change
         outputs:
           - name: packer-config
 
@@ -199,7 +197,8 @@ meta:
             - -exc
             - |
               source /assume-role
-              set +x
+              pwd
+              ls
               packer validate packer-config/packer.json
               packer build -on-error=abort packer-config/packer.json
 

@@ -25,14 +25,22 @@ jobs:
           params:
             AMI_NAME: packer-dw-al2-concourse-ami
             INSTANCE_TYPE: t2.micro
-            PACKER_TEMPLATE_KEY: ami-builder/dw-al2-concourse-ami/generic_packer_template.json.j2
-            PROVISION_SCRIPT_KEYS: '["ami-builder/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
+            PACKER_TEMPLATE_KEY: generic_packer_template.json.j2
+            PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-change/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
             SET_PROXY: true
             SOURCE_AMI_NAME: packer-dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             CONCOURSE_VERSION: 6.4.1
       - .: (( inject meta.plan.packer-bootstrap ))
+        config:
+          run:
+            dir: dw-al2-concourse-ami-change
+          inputs:
+            - name: dw-al2-concourse-ami-change
       - .: (( inject meta.plan.build-ami ))
+        config:
+          inputs:
+            - name: dw-al2-concourse-ami-change
 
   - name: dw-al2-concourse-ami-pr
     max_in_flight: 1
@@ -56,18 +64,25 @@ jobs:
           params:
             AMI_NAME: packer-pr-dw-al2-concourse-ami
             INSTANCE_TYPE: t2.micro
-            PACKER_TEMPLATE_KEY: ami-builder/pr/dw-al2-concourse-ami/generic_packer_template.json.j2
-            PROVISION_SCRIPT_KEYS: '["ami-builder/pr/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
+            PACKER_TEMPLATE_KEY: generic_packer_template.json.j2
+            PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-pr/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
             SET_PROXY: true
             SOURCE_AMI_NAME: packer-dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
             CONCOURSE_VERSION: 6.5.1
       - .: (( inject meta.plan.packer-bootstrap ))
+        config:
+          run:
+            dir: dw-al2-concourse-ami-pr
+          inputs:
+            - name: dw-al2-concourse-ami-pr
       - .: (( inject meta.plan.build-ami ))
         config:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.management-dev)):role/ci
+          inputs:
+            - name: dw-al2-concourse-ami-pr
         on_failure:
           put: dw-al2-concourse-ami-pr
           params:

@@ -197,8 +197,6 @@ meta:
             - -exc
             - |
               source /assume-role
-              pwd
-              ls
               packer validate packer-config/packer.json
               packer build -on-error=abort packer-config/packer.json
 

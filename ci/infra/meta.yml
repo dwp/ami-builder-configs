@@ -65,6 +65,9 @@ meta:
         outputs:
           - name: manifest
         params:
+          HTTP_PROXY: ((dataworks.proxy.http))
+          HTTPS_PROXY: ((dataworks.proxy.https))
+          NO_PROXY: ((dataworks.proxy.no))
           PACKER_TEMPLATE_BUCKET: ((manifest.bucket))
           PACKER_TEMPLATE_BUCKET_REGION: "eu-west-2"
           PACKER_TEMPLATE_KEY: "ami-builder/generic_packer_template.json.j2"
@@ -95,6 +98,9 @@ meta:
           args:
             - -exc
             - |
+              export HTTP_PROXY=${HTTP_PROXY}
+              export HTTPS_PROXY=${HTTPS_PROXY}
+              export NO_PROXY=${NO_PROXY}
               cat << EOF > manifest.json
               {
               "packer_template_bucket_region":  "${PACKER_TEMPLATE_BUCKET_REGION}",

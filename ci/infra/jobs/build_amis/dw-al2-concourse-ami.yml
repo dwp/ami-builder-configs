@@ -53,8 +53,6 @@ jobs:
         params:
           path: dw-al2-concourse-ami-pr
           status: pending
-      - get: aws-management-infrastructure
-      - .: (( inject meta.plan.terraform-output-management ))
       - .: (( inject meta.plan.get-al2-hardened-ami ))
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
@@ -82,7 +80,7 @@ jobs:
       - .: (( inject meta.plan.build-ami ))
         config:
           params:
-            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management-dev)):role/ci
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           inputs:
             - name: dw-al2-concourse-ami-pr
         on_failure:

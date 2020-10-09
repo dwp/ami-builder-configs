@@ -44,7 +44,7 @@
       {% if 'concourse_version' in event %}
       "tags": {
         "Concourse_Version": "{{ event['concourse_version'] }}"
-      }
+      },
       {% endif %}
       "encrypt_boot": false
     }],

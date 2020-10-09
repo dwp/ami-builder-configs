@@ -47,8 +47,6 @@ jobs:
         params:
           path: dw-al2-general-ami-pr
           status: pending
-      - get: aws-management-infrastructure
-      - .: (( inject meta.plan.terraform-output-management ))
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
@@ -68,7 +66,7 @@ jobs:
       - .: (( inject meta.plan.build-ami ))
         config:
           params:
-            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management-dev)):role/ci
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           inputs:
             - name: dw-al2-general-ami-pr
         on_failure:

@@ -136,7 +136,6 @@ meta:
           PROVISION_SCRIPT_BUCKET: ((manifest.mgt-dev.bucket))
           SUBNET_ID: ((manifest.mgt-dev.subnet_id))
           SECURITY_GROUP_ID: ((manifest.mgt-dev.security_group_id))
-          PROVISIONER_TYPE_FILE_SOURCE: "./pr"
 
     generate-manifest-mgt-dev:
       .: (( inject meta.plan.generate-manifest ))

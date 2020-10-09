@@ -56,6 +56,7 @@ jobs:
             INSTANCE_TYPE: t2.micro
             PACKER_TEMPLATE_KEY: generic_packer_template.json.j2
             PROVISION_SCRIPT_KEYS: '["dw-al2-general-ami-pr/dw-al2-general-ami/dw-general-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-general-ami-pr/dw-al2-general-ami/dw-general-ami-install.sh"
             SET_PROXY: true
             AMI_USERS: ((aws_account.development))
       - .: (( inject meta.plan.packer-bootstrap ))

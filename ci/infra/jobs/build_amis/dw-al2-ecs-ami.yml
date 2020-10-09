@@ -27,6 +27,7 @@ jobs:
             INSTANCE_TYPE: t2.micro
             PACKER_TEMPLATE_KEY: generic_packer_template.json.j2
             PROVISION_SCRIPT_KEYS: '["dw-al2-ecs-ami-change/dw-al2-ecs-ami/dw-ecs-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-ecs-ami-change/dw-al2-ecs-ami/dw-ecs-ami-install.sh"
             SET_PROXY: true
             SOURCE_AMI_NAME: packer-dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
@@ -65,6 +66,7 @@ jobs:
             INSTANCE_TYPE: t2.micro
             PACKER_TEMPLATE_KEY: generic_packer_template.json.j2
             PROVISION_SCRIPT_KEYS: '["dw-al2-ecs-ami-pr/dw-al2-ecs-ami/dw-ecs-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-ecs-ami-change/dw-al2-ecs-ami/dw-ecs-ami-install.sh"
             SET_PROXY: true
             SOURCE_AMI_NAME: packer-dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))

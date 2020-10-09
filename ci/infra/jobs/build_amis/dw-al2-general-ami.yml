@@ -49,7 +49,7 @@ jobs:
           status: pending
       - get: aws-management-infrastructure
       - .: (( inject meta.plan.terraform-output-management ))
-      - .: (( inject meta.plan.generate-manifest-mgt-dev-pr ))
+      - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
             AMI_NAME: packer-pr-dw-al2-general-ami

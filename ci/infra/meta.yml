@@ -128,24 +128,6 @@ meta:
               EOF
               cat manifest.json
 
-    generate-manifest-mgt-dev-pr:
-      .: (( inject meta.plan.generate-manifest ))
-      config:
-        params:
-          PACKER_TEMPLATE_BUCKET: ((manifest.mgt-dev.bucket))
-          PROVISION_SCRIPT_BUCKET: ((manifest.mgt-dev.bucket))
-          SUBNET_ID: ((manifest.mgt-dev.subnet_id))
-          SECURITY_GROUP_ID: ((manifest.mgt-dev.security_group_id))
-
-    generate-manifest-mgt-dev:
-      .: (( inject meta.plan.generate-manifest ))
-      config:
-        params:
-          PACKER_TEMPLATE_BUCKET: ((manifest.mgt-dev.bucket))
-          PROVISION_SCRIPT_BUCKET: ((manifest.mgt-dev.bucket))
-          SUBNET_ID: ((manifest.mgt-dev.subnet_id))
-          SECURITY_GROUP_ID: ((manifest.mgt-dev.security_group_id))
-
     packer-bootstrap:
       task: packer-bootstrap
       config:

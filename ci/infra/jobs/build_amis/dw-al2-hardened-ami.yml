@@ -56,7 +56,7 @@ jobs:
           status: pending
       - get: aws-management-infrastructure
       - .: (( inject meta.plan.terraform-output-management ))
-      - .: (( inject meta.plan.generate-manifest-mgt-dev-pr ))
+      - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
           source_ami: dw-al2-general-ami
         config:

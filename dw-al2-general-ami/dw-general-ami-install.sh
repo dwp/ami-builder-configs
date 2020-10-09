@@ -9,7 +9,7 @@ echo "http_proxy=$http_proxy"
 echo "https_proxy=$https_proxy"
 echo "NO_PROXY=$NO_PROXY"
 echo "no_proxy=$no_proxy"
-echo "ARTEFACT_BUCKET=${ARTEFACT_BUCKET}"
+echo "ARTEFACT_BUCKET=$ARTEFACT_BUCKET"
 
 # Update packages on the instance
 yum update -y

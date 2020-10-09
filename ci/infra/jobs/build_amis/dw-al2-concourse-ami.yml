@@ -18,7 +18,7 @@ jobs:
       - .: (( inject meta.plan.get-al2-hardened-ami ))
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: dw-al2-hardened-ami
+          source_ami: packer-dw-al2-hardened-ami
         config:
           inputs:
             - name: source_ami
@@ -56,7 +56,7 @@ jobs:
       - .: (( inject meta.plan.get-al2-hardened-ami ))
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: dw-al2-hardened-ami
+          source_ami: packer-dw-al2-hardened-ami
         config:
           inputs:
             - name: source_ami

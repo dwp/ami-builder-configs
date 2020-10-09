@@ -241,7 +241,7 @@ meta:
     start-instance:
       task: start-instance
       input_mapping:
-        source_ami: dw-untested-hardened-ami
+        source_ami: packer-dw-untested-hardened-ami
       config:
         platform: linux
         image_resource:

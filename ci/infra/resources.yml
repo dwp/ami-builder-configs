@@ -45,6 +45,16 @@ resources:
         state: available
         name: dw-al2-hardened-ami-*
 
+  - name: aws-security-tools
+    type: git
+    source:
+      branch: master
+      uri: https://((dataworks.enterprise_github_url))/dip/aws-security-tools.git
+      username: ((dataworks.enterprise_github_username))
+      password: ((dataworks-secrets.enterprise_github_pat))
+    check_every: 5m
+    webhook_token: ((dataworks.concourse_github_webhook_token))
+
   - name: weekly-wednesday
     source:
       location: Europe/London

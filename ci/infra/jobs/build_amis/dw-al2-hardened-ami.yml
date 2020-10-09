@@ -19,7 +19,7 @@ jobs:
         trigger: true
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: dw-al2-general-ami
+          source_ami: packer-dw-al2-general-ami
         config:
           inputs:
             - name: source_ami
@@ -28,7 +28,7 @@ jobs:
             INSTANCE_TYPE: t2.micro
             PACKER_TEMPLATE_KEY: generic_packer_template.json.j2
             PROVISION_SCRIPT_KEYS: '["dw-al2-hardened-ami-change/dw-al2-hardened-ami/hardening.sh","dw-al2-hardened-ami-change/dw-al2-hardened-ami/dw-hardened-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: '["dw-al2-hardened-ami-change/dw-al2-hardened-ami/hardening.sh","dw-al2-hardened-ami-change/dw-al2-hardened-ami/dw-hardened-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hardened-ami-change/dw-al2-hardened-ami/"
             SET_PROXY: true
             SOURCE_AMI_NAME: packer-dw-al2-general-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
@@ -56,7 +56,7 @@ jobs:
           status: pending
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: dw-al2-general-ami
+          source_ami: packer-dw-al2-general-ami
         config:
           inputs:
             - name: source_ami
@@ -100,13 +100,15 @@ jobs:
         trigger: true
       - get: aws-management-infrastructure
         trigger: false
+      - get: aws-security-tools
+        trigger: false
       - .: (( inject meta.plan.terraform-output-management ))
         config:
           params:
             TF_WORKSPACE: management
       - .: (( inject meta.plan.start-instance ))
         input_mapping:
-          source_ami: dw-al2-untested-hardened-ami
+          source_ami: packer-dw-al2-untested-hardened-ami
         config:
           params:
             LAUNCH_TEMPLATE_OUTPUT_NAME: "hardened_test_launch_template"
@@ -117,7 +119,7 @@ jobs:
             WHITELIST_NAME: whitelist_al2_hardened_ami
       - .: (( inject meta.plan.promote-ami ))
         input_mapping:
-          source_ami: dw-al2-untested-hardened-ami
+          source_ami: packer-dw-al2-untested-hardened-ami
         config:
           params:
             AMI_NAME_PREFIX: "dw-al2-hardened-ami-"
@@ -140,7 +142,7 @@ jobs:
             TF_WORKSPACE: management
       - .: (( inject meta.plan.start-instance ))
         input_mapping:
-          source_ami: dw-al2-untested-hardened-ami
+          source_ami: packer-dw-al2-untested-hardened-ami
         config:
           params:
             LAUNCH_TEMPLATE_OUTPUT_NAME: "hardened_test_launch_template"

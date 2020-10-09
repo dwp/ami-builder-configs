@@ -11,7 +11,7 @@ resources:
 
   - name: packer-dw-al2-general-ami
     type: ami
-    check_every: 1h
+    check_every: 5m
     source:
       aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
       region: ((dataworks.aws_region))
@@ -23,7 +23,7 @@ resources:
 
   - name: packer-dw-al2-untested-hardened-ami
     type: ami
-    check_every: 1h
+    check_every: 5m
     source:
       aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
       region: ((dataworks.aws_region))
@@ -35,7 +35,7 @@ resources:
 
   - name: packer-dw-al2-hardened-ami
     type: ami
-    check_every: 1h
+    check_every: 5m
     source:
       aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
       region: ((dataworks.aws_region))

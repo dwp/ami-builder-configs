@@ -53,6 +53,7 @@ yum install -y python-pip gcc yum-plugin-remove-with-leaves sudo
 echo "Install acm cert helper"
 echo "Getting default region"
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -d'"' -f4)
+echo $AWS_DEFAULT_REGION
 acm_cert_helper_repo=acm-pca-cert-generator
 acm_cert_helper_version=0.28.0
 echo "Getting cert helper"

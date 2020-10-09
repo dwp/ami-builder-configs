@@ -122,7 +122,7 @@ jobs:
           source_ami: packer-dw-al2-untested-hardened-ami
         config:
           params:
-            AMI_NAME_PREFIX: "dw-al2-hardened-ami-"
+            AMI_NAME_PREFIX: "packer-dw-al2-hardened-ami-"
     ensure:
       do:
         - .: (( inject meta.plan.inspector-cleanup ))

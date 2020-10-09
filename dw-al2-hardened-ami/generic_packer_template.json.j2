@@ -12,7 +12,7 @@
       "source_ami_filter": {
         "filters": {
           "virtualization-type": "{{ event['source_ami_virt_type'] or 'hvm' }}",
-          "name": "{{ event['source_ami_name'] or 'amzn-ami-hvm-*' }}",
+          "name": "{{ event['source_ami_name'] or 'amzn2-ami-hvm-*' }}",
           "root-device-type": "{{ event['source_ami_root_device_type'] or 'ebs' }}",
           "architecture": "x86_64"
         },
@@ -22,7 +22,7 @@
       "instance_type": "{{ event['instance_type'] or 't2.micro' }}",
       "ssh_username": "{{ event['ssh_username'] or 'ec2-user' }}",
       "subnet_id": "{{ event['subnet_id'] }}",
-      "ami_name": "{{ event['ami_name'] or 'dw-al2-hardened-ami' }}-{{ '{{' }} timestamp {{ '}}' }}",
+      "ami_name": "{{ event['ami_name'] or 'hardened-ami' }}-{{ '{{' }} timestamp {{ '}}' }}",
       {% if 'profile' in event %}
       "profile": "{{ event['profile'] }}",
       {% endif %}
@@ -94,14 +94,14 @@
         ,
         {
           "type": "file",
-          "source": "{{ event['provisioner_type_file_source'] or '.'}}",
-          "destination": "{{ event['provisioner_type_file_destination'] or '.'}}"
+          "source": "{{ event['provisioner_type_file_source'] or {{ provisioner }} }}",
+          "destination": "{{ event['provisioner_type_file_destination'] or '/tmp'}}"
         }
         {% for provisioner in event['provision_script_keys'] %}
         ,
         {
           "type": "shell",
-          "script": "{{ provisioner }}",
+          "script": "/tmp/{{ provisioner }}",
           "execute_command": "sudo -E sh -eux -c '{% raw %}{{ .Path }}{% endraw %}'"
           {% if 'set_proxy' in event and event['set_proxy'] == true %}
           ,

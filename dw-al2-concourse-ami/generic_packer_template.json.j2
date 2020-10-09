@@ -94,14 +94,14 @@
         ,
         {
           "type": "file",
-          "source": "{{ event['provisioner_type_file_source'] or '.'}}",
-          "destination": "{{ event['provisioner_type_file_destination'] or '.'}}"
+          "source": "{{ event['provisioner_type_file_source'] or {{ provisioner }} }}",
+          "destination": "{{ event['provisioner_type_file_destination'] or '/tmp'}}"
         }
         {% for provisioner in event['provision_script_keys'] %}
         ,
         {
           "type": "shell",
-          "script": "{{ provisioner }}",
+          "script": "/tmp/{{ provisioner }}",
           "execute_command": "sudo -E sh -eux -c '{% raw %}{{ .Path }}{% endraw %}'"
           {% if 'set_proxy' in event and event['set_proxy'] == true %}
           ,

@@ -136,6 +136,8 @@ jobs:
         trigger: true
       - get: aws-management-infrastructure
         trigger: false
+      - get: aws-security-tools
+        trigger: false
       - .: (( inject meta.plan.terraform-output-management ))
         config:
           params:

@@ -41,6 +41,11 @@
       {% if 'run_tags' in event %}
       "run_tags": {{ event['run_tags']|tojson }},
       {% endif %}
+      {% if 'concourse_version' in event %}
+      "tags": {
+        "Concourse_Version": "{{ event['concourse_version'] }}"
+      }
+      {% endif %}
       "encrypt_boot": false
     }],
     "provisioners": [
@@ -76,6 +81,22 @@
           "type": "shell",
           "inline": [
             "echo \"proxy settings not set\""
+          ]
+        }
+    {% endif %}
+    {% if 'concourse_version' in event and event['concourse_version']|length > 0 %}
+        ,
+        {
+          "type": "shell",
+          "inline": [
+            "sudo sh -c 'echo \"export CONCOURSE_VERSION={{ event['concourse_version'] }}\" >> /etc/environment'"
+          ]
+        }
+    {% else %}
+        {
+          "type": "shell",
+          "inline": [
+            "echo \"concourse version not set\""
           ]
         }
     {% endif %}

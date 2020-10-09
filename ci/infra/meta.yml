@@ -449,11 +449,11 @@ meta:
               aws ec2 terminate-instances --instance-ids ${INSTANCE_ID}
 
     get-al2-hardened-ami:
-      get: dw-al2-hardened-ami
+      get: packer-dw-al2-hardened-ami
       trigger: true
 
     get-al2-emr-hardened-ami:
-      get: dw-al2-emr-hardened-ami
+      get: packer-dw-al2-emr-hardened-ami
       trigger: true
 
     notify:

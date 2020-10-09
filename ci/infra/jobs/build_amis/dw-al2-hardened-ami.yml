@@ -15,7 +15,7 @@ jobs:
     plan:
       - get: dw-al2-hardened-ami-change
         trigger: true
-      - get: dw-al2-general-ami
+      - get: packer-dw-al2-general-ami
         trigger: true
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
@@ -49,7 +49,7 @@ jobs:
       - get: dw-al2-hardened-ami-pr
         trigger: true
         version: every
-      - get: dw-al2-general-ami
+      - get: packer-dw-al2-general-ami
       - put: dw-al2-hardened-ami-pr
         params:
           path: dw-al2-hardened-ami-pr
@@ -96,7 +96,7 @@ jobs:
   - name: dw-al2-test-and-promote-hardened-ami
     max_in_flight: 1
     plan:
-      - get: dw-al2-untested-hardened-ami
+      - get: packer-dw-al2-untested-hardened-ami
         trigger: true
       - get: aws-management-infrastructure
         trigger: false
@@ -132,7 +132,7 @@ jobs:
     plan:
       - get: weekly-wednesday
         trigger: true
-      - get: dw-al2-untested-hardened-ami
+      - get: packer-dw-al2-untested-hardened-ami
         trigger: true
       - get: aws-management-infrastructure
         trigger: false

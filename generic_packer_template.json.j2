@@ -101,7 +101,7 @@
         ,
         {
           "type": "shell",
-          "script": "/tmp/{{ provisioner }}",
+          "script": "{{ provisioner }}",
           "execute_command": "sudo -E sh -eux -c '{% raw %}{{ .Path }}{% endraw %}'"
           {% if 'set_proxy' in event and event['set_proxy'] == true %}
           ,

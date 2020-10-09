@@ -94,7 +94,7 @@
         ,
         {
           "type": "file",
-          "source": "{{ event['provisioner_type_file_source'] or provisioner }}",
+          "source": "{{ event['provisioner_type_file_source'] or '/tmp' }}",
           "destination": "{{ event['provisioner_type_file_destination'] or '/tmp'}}"
         }
         {% for provisioner in event['provision_script_keys'] %}

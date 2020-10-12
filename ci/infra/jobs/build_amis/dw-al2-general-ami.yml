@@ -22,6 +22,9 @@ jobs:
         config:
           params:
             AMI_NAME: packer-dw-al2-general-ami
+            PACKER_TEMPLATE_KEY: generic_packer_template.json.j2
+            PROVISION_SCRIPT_KEYS: '["dw-al2-general-ami-change/dw-al2-general-ami/dw-general-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-general-ami-change/dw-al2-general-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         config:
           run:
@@ -48,6 +51,9 @@ jobs:
           params:
             AMI_NAME: packer-pr-dw-al2-general-ami
             AMI_USERS: ((aws_account.development))
+            PACKER_TEMPLATE_KEY: generic_packer_template.json.j2
+            PROVISION_SCRIPT_KEYS: '["dw-al2-general-ami-pr/dw-al2-general-ami/dw-general-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-general-ami-pr/dw-al2-general-ami/]"
       - .: (( inject meta.plan.packer-bootstrap ))
         config:
           run:

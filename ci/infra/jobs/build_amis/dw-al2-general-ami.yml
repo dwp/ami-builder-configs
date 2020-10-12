@@ -1,41 +1,37 @@
 resources:
-  - name: dw-al2-general-ami-change
+  - name: dw-al2-general-ami
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
         - dw-al2-general-ami/*
-        - bootstrap_packer.py
+        - generic_packer_template.json.j2
+
   - name: dw-al2-general-ami-pr
     .: (( inject meta.resources.ami-builder-configs-pr ))
     source:
       paths:
         - dw-al2-general-ami/*
-        - bootstrap_packer.py
+        - generic_packer_template.json.j2
 
 jobs:
   - name: dw-al2-general-ami
     plan:
-      - get: dw-al2-general-ami-change
+      - get: dw-al2-general-ami
         trigger: true
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
             AMI_NAME: packer-dw-al2-general-ami
-            INSTANCE_TYPE: t2.micro
-            PACKER_TEMPLATE_KEY: generic_packer_template.json.j2
-            PROVISION_SCRIPT_KEYS: '["dw-al2-general-ami-change/dw-al2-general-ami/dw-general-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-general-ami-change/dw-al2-general-ami/dw-general-ami-install.sh"
-            SET_PROXY: true
       - .: (( inject meta.plan.packer-bootstrap ))
         config:
           run:
-            dir: dw-al2-general-ami-change
+            dir: dw-al2-general-ami
           inputs:
-            - name: dw-al2-general-ami-change
+            - name: dw-al2-general-ami
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
-            - name: dw-al2-general-ami-change
+            - name: dw-al2-general-ami
 
   - name: dw-al2-general-ami-pr
     max_in_flight: 1
@@ -51,11 +47,6 @@ jobs:
         config:
           params:
             AMI_NAME: packer-pr-dw-al2-general-ami
-            INSTANCE_TYPE: t2.micro
-            PACKER_TEMPLATE_KEY: generic_packer_template.json.j2
-            PROVISION_SCRIPT_KEYS: '["dw-al2-general-ami-pr/dw-al2-general-ami/dw-general-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-general-ami-pr/dw-al2-general-ami/dw-general-ami-install.sh"
-            SET_PROXY: true
             AMI_USERS: ((aws_account.development))
       - .: (( inject meta.plan.packer-bootstrap ))
         config:

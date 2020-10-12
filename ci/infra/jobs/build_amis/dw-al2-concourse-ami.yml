@@ -1,5 +1,5 @@
 resources:
-  - name: dw-al2-concourse-ami-change
+  - name: dw-al2-concourse-ami
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
@@ -13,7 +13,7 @@ resources:
 jobs:
   - name: dw-al2-concourse-ami
     plan:
-      - get: dw-al2-concourse-ami-change
+      - get: dw-al2-concourse-ami
         trigger: true
       - .: (( inject meta.plan.get-al2-hardened-ami ))
       - .: (( inject meta.plan.generate-manifest ))
@@ -24,24 +24,19 @@ jobs:
             - name: source_ami
           params:
             AMI_NAME: packer-dw-al2-concourse-ami
-            INSTANCE_TYPE: t2.micro
-            PACKER_TEMPLATE_KEY: generic_packer_template.json.j2
-            PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-change/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami-change/dw-al2-concourse-ami/dw-concourse-ami-install.sh"
-            SET_PROXY: true
             SOURCE_AMI_NAME: packer-dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             CONCOURSE_VERSION: 6.4.1
       - .: (( inject meta.plan.packer-bootstrap ))
         config:
           run:
-            dir: dw-al2-concourse-ami-change
+            dir: dw-al2-concourse-ami
           inputs:
-            - name: dw-al2-concourse-ami-change
+            - name: dw-al2-concourse-ami
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
-            - name: dw-al2-concourse-ami-change
+            - name: dw-al2-concourse-ami
 
   - name: dw-al2-concourse-ami-pr
     max_in_flight: 1
@@ -62,11 +57,6 @@ jobs:
             - name: source_ami
           params:
             AMI_NAME: packer-pr-dw-al2-concourse-ami
-            INSTANCE_TYPE: t2.micro
-            PACKER_TEMPLATE_KEY: generic_packer_template.json.j2
-            PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-pr/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami-pr/dw-al2-concourse-ami/dw-concourse-ami-install.sh"
-            SET_PROXY: true
             SOURCE_AMI_NAME: packer-dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))

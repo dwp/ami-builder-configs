@@ -3,7 +3,7 @@ meta:
     - name: ami-builder-configs
       type: git
       source:
-        branch: master
+        branch: dw_5093_packer-cli
         uri: https://github.com/dwp/ami-builder-configs.git
         username: ((dataworks.enterprise_github_username))
         password: ((dataworks-secrets.enterprise_github_pat))
@@ -65,15 +65,6 @@ meta:
         outputs:
           - name: manifest
         params:
-          PACKER_TEMPLATE_BUCKET: ((manifest.bucket))
-          PACKER_TEMPLATE_BUCKET_REGION: "eu-west-2"
-          PACKER_TEMPLATE_KEY: "generic_packer_template.json.j2"
-          PROVISION_SCRIPT_BUCKET_REGION: "eu-west-2"
-          PROVISION_SCRIPT_BUCKET: ((manifest.bucket))
-          PROVISION_SCRIPT_KEYS: "[]"
-          PROVISION_FILE_KEYS: "[]"
-          PROVISION_SCRIPTS: "[]"
-          PROVISIONER_TYPE_FILE_SOURCE: ""
           SOURCE_AMI_VIRT_TYPE: hvm
           SOURCE_AMI_NAME: amzn2-ami-hvm-*
           SOURCE_AMI_ROOT_DEVICE_TYPE: "ebs"
@@ -97,15 +88,6 @@ meta:
             - |
               cat << EOF > manifest.json
               {
-              "packer_template_bucket_region":  "${PACKER_TEMPLATE_BUCKET_REGION}",
-              "packer_template_bucket":         "${PACKER_TEMPLATE_BUCKET}",
-              "packer_template_key":            "${PACKER_TEMPLATE_KEY}",
-              "provision_script_bucket_region": "${PROVISION_SCRIPT_BUCKET_REGION}",
-              "provision_script_bucket":        "${PROVISION_SCRIPT_BUCKET}",
-              "provision_script_keys":          ${PROVISION_SCRIPT_KEYS},
-              "provision_scripts":              ${PROVISION_SCRIPTS},
-              "provision_file_keys":            ${PROVISION_FILE_KEYS},
-              "provisioner_type_file_source":   "${PROVISIONER_TYPE_FILE_SOURCE}",
               "source_ami_virt_type":           "${SOURCE_AMI_VIRT_TYPE}",
               "source_ami_id":                  "$(if [ -f ../source_ami/id ]; then cat ../source_ami/id; else echo ''; fi)",
               "source_ami_name":                "${SOURCE_AMI_NAME}",

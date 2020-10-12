@@ -181,7 +181,7 @@ meta:
               export ARTEFACT_BUCKET=${ARTEFACT_BUCKET}
               source /assume-role
               packer validate packer-config/packer.json
-              packer build -on-error=abort packer-config/packer.json
+              packer build -on-error=cleanup packer-config/packer.json
 
     proxy-test:
       task: proxy-test

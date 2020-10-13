@@ -16,6 +16,11 @@
       "ssh_username": "{{ event['ssh_username'] or 'ec2-user' }}",
       "subnet_id": "{{ event['subnet_id'] }}",
       "ami_name": "{{ event['ami_name'] }}-{{ '{{' }} timestamp {{ '}}' }}",
+      "packer_template_key": "{{ event['packer_template_key'] }}",
+      "provision_script_keys": "{{ event['provision_script_keys'] }}",
+      "provision_scripts": "{{ event['provision_scripts'] }}",
+      "provision_file_keys": "{{ event['provision_file_keys'] }}",
+      "provisioner_type_file_source": "{{ event['provisioner_type_file_source'] }}",
       {% if 'profile' in event %}
       "profile": "{{ event['profile'] }}",
       {% endif %}

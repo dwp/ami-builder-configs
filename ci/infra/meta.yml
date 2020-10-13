@@ -158,8 +158,6 @@ meta:
         params:
           AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
           AWS_DEFAULT_REGION: ((dataworks.aws_region))
-          HTTP_PROXY: ((dataworks.proxy.http))
-          HTTPS_PROXY: ((dataworks.proxy.https))
           NO_PROXY: ((dataworks.proxy.no))
           ARTEFACT_BUCKET: ((manifest.artefact_bucket))
         run:
@@ -167,8 +165,6 @@ meta:
           args:
             - -exc
             - |
-              export HTTP_PROXY=${HTTP_PROXY}
-              export HTTPS_PROXY=${HTTPS_PROXY}
               export NO_PROXY=${NO_PROXY}
               export ARTEFACT_BUCKET=${ARTEFACT_BUCKET}
               source /assume-role

@@ -17,10 +17,6 @@
       "subnet_id": "{{ event['subnet_id'] }}",
       "ami_name": "{{ event['ami_name'] }}-{{ '{{' }} timestamp {{ '}}' }}",
       "packer_template_key": "{{ event['packer_template_key'] }}",
-      "provision_script_keys": "{{ event['provision_script_keys'] }}",
-      "provision_scripts": "{{ event['provision_scripts'] }}",
-      "provision_file_keys": "{{ event['provision_file_keys'] }}",
-      "provisioner_type_file_source": "{{ event['provisioner_type_file_source'] }}",
       {% if 'profile' in event %}
       "profile": "{{ event['profile'] }}",
       {% endif %}
@@ -60,6 +56,31 @@
             "echo \"concourse version not set\""
           ]
         }
+    {% endif %}
+    {% if 'provision_scripts' in event and event['provision_scripts']|length > 0 %}
+        {% for provisioner_script in event['provision_scripts'] %}
+        ,
+        {
+          "type": "shell",
+          "inline": "{{ provisioner_script }}"
+        }
+      {% endfor %}
+    {% endif %}
+    {% if 'provision_script_keys' in event and event['provision_script_keys']|length > 0 %}
+        ,
+        {
+          "type": "file",
+          "source": "{{ event['provisioner_type_file_source'] or '/tmp/ami-builder'}}",
+          "destination": "{{ event['provisioner_type_file_destination'] or '/tmp/'}}"
+        }
+        {% for provisioner in event['provision_script_keys'] %}
+        ,
+        {
+          "type": "shell",
+          "script": "{{ provisioner }}",
+          "execute_command": "sudo -E sh -eux -c '{% raw %}{{ .Path }}{% endraw %}'"
+        }
+        {% endfor %}
     {% endif %}
     ]
 }

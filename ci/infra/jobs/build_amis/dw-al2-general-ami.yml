@@ -4,12 +4,14 @@ resources:
     source:
       paths:
         - dw-al2-general-ami/*
+        - generic_packer_template.json.j2
 
   - name: dw-al2-general-ami-pr
     .: (( inject meta.resources.ami-builder-configs-pr ))
     source:
       paths:
         - dw-al2-general-ami/*
+        - generic_packer_template.json.j2
 
 jobs:
   - name: dw-al2-general-ami
@@ -20,7 +22,7 @@ jobs:
         config:
           params:
             AMI_NAME: packer-dw-al2-general-ami
-            PACKER_TEMPLATE_KEY: "dw-al2-general-ami/generic_packer_template.json.j2"
+            PACKER_TEMPLATE_KEY: generic_packer_template.json.j2
             PROVISION_SCRIPT_KEYS: '["dw-al2-general-ami/dw-al2-general-ami/dw-general-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-general-ami/dw-al2-general-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))

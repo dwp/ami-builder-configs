@@ -63,7 +63,7 @@ jobs:
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-pr/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami-pr/dw-al2-concourse-ami/]"
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami-pr/dw-al2-concourse-ami/"
             CONCOURSE_VERSION: 6.5.1
       - .: (( inject meta.plan.packer-bootstrap ))
         config:

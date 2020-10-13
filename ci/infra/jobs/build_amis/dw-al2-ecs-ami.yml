@@ -27,7 +27,7 @@ jobs:
             SOURCE_AMI_NAME: packer-dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             PROVISION_SCRIPT_KEYS: '["dw-al2-ecs-ami/dw-al2-ecs-ami/dw-ecs-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-ecs-ami/dw-al2-ecs-ami/]"
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-ecs-ami/dw-al2-ecs-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         config:
           run:
@@ -61,7 +61,7 @@ jobs:
             SOURCE_AMI_NAME: packer-dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             PROVISION_SCRIPT_KEYS: '["dw-al2-ecs-ami-pr/dw-al2-ecs-ami/dw-ecs-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-ecs-ami-pr/dw-al2-ecs-ami/]"
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-ecs-ami-pr/dw-al2-ecs-ami/"
             AMI_USERS: ((aws_account.development))
       - .: (( inject meta.plan.packer-bootstrap ))
         config:

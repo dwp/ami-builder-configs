@@ -2,8 +2,8 @@
 set -eEu
 
 # Set Proxy
-echo "HTTP_PROXY=$HTTP_PROXY"
-echo "HTTPS_PROXY=$HTTPS_PROXY"
+echo "HTTP_PROXY=$http_proxy"
+echo "HTTPS_PROXY=$https_proxy"
 echo "http_proxy=$http_proxy"
 echo "https_proxy=$https_proxy"
 echo "NO_PROXY=$NO_PROXY"
@@ -16,6 +16,36 @@ echo "CONCOURSE_VERSION=$CONCOURSE_VERSION"
 cat > /etc/selinux/config << EOF
 SELINUX=permissive
 SELINUXTYPE=targeted
+EOF
+
+# Relax umask settings and defaults
+sed -i 's/^.*umask 0.*$/umask 002/' /etc/bashrc
+sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile
+sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile.d/*.sh
+sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
+
+# Download and Install Concourse
+CONCOURSE_VERSION=$CONCOURSE_VERSION
+CONCOURSE_TARBALL="concourse-$CONCOURSE_VERSION-linux-amd64.tgz"
+curl -s -L -O https://github.com/concourse/concourse/releases/download/v$CONCOURSE_VERSION/$CONCOURSE_TARBALL
+tar -xzf $CONCOURSE_TARBALL -C /usr/local
+rm $CONCOURSE_TARBALL
+EOF
+
+# Relax umask settings and defaults
+sed -i 's/^.*umask 0.*$/umask 002/' /etc/bashrc
+sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile
+sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile.d/*.sh
+sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
+
+# Download and Install Concourse
+CONCOURSE_VERSION=$CONCOURSE_VERSION
+CONCOURSE_TARBALL="concourse-$CONCOURSE_VERSION-linux-amd64.tgz"
+curl -s -L -O https://github.com/concourse/concourse/releases/download/v$CONCOURSE_VERSION/$CONCOURSE_TARBALL
+tar -xzf $CONCOURSE_TARBALL -C /usr/local
+rm $CONCOURSE_TARBALL
+tar -xzf $CONCOURSE_TARBALL -C /usr/local
+rm $CONCOURSE_TARBALL
 EOF
 
 # Relax umask settings and defaults

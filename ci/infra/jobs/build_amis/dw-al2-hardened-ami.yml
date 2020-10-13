@@ -27,6 +27,8 @@ jobs:
             AMI_NAME: packer-dw-al2-untested-hardened-ami
             SOURCE_AMI_NAME: packer-dw-al2-general-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
+            PROVISION_SCRIPT_KEYS: '["dw-al2-hardened-ami/dw-al2-hardened-ami/hardening.sh","dw-al2-hardened-ami/dw-al2-hardened-ami/dw-hardened-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hardened-ami/dw-al2-hardened-ami/]"
       - .: (( inject meta.plan.packer-bootstrap ))
         config:
           run:
@@ -60,6 +62,8 @@ jobs:
             SOURCE_AMI_NAME: packer-dw-al2-general-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
+            PROVISION_SCRIPT_KEYS: '["dw-al2-hardened-ami-pr/dw-al2-hardened-ami/hardening.sh","dw-al2-hardened-ami-pr/dw-al2-hardened-ami/dw-hardened-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hardened-ami-pr/dw-al2-hardened-ami/]"
       - .: (( inject meta.plan.packer-bootstrap ))
         config:
           run:

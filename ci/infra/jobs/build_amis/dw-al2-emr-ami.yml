@@ -26,6 +26,8 @@ jobs:
             AMI_NAME: packer-dw-al2-emr-ami
             SOURCE_AMI_NAME: packer-dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
+            PROVISION_SCRIPT_KEYS: '["dw-al2-emr-ami/dw-al2-emr-ami/dw-emr-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-emr-ami/dw-al2-emr-ami/]"
       - .: (( inject meta.plan.packer-bootstrap ))
         config:
           run:
@@ -59,6 +61,8 @@ jobs:
             SOURCE_AMI_NAME: packer-dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
+            PROVISION_SCRIPT_KEYS: '["dw-al2-emr-ami-pr/dw-al2-emr-ami/dw-emr-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-emr-ami-pr/dw-al2-emr-ami/]"
       - .: (( inject meta.plan.packer-bootstrap ))
         config:
           run:

@@ -26,6 +26,8 @@ jobs:
             AMI_NAME: packer-dw-al2-concourse-ami
             SOURCE_AMI_NAME: packer-dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
+            PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami/dw-al2-concourse-ami/"
             CONCOURSE_VERSION: 6.4.1
       - .: (( inject meta.plan.packer-bootstrap ))
         config:
@@ -60,6 +62,8 @@ jobs:
             SOURCE_AMI_NAME: packer-dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
+            PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-pr/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami-pr/dw-al2-concourse-ami/]"
             CONCOURSE_VERSION: 6.5.1
       - .: (( inject meta.plan.packer-bootstrap ))
         config:

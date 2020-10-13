@@ -3,12 +3,12 @@ set -eEu
 
 ## Script to prepare general Dataworks AMI
 
-echo "HTTP_PROXY=$HTTP_PROXY"
-echo "HTTPS_PROXY=$HTTPS_PROXY"
+echo "HTTP_PROXY=$http_proxy"
+echo "HTTPS_PROXY=$https_proxy"
 echo "http_proxy=$http_proxy"
 echo "https_proxy=$https_proxy"
 echo "NO_PROXY=$NO_PROXY"
-echo "no_proxy=$no_proxy"
+echo "no_proxy=$NO_PROXY"
 echo "ARTEFACT_BUCKET=$ARTEFACT_BUCKET"
 
 # Update packages on the instance

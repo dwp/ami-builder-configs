@@ -2,8 +2,8 @@
 set -eEu
 
 # Set Proxy
-echo "HTTP_PROXY=$HTTP_PROXY"
-echo "HTTPS_PROXY=$HTTPS_PROXY"
+echo "HTTP_PROXY=$http_proxy"
+echo "HTTPS_PROXY=$https_proxy"
 echo "http_proxy=$http_proxy"
 echo "https_proxy=$https_proxy"
 echo "NO_PROXY=$NO_PROXY"
@@ -16,6 +16,30 @@ cat > /etc/selinux/config << EOF
 SELINUX=permissive
 SELINUXTYPE=targeted
 EOF
+
+# Download and Install ECS Agent
+amazon-linux-extras disable docker
+amazon-linux-extras install -y ecs
+systemctl enable --now ecs
+
+# Install Sysdig
+
+amazon-linux-extras install -y epel
+rpm --import https://download.sysdig.com/DRAIOS-GPG-KEY.public
+curl -s -o /etc/yum.repos.d/draios.repo https://download.sysdig.com/stable/rpm/draios.repo
+yum install -y sysdig
+
+# Download and Install ECS Agent
+amazon-linux-extras disable docker
+amazon-linux-extras install -y ecs
+systemctl enable --now ecs
+
+# Install Sysdig
+
+amazon-linux-extras install -y epel
+rpm --import https://download.sysdig.com/DRAIOS-GPG-KEY.public
+curl -s -o /etc/yum.repos.d/draios.repo https://download.sysdig.com/stable/rpm/draios.repo
+yum install -y sysdig
 
 # Download and Install ECS Agent
 amazon-linux-extras disable docker

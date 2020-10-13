@@ -4,11 +4,14 @@ resources:
     source:
       paths:
         - dw-al2-concourse-ami/*
+        - generic_packer_template.json.j2
+
   - name: dw-al2-concourse-ami-pr
     .: (( inject meta.resources.ami-builder-configs-pr ))
     source:
       paths:
         - dw-al2-concourse-ami/*
+        - generic_packer_template.json.j2
 
 jobs:
   - name: dw-al2-concourse-ami

@@ -82,7 +82,7 @@ meta:
           SECURITY_GROUP_ID: ((manifest.security_group_id))
           PROFILE: ""
           AMI_USERS: "((aws_account.development)),((aws_account.qa)),((aws_account.integration)),((aws_account.preprod)),((aws_account.production)),((aws_account.management-dev))"
-          SET_PROXY: false
+          SET_PROXY: true
           ARTEFACT_BUCKET: ((manifest.artefact_bucket))
           RUN_TAGS: '{"Persistence": "Ignore", "Owner": "dataworks platform", "Application": "packer"}'
         run:

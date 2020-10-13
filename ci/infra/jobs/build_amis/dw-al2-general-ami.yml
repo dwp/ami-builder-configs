@@ -24,7 +24,6 @@ jobs:
             AMI_NAME: packer-dw-al2-general-ami
             PROVISION_SCRIPT_KEYS: '["dw-al2-general-ami/dw-al2-general-ami/dw-general-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-general-ami/dw-al2-general-ami/"
-            SET_PROXY: true
       - .: (( inject meta.plan.packer-bootstrap ))
         config:
           run:

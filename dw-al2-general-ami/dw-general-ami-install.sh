@@ -3,8 +3,6 @@ set -eEu
 
 ## Script to prepare general Dataworks AMI
 
-env
-
 echo "HTTP_PROXY=$http_proxy"
 echo "HTTPS_PROXY=$https_proxy"
 echo "http_proxy=$http_proxy"

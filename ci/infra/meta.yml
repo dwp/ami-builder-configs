@@ -165,6 +165,8 @@ meta:
           args:
             - -exc
             - |
+              export http_proxy
+              export https_proxy
               export NO_PROXY=${NO_PROXY}
               export ARTEFACT_BUCKET=${ARTEFACT_BUCKET}
               source /assume-role

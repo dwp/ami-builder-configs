@@ -209,7 +209,6 @@ meta:
               cat negative-manifest.json
               echo "Test that whitelisted URLs are accessible through proxy"
               source /assume-role
-              set +x
               aws --region ${AWS_REGION} lambda invoke --function-name packer_egress_test \
                 --invocation-type RequestResponse \
                 --payload file://positive-manifest.json \
@@ -252,7 +251,6 @@ meta:
               # Subnet[0] is used by Packer, hence use subnet[1] to have more IPs available
               export AWS_DEFAULT_REGION
               source /assume-role
-              set +x
               SUBNET_ID=$(cat ./terraform-output-management/outputs.json | jq -r '.vpc.value.subnet_ids[1]')
               LAUNCH_TEMPLATE_ID="$(cat ./terraform-output-management/outputs.json | jq -r .${LAUNCH_TEMPLATE_OUTPUT_NAME}.value.id)"
               LAUNCH_TEMPLATE_NAME="$(cat ./terraform-output-management/outputs.json | jq -r .${LAUNCH_TEMPLATE_OUTPUT_NAME}.value.name)"
@@ -300,7 +298,6 @@ meta:
             - |
               export AWS_DEFAULT_REGION
               source /assume-role
-              set +x
               ASS_TEMPLATE_ARN=$(cat ./terraform-output-management/outputs.json | jq -r '.hardened_assessment_template.value.arn')
               ASS_RUN_ARN=$(aws inspector start-assessment-run --assessment-template-arn ${ASS_TEMPLATE_ARN} | jq -r '.assessmentRunArn')
               echo ${ASS_RUN_ARN} > assessment_run_arn/arn
@@ -333,7 +330,6 @@ meta:
               export AWS_DEFAULT_REGION
               export ASSUME_DURATION
               source /assume-role
-              set +x
               ASS_RUN_ARN=$(cat assessment_run_arn/arn)
               ASS_RUN_DURATION=$(cat terraform-output-management/outputs.json | jq -r '.hardened_assessment_template.value.duration')
               STATE="unknown"
@@ -388,14 +384,12 @@ meta:
             - |
               export AWS_DEFAULT_REGION
               source /assume-role
-              set +x
               SOURCE_AMI_ID="$(cat ./source_ami/id)"
               TIMESTAMP=$(date +%s)
               AMI_NAME="${AMI_NAME_PREFIX}${TIMESTAMP}"
               AMI_ID=$(aws ec2 copy-image --name ${AMI_NAME} --source-image-id ${SOURCE_AMI_ID} --source-region ${AWS_REGION} | jq -r .ImageId)
               AMI_COPY_STATE="unknown"
               count=0
-              set +x
               while [[ ${AMI_COPY_STATE} != 'available' ]]; do
                 echo "waiting for the AMI copy to complete: ${count}0 passed of 600 seconds"
                 if [[ ${count} -le 60 ]]; then
@@ -432,7 +426,6 @@ meta:
             - |
               export AWS_DEFAULT_REGION
               source /assume-role
-              set +x
               INSTANCE_ID="$(cat ./running_instance_id/id)"
               aws ec2 terminate-instances --instance-ids ${INSTANCE_ID}
 

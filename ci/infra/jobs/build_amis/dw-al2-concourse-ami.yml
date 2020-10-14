@@ -21,13 +21,13 @@ jobs:
       - .: (( inject meta.plan.get-al2-hardened-ami ))
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: packer-dw-al2-hardened-ami
+          source_ami: dw-al2-hardened-ami
         config:
           inputs:
             - name: source_ami
           params:
-            AMI_NAME: packer-dw-al2-concourse-ami
-            SOURCE_AMI_NAME: packer-dw-al2-hardened-ami-*
+            AMI_NAME: dw-al2-concourse-ami
+            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami/dw-al2-concourse-ami/"
@@ -56,13 +56,13 @@ jobs:
       - .: (( inject meta.plan.get-al2-hardened-ami ))
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: packer-dw-al2-hardened-ami
+          source_ami: dw-al2-hardened-ami
         config:
           inputs:
             - name: source_ami
           params:
             AMI_NAME: packer-pr-dw-al2-concourse-ami
-            SOURCE_AMI_NAME: packer-dw-al2-hardened-ami-*
+            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-pr/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'

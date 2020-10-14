@@ -231,7 +231,7 @@ meta:
     start-instance:
       task: start-instance
       input_mapping:
-        source_ami: packer-dw-untested-hardened-ami
+        source_ami: dw-untested-hardened-ami
       config:
         platform: linux
         image_resource:
@@ -439,11 +439,11 @@ meta:
               aws ec2 terminate-instances --instance-ids ${INSTANCE_ID}
 
     get-al2-hardened-ami:
-      get: packer-dw-al2-hardened-ami
+      get: dw-al2-hardened-ami
       trigger: true
 
     get-al2-emr-hardened-ami:
-      get: packer-dw-al2-emr-hardened-ami
+      get: dw-al2-emr-hardened-ami
       trigger: true
 
     notify:

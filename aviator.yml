@@ -9,6 +9,7 @@ spruce:
           - credentials.yml.example
           - credentials.yml
       - with_in: ci/infra/jobs/build_amis/
+         regexp: ".*yml"
     to: aviator_pipeline.yml
 fly:
   name: ami-builder

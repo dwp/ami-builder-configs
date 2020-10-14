@@ -62,6 +62,7 @@ meta:
             tag: ((dataworks.docker_awscli_version))
         inputs:
           - name: source_ami
+            optional: true
         outputs:
           - name: manifest
         params:

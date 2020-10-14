@@ -5,11 +5,8 @@ spruce:
     merge:
       - with_in: ci/infra/
         regexp: ".*yml"
-        except:
-          - credentials.yml.example
-          - credentials.yml
       - with_in: ci/infra/jobs/build_amis/
-         regexp: ".*yml"
+        regexp: ".*yml"
     to: aviator_pipeline.yml
 fly:
   name: ami-builder

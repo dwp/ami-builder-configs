@@ -30,4 +30,3 @@ CONCOURSE_TARBALL="concourse-$CONCOURSE_VERSION-linux-amd64.tgz"
 curl -s -L -O https://github.com/concourse/concourse/releases/download/v$CONCOURSE_VERSION/$CONCOURSE_TARBALL
 tar -xzf $CONCOURSE_TARBALL -C /usr/local
 rm $CONCOURSE_TARBALL
-EOF

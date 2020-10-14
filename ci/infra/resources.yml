@@ -57,7 +57,6 @@ resources:
 
   - name: weekly-wednesday
     source:
-      location: Europe/London
       start: 3:00 AM
       stop: 4:00 AM
       days: [Wednesday]

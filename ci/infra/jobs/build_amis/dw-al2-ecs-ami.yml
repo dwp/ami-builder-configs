@@ -23,8 +23,6 @@ jobs:
         input_mapping:
           source_ami: dw-al2-hardened-ami
         config:
-          inputs:
-            - name: source_ami
           params:
             AMI_NAME: dw-al2-ecs-ami
             SOURCE_AMI_NAME: dw-al2-hardened-ami-*
@@ -58,8 +56,6 @@ jobs:
         input_mapping:
           source_ami: dw-al2-hardened-ami
         config:
-          inputs:
-            - name: source_ami
           params:
             AMI_NAME: packer-pr-dw-al2-ecs-ami
             SOURCE_AMI_NAME: dw-al2-hardened-ami-*

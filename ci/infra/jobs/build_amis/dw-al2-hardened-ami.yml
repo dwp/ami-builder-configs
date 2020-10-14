@@ -24,8 +24,6 @@ jobs:
         input_mapping:
           source_ami: dw-al2-general-ami
         config:
-          inputs:
-            - name: source_ami
           params:
             AMI_NAME: dw-al2-untested-hardened-ami
             SOURCE_AMI_NAME: dw-al2-general-ami-*
@@ -58,8 +56,6 @@ jobs:
         input_mapping:
           source_ami: dw-al2-general-ami
         config:
-          inputs:
-            - name: source_ami
           params:
             AMI_NAME: packer-pr-dw-al2-hardened-ami
             SOURCE_AMI_NAME: dw-al2-general-ami-*

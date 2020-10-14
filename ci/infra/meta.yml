@@ -440,10 +440,6 @@ meta:
       get: dw-al2-hardened-ami
       trigger: true
 
-    get-al2-emr-hardened-ami:
-      get: dw-al2-emr-hardened-ami
-      trigger: true
-
     notify:
       on_failure:
         put: slack

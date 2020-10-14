@@ -1,8 +1,5 @@
 SHELL:=bash
 
-aws_profile=default
-aws_region=eu-west-2
-
 default: help
 
 .PHONY: help
@@ -12,12 +9,6 @@ help:
 .PHONY: bootstrap
 bootstrap: ## Bootstrap local environment for first use
 	make git-hooks
-	pip3 install --user Jinja2 PyYAML
-	@{ \
-		export AWS_PROFILE=$(aws_profile); \
-		export AWS_REGION=$(aws_region); \
-		python3 bootstrap_packer.py; \
-	}
 
 .PHONY: git-hooks
 git-hooks: ## Set up hooks in .githooks

@@ -16,3 +16,4 @@ fly:
   target: aws-concourse
   expose: true
   config: aviator_pipeline.yml
+  check_creds: true

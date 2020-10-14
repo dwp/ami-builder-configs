@@ -3,7 +3,7 @@ meta:
     - name: ami-builder-configs
       type: git
       source:
-        branch: dw_5093_packer-cli
+        branch: master
         uri: https://github.com/dwp/ami-builder-configs.git
         username: ((dataworks.enterprise_github_username))
         password: ((dataworks-secrets.enterprise_github_pat))

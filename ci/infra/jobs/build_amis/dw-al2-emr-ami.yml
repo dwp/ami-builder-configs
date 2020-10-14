@@ -53,6 +53,7 @@ jobs:
           path: dw-al2-emr-ami-pr
           status: pending
       - .: (( inject meta.plan.get-al2-hardened-ami ))
+        trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
           source_ami: dw-al2-hardened-ami

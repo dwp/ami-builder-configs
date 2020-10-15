@@ -28,7 +28,7 @@ jobs:
             AMI_NAME: dw-al2-untested-hardened-ami
             SOURCE_AMI_NAME: dw-al2-base-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
-            PROVISION_SCRIPT_KEYS: '["dw-al2-hardened-ami-config/dw-al2-hardened-ami/hardening.sh","dw-al2-hardened-ami/dw-al2-hardened-ami/dw-hardened-ami-install.sh"]'
+            PROVISION_SCRIPT_KEYS: '["dw-al2-hardened-ami-config/dw-al2-hardened-ami/hardening.sh","dw-al2-hardened-ami-config/dw-al2-hardened-ami/dw-hardened-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hardened-ami-config/dw-al2-hardened-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:

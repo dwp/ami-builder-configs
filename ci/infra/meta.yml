@@ -439,10 +439,7 @@ meta:
     notify:
       on_failure:
         put: slack
-        attempts: 15
+        attempts: 3
         params:
           channel: "#dataworks-alerts"
           icon_emoji: ":concourse-red:"
-          attachments:
-            - color: danger
-              text: ":fire: <$ATC_EXTERNAL_URL/teams/dataworks/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME failed>"

@@ -149,13 +149,9 @@ jobs:
     ensure:
       do:
         - .: (( inject meta.plan.inspector-cleanup ))
+    .: (( inject meta.plan.notify ))
     on_failure:
-      put: slack
-      attempts: 3
       params:
-        channel: "#dataworks-alerts"
-        icon_emoji: ":concourse-red:"
         attachments:
           - color: danger
             text: ":fire: Weekly AWS Inspector test of dw-al2-hardened-ami has failed - non-whitelisted vulnerabilities found "
-            attachment_type: "default"

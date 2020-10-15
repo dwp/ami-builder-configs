@@ -9,7 +9,7 @@ resources:
     check_every: 720h
     webhook_token: ((dataworks.concourse_github_webhook_token))
 
-  - name: dw-al2-general-ami
+  - name: dw-al2-base-ami
     type: ami
     check_every: 5m
     source:
@@ -19,7 +19,7 @@ resources:
         owner-id: ((dataworks.aws_management_acc))
         is-public: false
         state: available
-        name: dw-al2-general-ami-*
+        name: dw-al2-base-ami-*
 
   - name: dw-al2-untested-hardened-ami
     type: ami

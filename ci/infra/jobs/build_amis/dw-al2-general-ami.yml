@@ -1,70 +1,70 @@
 resources:
-  - name: dw-al2-general-ami-config
+  - name: dw-al2-base-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
-        - dw-al2-general-ami/*
+        - dw-al2-base-ami/*
         - generic_packer_template.json.j2
 
-  - name: dw-al2-general-ami-pr
+  - name: dw-al2-base-ami-pr
     .: (( inject meta.resources.ami-builder-configs-pr ))
     source:
       paths:
-        - dw-al2-general-ami/*
+        - dw-al2-base-ami/*
         - generic_packer_template.json.j2
 
 jobs:
-  - name: dw-al2-general-ami
+  - name: dw-al2-base-ami
     plan:
-      - get: dw-al2-general-ami-config
+      - get: dw-al2-base-ami-config
         trigger: true
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
-            AMI_NAME: dw-al2-general-ami
-            PROVISION_SCRIPT_KEYS: '["dw-al2-general-ami-config/dw-al2-general-ami/dw-general-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-general-ami-config/dw-al2-general-ami/"
+            AMI_NAME: dw-al2-base-ami
+            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-config/dw-al2-base-ami/dw-base-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
-          source_config: dw-al2-general-ami-config
+          source_config: dw-al2-base-ami-config
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
-            - name: dw-al2-general-ami-config
+            - name: dw-al2-base-ami-config
 
-  - name: dw-al2-general-ami-pr
+  - name: dw-al2-base-ami-pr
     max_in_flight: 1
     plan:
-      - get: dw-al2-general-ami-pr
+      - get: dw-al2-base-ami-pr
         trigger: true
         version: every
-      - put: dw-al2-general-ami-pr
+      - put: dw-al2-base-ami-pr
         params:
-          path: dw-al2-general-ami-pr
+          path: dw-al2-base-ami-pr
           status: pending
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
-            AMI_NAME: pr-dw-al2-general-ami
+            AMI_NAME: pr-dw-al2-base-ami
             AMI_USERS: ((aws_account.development))
-            PROVISION_SCRIPT_KEYS: '["dw-al2-general-ami-pr/dw-al2-general-ami/dw-general-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-general-ami-pr/dw-al2-general-ami/]"
+            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-pr/dw-al2-base-ami/dw-base-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-pr/dw-al2-base-ami/]"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
-          source_config: dw-al2-general-ami-pr
+          source_config: dw-al2-base-ami-pr
       - .: (( inject meta.plan.build-ami ))
         config:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           inputs:
-            - name: dw-al2-general-ami-pr
+            - name: dw-al2-base-ami-pr
         on_failure:
-          put: dw-al2-general-ami-pr
+          put: dw-al2-base-ami-pr
           params:
-            path: dw-al2-general-ami-pr
+            path: dw-al2-base-ami-pr
             status: failure
         on_success:
-          put: dw-al2-general-ami-pr
+          put: dw-al2-base-ami-pr
           params:
-            path: dw-al2-general-ami-pr
+            path: dw-al2-base-ami-pr
             status: success

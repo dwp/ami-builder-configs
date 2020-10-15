@@ -18,15 +18,15 @@ jobs:
     plan:
       - get: dw-al2-hardened-ami-config
         trigger: true
-      - get: dw-al2-general-ami
+      - get: dw-al2-base-ami
         trigger: true
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: dw-al2-general-ami
+          source_ami: dw-al2-base-ami
         config:
           params:
             AMI_NAME: dw-al2-untested-hardened-ami
-            SOURCE_AMI_NAME: dw-al2-general-ami-*
+            SOURCE_AMI_NAME: dw-al2-base-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             PROVISION_SCRIPT_KEYS: '["dw-al2-hardened-ami-config/dw-al2-hardened-ami/hardening.sh","dw-al2-hardened-ami/dw-al2-hardened-ami/dw-hardened-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hardened-ami-config/dw-al2-hardened-ami/"
@@ -44,18 +44,18 @@ jobs:
       - get: dw-al2-hardened-ami-pr
         trigger: true
         version: every
-      - get: dw-al2-general-ami
+      - get: dw-al2-base-ami
       - put: dw-al2-hardened-ami-pr
         params:
           path: dw-al2-hardened-ami-pr
           status: pending
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: dw-al2-general-ami
+          source_ami: dw-al2-base-ami
         config:
           params:
             AMI_NAME: pr-dw-al2-hardened-ami
-            SOURCE_AMI_NAME: dw-al2-general-ami-*
+            SOURCE_AMI_NAME: dw-al2-base-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-hardened-ami-pr/dw-al2-hardened-ami/hardening.sh","dw-al2-hardened-ami-pr/dw-al2-hardened-ami/dw-hardened-ami-install.sh"]'

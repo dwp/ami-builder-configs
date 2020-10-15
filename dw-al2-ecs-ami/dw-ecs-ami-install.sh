@@ -1,14 +1,6 @@
 #!/bin/sh
 set -eEu
 
-# Set Proxy
-echo "HTTP_PROXY=$http_proxy"
-echo "HTTPS_PROXY=$https_proxy"
-echo "http_proxy=$http_proxy"
-echo "https_proxy=$https_proxy"
-echo "NO_PROXY=$NO_PROXY"
-echo "no_proxy=$no_proxy"
-
 # Make changes to hardened-ami that are required for ECS to work
 
 # Change SELinux config to be permissive

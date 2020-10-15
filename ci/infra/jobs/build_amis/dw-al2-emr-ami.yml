@@ -30,11 +30,8 @@ jobs:
             PROVISION_SCRIPT_KEYS: '["dw-al2-emr-ami-config/dw-al2-emr-ami/dw-emr-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-emr-ami-config/dw-al2-emr-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
-        config:
-          run:
-            dir: dw-al2-emr-ami-config
-          inputs:
-            - name: dw-al2-emr-ami-config
+        input_mapping:
+          source_config: dw-al2-emr-ami-config
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
@@ -64,11 +61,8 @@ jobs:
             PROVISION_SCRIPT_KEYS: '["dw-al2-emr-ami-pr/dw-al2-emr-ami/dw-emr-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-emr-ami-pr/dw-al2-emr-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
-        config:
-          run:
-            dir: dw-al2-emr-ami-pr
-          inputs:
-            - name: dw-al2-emr-ami-pr
+        input_mapping:
+          source_config: dw-al2-emr-ami-pr
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

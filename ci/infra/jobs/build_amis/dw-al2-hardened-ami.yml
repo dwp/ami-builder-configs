@@ -31,11 +31,8 @@ jobs:
             PROVISION_SCRIPT_KEYS: '["dw-al2-hardened-ami-config/dw-al2-hardened-ami/hardening.sh","dw-al2-hardened-ami/dw-al2-hardened-ami/dw-hardened-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hardened-ami-config/dw-al2-hardened-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
-        config:
-          run:
-            dir: dw-al2-hardened-ami-config
-          inputs:
-            - name: dw-al2-hardened-ami-config
+        input_mapping:
+          source_config: dw-al2-hardened-ami-config
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
@@ -64,11 +61,8 @@ jobs:
             PROVISION_SCRIPT_KEYS: '["dw-al2-hardened-ami-pr/dw-al2-hardened-ami/hardening.sh","dw-al2-hardened-ami-pr/dw-al2-hardened-ami/dw-hardened-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hardened-ami-pr/dw-al2-hardened-ami/]"
       - .: (( inject meta.plan.packer-bootstrap ))
-        config:
-          run:
-            dir: dw-al2-hardened-ami-pr
-          inputs:
-            - name: dw-al2-hardened-ami-pr
+        input_mapping:
+          source_config: dw-al2-hardened-ami-pr
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

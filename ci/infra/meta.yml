@@ -133,6 +133,7 @@ meta:
             tag: 0.0.19
         run:
           path: sh
+          dir: source_config
           args:
             - -exc
             - |
@@ -142,6 +143,7 @@ meta:
               cp packer.json ../packer-config
         inputs:
           - name: manifest
+          - name: source_config
         outputs:
           - name: packer-config
 

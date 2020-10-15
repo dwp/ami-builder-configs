@@ -25,11 +25,8 @@ jobs:
             PROVISION_SCRIPT_KEYS: '["dw-al2-general-ami-config/dw-al2-general-ami/dw-general-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-general-ami-config/dw-al2-general-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
-        config:
-          run:
-            dir: dw-al2-general-ami-config
-          inputs:
-            - name: dw-al2-general-ami-config
+        input_mapping:
+          source_config: dw-al2-general-ami-config
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
@@ -53,11 +50,8 @@ jobs:
             PROVISION_SCRIPT_KEYS: '["dw-al2-general-ami-pr/dw-al2-general-ami/dw-general-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-general-ami-pr/dw-al2-general-ami/]"
       - .: (( inject meta.plan.packer-bootstrap ))
-        config:
-          run:
-            dir: dw-al2-general-ami-pr
-          inputs:
-            - name: dw-al2-general-ami-pr
+        input_mapping:
+          source_config: dw-al2-general-ami-pr
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

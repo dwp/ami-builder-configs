@@ -48,7 +48,7 @@ jobs:
             AMI_NAME: pr-dw-al2-base-ami
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-pr/dw-al2-base-ami/dw-base-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-pr/dw-al2-base-ami/]"
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-pr/dw-al2-base-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-base-ami-pr

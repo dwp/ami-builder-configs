@@ -1,5 +1,5 @@
 resources:
-  - name: dw-al2-concourse-ami
+  - name: dw-al2-concourse-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
@@ -16,7 +16,7 @@ resources:
 jobs:
   - name: dw-al2-concourse-ami
     plan:
-      - get: dw-al2-concourse-ami
+      - get: dw-al2-concourse-ami-config
         trigger: true
       - .: (( inject meta.plan.get-al2-hardened-ami ))
       - .: (( inject meta.plan.generate-manifest ))
@@ -27,19 +27,19 @@ jobs:
             AMI_NAME: dw-al2-concourse-ami
             SOURCE_AMI_NAME: dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
-            PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami/dw-al2-concourse-ami/"
+            PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-config/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami-config/dw-al2-concourse-ami/"
             CONCOURSE_VERSION: 6.4.1
       - .: (( inject meta.plan.packer-bootstrap ))
         config:
           run:
-            dir: dw-al2-concourse-ami
+            dir: dw-al2-concourse-ami-config
           inputs:
-            - name: dw-al2-concourse-ami
+            - name: dw-al2-concourse-ami-config
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
-            - name: dw-al2-concourse-ami
+            - name: dw-al2-concourse-ami-config
 
   - name: dw-al2-concourse-ami-pr
     max_in_flight: 1
@@ -58,7 +58,7 @@ jobs:
           source_ami: dw-al2-hardened-ami
         config:
           params:
-            AMI_NAME: packer-pr-dw-al2-concourse-ami
+            AMI_NAME: pr-dw-al2-concourse-ami
             SOURCE_AMI_NAME: dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))

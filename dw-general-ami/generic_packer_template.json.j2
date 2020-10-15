@@ -23,7 +23,7 @@
       "iam_instance_profile": "instance_ami_builder",
       "ssh_username": "{{ event['ssh_username'] or 'ec2-user' }}",
       "subnet_id": "{{ event['subnet_id'] }}",
-      "ami_name": "dw-general-ami-{{ '{{' }} timestamp {{ '}}' }}",
+      "ami_name": "dw-base-ami-{{ '{{' }} timestamp {{ '}}' }}",
       {% if 'profile' in event %}
       "profile": "{{ event['profile'] }}",
       {% endif %}

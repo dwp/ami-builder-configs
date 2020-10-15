@@ -11,14 +11,6 @@ bootstrap: ## Bootstrap local environment for first use
 	make git-hooks
 
 .PHONY: git-hooks
-git-hooks: ## Set up hooks in .git/hooks
-	@{ \
-		HOOK_DIR=.git/hooks; \
-		for hook in $(shell ls .githooks); do \
-			if [ ! -h $${HOOK_DIR}/$${hook} -a -x $${HOOK_DIR}/$${hook} ]; then \
-				mv $${HOOK_DIR}/$${hook} $${HOOK_DIR}/$${hook}.local; \
-				echo "moved existing $${hook} to $${hook}.local"; \
-			fi; \
-			ln -s -f ../../.githooks/$${hook} $${HOOK_DIR}/$${hook}; \
-		done \
-	}
+git-hooks: ## Set up hooks in .githooks
+	@git submodule update --init .githooks ; \
+  	git config core.hooksPath .githooks \

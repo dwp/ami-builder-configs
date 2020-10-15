@@ -1,0 +1,447 @@
+meta:
+  resources:
+    - name: ami-builder-configs
+      type: git
+      source:
+        branch: master
+        uri: https://github.com/dwp/ami-builder-configs.git
+      webhook_token: ((dataworks.concourse_github_webhook_token))
+      check_every: 720h
+
+    - name: ami-builder-configs-pr
+      type: pull-request
+      source:
+        access_token: ((dataworks-secrets.concourse_github_pat))
+        repository: dwp/ami-builder-configs
+      webhook_token: ((dataworks.concourse_github_webhook_token))
+      check_every: 720h
+
+  plan:
+    terraform-common-config:
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.terraform_repository))
+            version: ((dataworks.terraform_version))
+            tag: ((dataworks.terraform_version))
+        params:
+          TF_INPUT: false
+          TF_CLI_ARGS_apply: -lock-timeout=300s
+          TF_CLI_ARGS_plan: -lock-timeout=300s
+          TF_VAR_slack_webhook_url: ((dataworks.slack_webhook_url))
+
+    terraform-output-management:
+      task: terraform-output-management
+      .: (( inject meta.plan.terraform-common-config ))
+      config:
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              terraform init
+              terraform workspace show
+              terraform output --json > ../terraform-output-management/outputs.json
+          dir: aws-management-infrastructure
+        inputs:
+          - name: aws-management-infrastructure
+        outputs:
+          - name: terraform-output-management
+
+    generate-manifest:
+      task: generate-manifest
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        inputs:
+          - name: source_ami
+            optional: true
+        outputs:
+          - name: manifest
+        params:
+          PACKER_TEMPLATE_KEY: "generic_packer_template.json.j2"
+          PROVISION_SCRIPT_KEYS: "[]"
+          PROVISION_FILE_KEYS: "[]"
+          PROVISION_SCRIPTS: "[]"
+          PROVISIONER_TYPE_FILE_SOURCE: ""
+          SOURCE_AMI_VIRT_TYPE: hvm
+          SOURCE_AMI_NAME: amzn2-ami-hvm-*
+          SOURCE_AMI_ROOT_DEVICE_TYPE: "ebs"
+          SOURCE_AMI_OWNER: 137112412989
+          INSTANCE_TYPE: t2.micro
+          IAM_INSTANCE_PROFILE: ""
+          SSH_USERNAME: "ec2-user"
+          SUBNET_ID: ((manifest.subnet_id))
+          REGION: "eu-west-2"
+          SECURITY_GROUP_ID: ((manifest.security_group_id))
+          PROFILE: ""
+          AMI_USERS: "((aws_account.development)),((aws_account.qa)),((aws_account.integration)),((aws_account.preprod)),((aws_account.production)),((aws_account.management-dev))"
+          SET_PROXY: true
+          ARTEFACT_BUCKET: ((manifest.artefact_bucket))
+          RUN_TAGS: '{"Persistence": "Ignore", "Owner": "dataworks platform", "Application": "packer"}'
+        run:
+          path: sh
+          dir: manifest
+          args:
+            - -exc
+            - |
+              cat << EOF > manifest.json
+              {
+              "packer_template_key":            "${PACKER_TEMPLATE_KEY}",
+              "provision_script_keys":          ${PROVISION_SCRIPT_KEYS},
+              "provision_scripts":              ${PROVISION_SCRIPTS},
+              "provision_file_keys":            ${PROVISION_FILE_KEYS},
+              "provisioner_type_file_source":   "${PROVISIONER_TYPE_FILE_SOURCE}",
+              "source_ami_virt_type":           "${SOURCE_AMI_VIRT_TYPE}",
+              "source_ami_id":                  "$(if [ -f ../source_ami/id ]; then cat ../source_ami/id; else echo ''; fi)",
+              "source_ami_name":                "${SOURCE_AMI_NAME}",
+              "source_ami_root_device_type":    "${SOURCE_AMI_ROOT_DEVICE_TYPE}",
+              "source_ami_owner":               "${SOURCE_AMI_OWNER}",
+              "instance_type":                  "${INSTANCE_TYPE}",
+              "iam_instance_profile":           "${IAM_INSTANCE_PROFILE}",
+              "ssh_username":                   "${SSH_USERNAME}",
+              "subnet_id":                      "${SUBNET_ID}",
+              "ami_name":                       "${AMI_NAME}",
+              "profile":                        "${PROFILE}",
+              "security_group_id":              "${SECURITY_GROUP_ID}",
+              "ami_users":                      "${AMI_USERS}",
+              "region":                         "${REGION}",
+              "set_proxy":                      ${SET_PROXY},
+              "artefact_bucket":                "${ARTEFACT_BUCKET}",
+              "run_tags":                       ${RUN_TAGS},
+              "concourse_version":              "${CONCOURSE_VERSION}"
+              }
+              EOF
+              cat manifest.json
+
+    packer-bootstrap:
+      task: packer-bootstrap
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: dwpdigital/jinja-yaml-aws
+            version: 0.0.19
+            tag: 0.0.19
+        run:
+          path: sh
+          dir: source_config
+          args:
+            - -exc
+            - |
+              pwd
+              cp ../manifest/manifest.json .
+              python3 bootstrap_packer.py
+              cp packer.json ../packer-config
+        inputs:
+          - name: manifest
+          - name: source_config
+        outputs:
+          - name: packer-config
+
+    build-ami:
+      task: build-ami
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: dwpdigital/packer
+            tag: 0.0.1
+        inputs:
+          - name: packer-config
+        params:
+          AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
+          NO_PROXY: ((dataworks.proxy.no))
+          ARTEFACT_BUCKET: ((manifest.artefact_bucket))
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              export http_proxy=${http_proxy}
+              export https_proxy=${https_proxy}
+              export NO_PROXY=${NO_PROXY}
+              export ARTEFACT_BUCKET=${ARTEFACT_BUCKET}
+              source /assume-role
+              packer validate packer-config/packer.json
+              packer build -on-error=cleanup packer-config/packer.json
+
+    proxy-test:
+      task: proxy-test
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        params:
+          AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+          AWS_REGION: ((dataworks.aws_region))
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              cat << EOF > positive-manifest.json
+              {
+                "required_endpoints":
+                {
+                  "Github": "https://github.com"
+                }
+              }
+              EOF
+              cat positive-manifest.json
+              cat << EOF > negative-manifest.json
+              {
+                "required_endpoints":
+                {
+                  "MSN": "https://msn.com"
+                }
+              }
+              EOF
+              cat negative-manifest.json
+              echo "Test that whitelisted URLs are accessible through proxy"
+              source /assume-role
+              aws --region ${AWS_REGION} lambda invoke --function-name packer_egress_test \
+                --invocation-type RequestResponse \
+                --payload file://positive-manifest.json \
+                --cli-connect-timeout 600 \
+                --cli-read-timeout 600 \
+              output.json
+              cat output.json | jq -eC 'if .errorMessage? then error(.errorMessage) else true end'
+              echo "Test that URLs not in the whitelist aren't accessible through proxy"
+              aws --region ${AWS_REGION} lambda invoke --function-name packer_egress_test \
+                --invocation-type RequestResponse \
+                --payload file://negative-manifest.json \
+                --cli-connect-timeout 600 \
+                --cli-read-timeout 600 \
+              output.json
+              cat output.json | jq -eC 'if .errorMessage? then true else error("Connection to internet not blocked") end'
+
+    start-instance:
+      task: start-instance
+      input_mapping:
+        source_ami: dw-untested-hardened-ami
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        inputs:
+          - name: source_ami
+          - name: terraform-output-management
+        params:
+          AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              # Subnet[0] is used by Packer, hence use subnet[1] to have more IPs available
+              export AWS_DEFAULT_REGION
+              source /assume-role
+              SUBNET_ID=$(cat ./terraform-output-management/outputs.json | jq -r '.vpc.value.subnet_ids[1]')
+              LAUNCH_TEMPLATE_ID="$(cat ./terraform-output-management/outputs.json | jq -r .${LAUNCH_TEMPLATE_OUTPUT_NAME}.value.id)"
+              LAUNCH_TEMPLATE_NAME="$(cat ./terraform-output-management/outputs.json | jq -r .${LAUNCH_TEMPLATE_OUTPUT_NAME}.value.name)"
+              TAG_NAME="$(cat ./terraform-output-management/outputs.json | jq -r '.inspector_test_instance_tag.value.name')"
+              SOURCE_AMI_ID="$(cat ./source_ami/id)"
+              SOURCE_TEMPLATE_VERSION=$(aws ec2 describe-launch-templates --filters Name=launch-template-name,Values=${LAUNCH_TEMPLATE_NAME} | jq -r .LaunchTemplates[0].LatestVersionNumber)
+              LAUNCH_TEMPLATE_VERSION=$(aws ec2 create-launch-template-version --launch-template-id ${LAUNCH_TEMPLATE_ID} --source-version ${SOURCE_TEMPLATE_VERSION} --launch-template-data "{\"ImageId\":\"${SOURCE_AMI_ID}\"}" | jq -r '.LaunchTemplateVersion.VersionNumber')
+              RUNNING_INSTANCE_ID=$(aws ec2 run-instances --launch-template LaunchTemplateId=${LAUNCH_TEMPLATE_ID},Version=${LAUNCH_TEMPLATE_VERSION} --subnet-id ${SUBNET_ID} | jq -r '.Instances[0].InstanceId')
+              echo ${RUNNING_INSTANCE_ID} > running_instance_id/id
+              CURRENT_TAG_VALUE="unknown"
+              count=0
+              set +x
+              while [[ ${CURRENT_TAG_VALUE} != 'True' ]]; do
+                echo "waiting for the instance to become ready: ${count}0 passed of 240 seconds"
+                if [[ ${count} -le 24 ]]; then
+                  CURRENT_TAG_VALUE=$(aws ec2 describe-tags --filters Name=resource-id,Values=${RUNNING_INSTANCE_ID} Name=key,Values=${TAG_NAME} | jq -r '.Tags[0].Value')
+                  count=$((count+1))
+                else
+                  exit 1
+                fi
+                sleep 10
+              done
+        outputs:
+          - name: running_instance_id
+
+    run-inspector:
+      task: run-inspector
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        inputs:
+          - name: terraform-output-management
+        params:
+          AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              export AWS_DEFAULT_REGION
+              source /assume-role
+              ASS_TEMPLATE_ARN=$(cat ./terraform-output-management/outputs.json | jq -r '.hardened_assessment_template.value.arn')
+              ASS_RUN_ARN=$(aws inspector start-assessment-run --assessment-template-arn ${ASS_TEMPLATE_ARN} | jq -r '.assessmentRunArn')
+              echo ${ASS_RUN_ARN} > assessment_run_arn/arn
+        outputs:
+          - name: assessment_run_arn
+
+    evaluate-assessment-run:
+      task: evaluate-assessment-run
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        inputs:
+          - name: assessment_run_arn
+          - name: aws-security-tools
+          - name: terraform-output-management
+        params:
+          AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
+          ASSUME_DURATION: 7200
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              export AWS_DEFAULT_REGION
+              export ASSUME_DURATION
+              source /assume-role
+              ASS_RUN_ARN=$(cat assessment_run_arn/arn)
+              ASS_RUN_DURATION=$(cat terraform-output-management/outputs.json | jq -r '.hardened_assessment_template.value.duration')
+              STATE="unknown"
+              set +x
+              LIMIT=$((${ASS_RUN_DURATION} + 600))     # loop time limit in seconds, set to assessment run duration plus 10 minutes
+              INTERVAL=60                              # loop interval in seconds
+              TIME_PASSED=0                            # loop counter based on seconds passed
+              while [[ "${STATE}" != 'COMPLETED' ]]; do
+                if [ `expr ${TIME_PASSED} % 300` -eq 0 ]; then       # print a message every 300 seconds (5 minutes)
+                  echo "waiting for the assessment run to complete, passed $((${TIME_PASSED} / 60)) minutes out of $((${LIMIT} / 60))"
+                fi
+                STATE=$(aws inspector describe-assessment-runs --assessment-run-arns ${ASS_RUN_ARN} | jq -r '.assessmentRuns[0].state')
+                if [[ "${STATE}" == 'null' ]]; then
+                  echo "Incorrect assessment run ARN: ${ASS_RUN_ARN}"
+                  exit 1
+                fi
+                if [[ ${TIME_PASSED} -gt ${LIMIT} ]]; then
+                  echo "Maximum wait time of $((${LIMIT} / 60)) minutes reached"
+                  exit 1
+                fi
+                sleep ${INTERVAL}
+                TIME_PASSED=$((${TIME_PASSED}+${INTERVAL}))
+              done
+              set -x
+              SCRIPT_PATH="aws-security-tools/files/inspector"
+              VULNS=$(python3 ${SCRIPT_PATH}/evaluate-assessment-run.py --assessment-run-arn ${ASS_RUN_ARN} --whitelist-file ${SCRIPT_PATH}/${WHITELIST_NAME})
+              rc=$?
+              if [[ $rc -ne 0 -o $VULNS -gt 0 ]]; then
+                exit 1
+              fi
+
+    promote-ami:
+      task: promote-ami
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        inputs:
+          - name: source_ami
+        params:
+          AWS_REGION: ((dataworks.aws_region))
+          AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              export AWS_DEFAULT_REGION
+              source /assume-role
+              SOURCE_AMI_ID="$(cat ./source_ami/id)"
+              TIMESTAMP=$(date +%s)
+              AMI_NAME="${AMI_NAME_PREFIX}${TIMESTAMP}"
+              AMI_ID=$(aws ec2 copy-image --name ${AMI_NAME} --source-image-id ${SOURCE_AMI_ID} --source-region ${AWS_REGION} | jq -r .ImageId)
+              AMI_COPY_STATE="unknown"
+              count=0
+              while [[ ${AMI_COPY_STATE} != 'available' ]]; do
+                echo "waiting for the AMI copy to complete: ${count}0 passed of 600 seconds"
+                if [[ ${count} -le 60 ]]; then
+                  AMI_COPY_STATE=$(aws ec2 describe-images --image-ids ${AMI_ID} | jq -r .Images[0].State)
+                  count=$((count+1))
+                else
+                  exit 1
+                fi
+                sleep 10
+              done
+              PERMISSIONS_JSON=$(aws ec2 describe-image-attribute --image-id ${SOURCE_AMI_ID} --attribute launchPermission | jq -r '.LaunchPermissions | { LaunchPermission: { Add: .}}')
+              aws ec2 modify-image-attribute --image-id ${AMI_ID} --attribute launchPermission --cli-input-json "${PERMISSIONS_JSON}"
+              echo "AMI copy complete - ${AMI_ID} / ${AMI_NAME}"
+
+    inspector-cleanup:
+      task: inspector-cleanup
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        inputs:
+          - name: running_instance_id
+        params:
+          AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              export AWS_DEFAULT_REGION
+              source /assume-role
+              INSTANCE_ID="$(cat ./running_instance_id/id)"
+              aws ec2 terminate-instances --instance-ids ${INSTANCE_ID}
+
+    get-al2-hardened-ami:
+      get: dw-al2-hardened-ami
+      trigger: true
+
+    notify:
+      on_failure:
+        put: slack
+        attempts: 3
+        params:
+          channel: "#dataworks-alerts"
+          icon_emoji: ":concourse-red:"

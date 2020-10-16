@@ -68,7 +68,7 @@
             "CONCOURSE_VERSION={% raw %}{{ user `CONCOURSE_VERSION` }}{% endraw %}",
             "http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
             "https_proxy={% raw %}{{ user `https_proxy` }}{% endraw %}",
-            "no_proxy={% raw %}{{ user `NO_PROXY` }}{% endraw %}"
+            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}"
             ],
           "use_env_var_file": true,
           "execute_command": "sudo -E sh -eux -c '{% raw %}. {{.EnvVarFile}} && {{.Path}}{% endraw %}'"

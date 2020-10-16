@@ -5,6 +5,12 @@ resources:
       paths:
         - dw-al2-hardened-ami/*
 
+  - name: dw-al2-hardened-ami-template
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - generic_packer_template.json.j2
+
   - name: dw-al2-hardened-ami-pr
     .: (( inject meta.resources.ami-builder-configs-pr ))
     source:
@@ -16,6 +22,8 @@ jobs:
     plan:
       - get: dw-al2-hardened-ami-config
         trigger: true
+      - get: dw-al2-hardened-ami-template
+        trigger: false
       - get: dw-al2-base-ami
         trigger: true
       - .: (( inject meta.plan.generate-manifest ))
@@ -31,6 +39,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-hardened-ami-config
+          source_template: dw-al2-hardened-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
@@ -42,6 +51,8 @@ jobs:
       - get: dw-al2-hardened-ami-pr
         trigger: true
         version: every
+      - get: dw-al2-hardened-ami-template
+        trigger: false
       - get: dw-al2-base-ami
       - put: dw-al2-hardened-ami-pr
         params:
@@ -61,6 +72,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-hardened-ami-pr
+          source_template: dw-al2-hardened-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

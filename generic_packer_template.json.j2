@@ -1,7 +1,10 @@
 {
     "variables": {
         {% if 'artefact_bucket' in event %}
-        "artefact_bucket": "{{ event['artefact_bucket'] }}",
+        "ARTEFACT_BUCKET": "{{ event['artefact_bucket'] }}",
+        {% endif %}
+         {% if 'concourse_version' in event and event['concourse_version']|length > 0  %}
+        "CONCOURSE_VERSION": "{{ event['concourse_version'] }}",
         {% endif %}
         "http_proxy": "{% raw %}{{ env `http_proxy` }}{% endraw %}",
         "https_proxy": "{% raw %}{{ env `https_proxy` }}{% endraw %}",
@@ -50,34 +53,8 @@
       "encrypt_boot": false
     }],
     "provisioners": [
-    {% if 'artefact_bucket' in event %}
-        {
-          "type": "shell",
-          "inline": [
-            "sudo sh -c 'echo \"export ARTEFACT_BUCKET={% raw %}{{ user `artefact_bucket` }}{% endraw %}\" >> /etc/environment'"
-          ]
-        },
-    {% endif %}
-    {% if 'concourse_version' in event and event['concourse_version']|length > 0 %}
-        ,
-        {
-          "type": "shell",
-          "inline": [
-            "sudo sh -c 'echo \"export CONCOURSE_VERSION={{ event['concourse_version'] }}\" >> /etc/environment'"
-          ]
-        }
-    {% else %}
-        ,
-        {
-          "type": "shell",
-          "inline": [
-            "echo \"concourse version not set\""
-          ]
-        }
-    {% endif %}
     {% if 'provision_scripts' in event and event['provision_scripts']|length > 0 %}
         {% for provisioner_script in event['provision_scripts'] %}
-        ,
         {
           "type": "shell",
           "inline": "{{ provisioner_script }}"
@@ -96,7 +73,8 @@
         {
           "type": "shell",
           "script": "{{ provisioner }}",
-          "execute_command": "sudo -E sh -eux -c '{% raw %}{{ .Path }}{% endraw %}'"
+          "use_env_var_file": true,
+          "execute_command": "sudo -E sh -eux -c '{% raw %} . {{.EnvVarFile}} && {{.Path}} {% endraw %}'"
         }
         {% endfor %}
     {% endif %}

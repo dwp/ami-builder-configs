@@ -19,7 +19,7 @@ AWSAGENTPROXYCONFIG
 cat /etc/init.d/awsagent.env
 
 echo "Obtaining AWS Inspector Agent installer"
-curl -x $http_proxy -O https://inspector-agent.amazonaws.com/linux/latest/install
+curl -O https://inspector-agent.amazonaws.com/linux/latest/install
 
 echo "Running AWS Inspector Agent installer"
 bash install

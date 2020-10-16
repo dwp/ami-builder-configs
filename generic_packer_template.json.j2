@@ -53,23 +53,13 @@
       "encrypt_boot": false
     }],
     "provisioners": [
-    {% if 'provision_scripts' in event and event['provision_scripts']|length > 0 %}
-        {% for provisioner_script in event['provision_scripts'] %}
-        {
-          "type": "shell",
-          "inline": "{{ provisioner_script }}"
-        }
-      {% endfor %}
-    {% endif %}
     {% if 'provision_script_keys' in event and event['provision_script_keys']|length > 0 %}
-        ,
         {
           "type": "file",
           "source": "{{ event['provisioner_type_file_source'] or '/tmp/ami-builder'}}",
           "destination": "{{ event['provisioner_type_file_destination'] or '/tmp/'}}"
         }
         {% for provisioner in event['provision_script_keys'] %}
-        ,
         {
           "type": "shell",
           "script": "{{ provisioner }}",

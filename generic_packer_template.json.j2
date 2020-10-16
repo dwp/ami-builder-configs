@@ -66,9 +66,9 @@
           "environment_vars": [
             "ARTEFACT_BUCKET={% raw %}{{ user `ARTEFACT_BUCKET` }}{% endraw %}",
             "CONCOURSE_VERSION={% raw %}{{ user `CONCOURSE_VERSION` }}{% endraw %}",
-            "http_proxy={% raw %}{{ env `http_proxy` }}{% endraw %}",
-            "https_proxy={% raw %}{{ env `https_proxy` }}{% endraw %}",
-            "no_proxy={% raw %}{{ env `NO_PROXY` }}{% endraw %}"
+            "http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
+            "https_proxy={% raw %}{{ user `https_proxy` }}{% endraw %}",
+            "no_proxy={% raw %}{{ user `NO_PROXY` }}{% endraw %}"
             ],
           "use_env_var_file": true,
           "execute_command": "sudo -E sh -eux -c '{% raw %}. {{.EnvVarFile}} && {{.Path}}{% endraw %}'"

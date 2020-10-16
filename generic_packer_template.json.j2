@@ -69,7 +69,7 @@
             "http_proxy={% raw %}{{ env `http_proxy` }}{% endraw %}",
             "https_proxy={% raw %}{{ env `https_proxy` }}{% endraw %}",
             "no_proxy={% raw %}{{ env `NO_PROXY` }}{% endraw %}"
-            ],x
+            ],
           "use_env_var_file": true,
           "execute_command": "sudo -E sh -eux -c '{% raw %}. {{.EnvVarFile}} && {{.Path}}{% endraw %}'"
         }

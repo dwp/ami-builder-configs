@@ -128,9 +128,8 @@ meta:
         image_resource:
           type: docker-image
           source:
-            repository: dwpdigital/jinja-yaml-aws
-            version: 0.0.19
-            tag: 0.0.19
+            repository: dwpdigital/packer
+            tag: 0.0.2
         run:
           path: sh
           dir: source_config
@@ -141,6 +140,8 @@ meta:
               cp ../manifest/manifest.json .
               python3 bootstrap_packer.py
               cp packer.json ../packer-config
+              cat ../packer-config/packer.json
+              packer validate ../packer-config/packer.json
         inputs:
           - name: manifest
           - name: source_config
@@ -173,7 +174,6 @@ meta:
               export NO_PROXY=${NO_PROXY}
               export ARTEFACT_BUCKET=${ARTEFACT_BUCKET}
               source /assume-role
-              packer validate packer-config/packer.json
               packer build -on-error=cleanup packer-config/packer.json
 
     proxy-test:

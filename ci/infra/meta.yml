@@ -155,7 +155,7 @@ meta:
           type: docker-image
           source:
             repository: dwpdigital/packer
-            tag: 0.0.1
+            tag: 0.0.2
         inputs:
           - name: packer-config
         params:

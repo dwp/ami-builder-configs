@@ -58,13 +58,13 @@
           "type": "file",
           "source": "{{ event['provisioner_type_file_source'] or '/tmp/ami-builder'}}",
           "destination": "{{ event['provisioner_type_file_destination'] or '/tmp/'}}"
-        }
+        },
         {% for provisioner in event['provision_script_keys'] %}
         {
           "type": "shell",
           "script": "{{ provisioner }}",
           "use_env_var_file": true,
-          "execute_command": "sudo -E sh -eux -c '{% raw %} . {{.EnvVarFile}} && {{.Path}} {% endraw %}'"
+          "execute_command": "sudo -E sh -eux -c '{% raw %}. {{.EnvVarFile}} && {{.Path}}{% endraw %}'"
         }
         {% endfor %}
     {% endif %}

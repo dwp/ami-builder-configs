@@ -40,7 +40,6 @@ sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
 
 yum install -y python-pip gcc yum-plugin-remove-with-leaves sudo
 
-# Required by dw-ingestion-dataset-generation
 yum install -y python36
 pip-3.6 install jinja2
 pip-3.6 install yaml

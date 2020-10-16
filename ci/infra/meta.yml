@@ -140,8 +140,6 @@ meta:
               cp ../manifest/manifest.json .
               python3 bootstrap_packer.py
               cp packer.json ../packer-config
-              cat ../packer-config/packer.json
-              packer validate ../packer-config/packer.json
         inputs:
           - name: manifest
           - name: source_config
@@ -174,6 +172,8 @@ meta:
               export NO_PROXY=${NO_PROXY}
               export ARTEFACT_BUCKET=${ARTEFACT_BUCKET}
               source /assume-role
+              cat packer-config/packer.json
+              packer validate packer-config/packer.json
               packer build -on-error=cleanup packer-config/packer.json
 
     proxy-test:

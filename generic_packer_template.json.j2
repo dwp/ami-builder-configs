@@ -59,7 +59,6 @@
         },
     {% endif %}
     {% if 'concourse_version' in event and event['concourse_version']|length > 0 %}
-        ,
         {
           "type": "shell",
           "inline": [
@@ -67,7 +66,6 @@
           ]
         }
     {% else %}
-        ,
         {
           "type": "shell",
           "inline": [

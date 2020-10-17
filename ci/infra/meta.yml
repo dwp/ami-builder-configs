@@ -137,12 +137,16 @@ meta:
             - -exc
             - |
               pwd
+              cp ../source_template/generic_packer_template.json.j2 .
               cp ../manifest/manifest.json .
               python3 bootstrap_packer.py
               cp packer.json ../packer-config
         inputs:
           - name: manifest
           - name: source_config
+          - name: source_template
+            optional: true
+
         outputs:
           - name: packer-config
 

@@ -42,7 +42,7 @@ yum install -y python-pip gcc yum-plugin-remove-with-leaves sudo
 
 yum install -y python3
 pip3 install jinja2
-pip3 install yaml
+pip3 install pyyaml
 
 echo "Install acm cert helper"
 echo "Getting default region"

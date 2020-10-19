@@ -10,11 +10,6 @@ resources:
     source:
       paths:
         - dw-al2-base-ami/*
-
-  - name: dw-al2-base-ami-template-pr
-    .: (( inject meta.resources.ami-builder-configs ))
-    source:
-      paths:
         - generic_packer_template.json.j2
 
 jobs:
@@ -45,9 +40,6 @@ jobs:
       - get: dw-al2-base-ami-pr
         trigger: true
         version: every
-      - get: dw-al2-base-ami-template-pr
-        trigger: true
-        version: every
       - put: dw-al2-base-ami-pr
         params:
           path: dw-al2-base-ami-pr
@@ -62,7 +54,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-base-ami-pr
-          source_template: dw-al2-base-ami-template-pr
+          source_template: dw-al2-base-ami-pr
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

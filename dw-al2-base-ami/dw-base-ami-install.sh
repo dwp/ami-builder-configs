@@ -40,6 +40,10 @@ sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
 
 yum install -y python-pip gcc yum-plugin-remove-with-leaves sudo
 
+yum install -y python3
+pip3 install jinja2
+pip3 install pyyaml
+
 echo "Install acm cert helper"
 echo "Getting default region"
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -d'"' -f4)

@@ -5,12 +5,6 @@ resources:
       paths:
         - dw-al2-emr-ami/*
 
-  - name: dw-al2-emr-ami-template
-    .: (( inject meta.resources.ami-builder-configs ))
-    source:
-      paths:
-        - generic_packer_template.json.j2
-
   - name: dw-al2-emr-ami-pr
     .: (( inject meta.resources.ami-builder-configs-pr ))
     source:
@@ -22,7 +16,7 @@ jobs:
     plan:
       - get: dw-al2-emr-ami-config
         trigger: true
-      - get: dw-al2-emr-ami-template
+      - get: dw-al2-base-ami-template
         trigger: false
       - .: (( inject meta.plan.get-al2-hardened-ami ))
       - .: (( inject meta.plan.generate-manifest ))
@@ -38,7 +32,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-emr-ami-config
-          source_template: dw-al2-emr-ami-template
+          source_template: dw-al2-base-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
@@ -50,7 +44,7 @@ jobs:
       - get: dw-al2-emr-ami-pr
         trigger: true
         version: every
-      - get: dw-al2-emr-ami-template
+      - get: dw-al2-base-ami-template
         trigger: false
       - put: dw-al2-emr-ami-pr
         params:
@@ -72,7 +66,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-emr-ami-pr
-          source_template: dw-al2-emr-ami-template
+          source_template: dw-al2-base-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

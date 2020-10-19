@@ -9,6 +9,12 @@ resources:
     check_every: 720h
     webhook_token: ((dataworks.concourse_github_webhook_token))
 
+  - name: dw-al2-base-ami-template
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - generic_packer_template.json.j2
+
   - name: dw-al2-base-ami
     type: ami
     check_every: 5m

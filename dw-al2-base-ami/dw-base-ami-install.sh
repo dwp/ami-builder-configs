@@ -40,13 +40,9 @@ sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
 
 yum install -y python-pip gcc yum-plugin-remove-with-leaves sudo
 
-
-yum list | grep python
-yum repolist
-
-yum install -y python36
-pip-3.6 install jinja2
-pip-3.6 install yaml
+yum install -y python3
+pip3 install jinja2
+pip3 install yaml
 
 echo "Install acm cert helper"
 echo "Getting default region"

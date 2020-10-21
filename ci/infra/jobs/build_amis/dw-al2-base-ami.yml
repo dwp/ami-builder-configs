@@ -4,6 +4,7 @@ resources:
     source:
       paths:
         - dw-al2-base-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
 
   - name: dw-al2-base-ami-pr
     .: (( inject meta.resources.ami-builder-configs-pr ))
@@ -11,6 +12,7 @@ resources:
       paths:
         - dw-al2-base-ami/*
         - generic_packer_template.json.j2
+        - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
 
 jobs:
   - name: dw-al2-base-ami

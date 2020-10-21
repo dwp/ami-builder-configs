@@ -4,12 +4,14 @@ resources:
     source:
       paths:
         - dw-al2-ecs-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-ecs-ami.yml
 
   - name: dw-al2-ecs-ami-pr
     .: (( inject meta.resources.ami-builder-configs-pr ))
     source:
       paths:
         - dw-al2-ecs-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-ecs-ami.yml
 
 jobs:
   - name: dw-al2-ecs-ami

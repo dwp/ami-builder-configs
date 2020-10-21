@@ -4,12 +4,14 @@ resources:
     source:
       paths:
         - dw-al2-hardened-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-hardened-ami.yml
 
   - name: dw-al2-hardened-ami-pr
     .: (( inject meta.resources.ami-builder-configs-pr ))
     source:
       paths:
         - dw-al2-hardened-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-hardened-ami.yml
 
 jobs:
   - name: dw-al2-untested-hardened-ami

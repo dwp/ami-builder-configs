@@ -18,6 +18,6 @@ sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
 # Download and Install Concourse
 pwd
 ls
-CONCOURSE_TARBALL=$(find concourse-release/ -type f -name *.tgz)
+CONCOURSE_TARBALL=$(find /tmp -type f -name *.tgz)
 tar -xzf $CONCOURSE_TARBALL -C /usr/local
 rm $CONCOURSE_TARBALL

@@ -76,5 +76,13 @@
         }
         {% endfor %}
     {% endif %}
+    ,
+    {% if 'concourse_version' in event and event['concourse_version']|length > 0 %}
+        {
+          "destination": "/tmp",
+          "source": "./concourse-version",
+          "type": "file"
+        }
+    {% endif %}
     ]
 }

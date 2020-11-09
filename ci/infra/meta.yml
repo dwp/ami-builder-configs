@@ -50,6 +50,15 @@ meta:
         outputs:
           - name: terraform-output-management
 
+    get-concourse-release:
+      get: concourse-release
+      params:
+        tag: ~/tag
+        globs:
+          - concourse-*-linux-amd64.zip
+      trigger: true
+      version: every
+
     generate-manifest:
       task: generate-manifest
       config:

@@ -16,6 +16,6 @@ sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile.d/*.sh
 sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
 
 # Download and Install Concourse
-CONCOURSE_TARBALL=$(ls ../concourse-release)
+CONCOURSE_TARBALL=$(ls concourse-release)
 tar -xzf ../concourse-release/$CONCOURSE_TARBALL -C /usr/local
 rm ../concourse-release/$CONCOURSE_TARBALL

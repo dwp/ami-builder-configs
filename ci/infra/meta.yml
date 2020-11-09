@@ -125,7 +125,7 @@ meta:
               "set_proxy":                      ${SET_PROXY},
               "artefact_bucket":                "${ARTEFACT_BUCKET}",
               "run_tags":                       ${RUN_TAGS},
-              "concourse_version":              "$(if [ -f ~/concourse-tag ]; then cat ~/concourse-tag; else echo ''; fi)"
+              "concourse_version":              "$(if [ -f ../concourse-release/concourse-tag ]; then cat ../concourse-release/concourse-tag; else echo ''; fi)"
               }
               EOF
               cat manifest.json

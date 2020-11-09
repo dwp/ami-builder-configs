@@ -72,7 +72,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-concourse-ami-pr
-          source_template: dw-al2-base-ami-template
+          source_template: dw-al2-concourse-ami-pr
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

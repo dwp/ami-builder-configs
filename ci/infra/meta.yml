@@ -53,7 +53,7 @@ meta:
     get-concourse-release:
       get: concourse-release
       params:
-        tag: ~/tag
+        tag: ~/concourse-tag
         globs:
           - concourse-*-linux-amd64.zip
       trigger: true
@@ -125,7 +125,7 @@ meta:
               "set_proxy":                      ${SET_PROXY},
               "artefact_bucket":                "${ARTEFACT_BUCKET}",
               "run_tags":                       ${RUN_TAGS},
-              "concourse_version":              "${CONCOURSE_VERSION}"
+              "concourse_version":              "$(if [ -f ~/concourse-tag ]; then cat ~/concourse-tag; else echo ''; fi)"
               }
               EOF
               cat manifest.json

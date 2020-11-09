@@ -67,8 +67,8 @@ jobs:
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-pr/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami-pr/dw-al2-concourse-ami/"
-        inputs:
-          - concourse-release
+          inputs:
+            - name: concourse-release
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-concourse-ami-pr
@@ -79,6 +79,7 @@ jobs:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           inputs:
             - name: dw-al2-concourse-ami-pr
+            - name: concourse-release
         on_failure:
           put: dw-al2-concourse-ami-pr
           params:

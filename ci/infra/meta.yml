@@ -52,11 +52,6 @@ meta:
 
     get-concourse-release:
       get: concourse-release
-      params:
-        globs:
-          - "concourse-*-linux-amd64.tgz"
-      trigger: true
-      version: every
 
     generate-manifest:
       task: generate-manifest

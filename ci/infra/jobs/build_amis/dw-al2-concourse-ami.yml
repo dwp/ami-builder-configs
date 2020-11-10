@@ -16,6 +16,12 @@ resources:
 jobs:
   - name: dw-al2-concourse-ami
     plan:
+      - .: (( inject meta.plan.get-concourse-release ))
+        params:
+        globs:
+          - "concourse-*-linux-amd64.tgz"
+        trigger: true
+        version: { tag: "v6.6.0" }
       - get: dw-al2-concourse-ami-config
         trigger: true
       - get: dw-al2-base-ami-template
@@ -44,6 +50,11 @@ jobs:
     max_in_flight: 1
     plan:
       - .: (( inject meta.plan.get-concourse-release ))
+        params:
+        globs:
+          - "concourse-*-linux-amd64.tgz"
+        trigger: true
+        version: every
       - get: dw-al2-concourse-ami-pr
         trigger: true
         version: every

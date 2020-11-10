@@ -68,7 +68,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-hardened-ami-pr
-          source_template: dw-al2-hardened-ami-pr
+          source_template: dw-al2-base-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

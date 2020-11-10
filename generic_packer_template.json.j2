@@ -53,6 +53,14 @@
       "encrypt_boot": false
     }],
     "provisioners": [
+    {% if 'concourse_version' in event and event['concourse_version']|length > 0 %}
+        {
+          "destination": "/tmp/",
+          "source": "concourse-release/",
+          "type": "file"
+        }
+        ,
+    {% endif %}
     {% if 'provision_script_keys' in event and event['provision_script_keys']|length > 0 %}
         {
           "type": "file",

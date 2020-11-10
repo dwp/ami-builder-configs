@@ -50,6 +50,14 @@ meta:
         outputs:
           - name: terraform-output-management
 
+    get-concourse-release:
+      get: concourse-release
+      params:
+        globs:
+          - "concourse-*-linux-amd64.tgz"
+      trigger: true
+      version: every
+
     generate-manifest:
       task: generate-manifest
       config:
@@ -116,7 +124,7 @@ meta:
               "set_proxy":                      ${SET_PROXY},
               "artefact_bucket":                "${ARTEFACT_BUCKET}",
               "run_tags":                       ${RUN_TAGS},
-              "concourse_version":              "${CONCOURSE_VERSION}"
+              "concourse_version":              "$(if [ -f ../concourse-release/tag ]; then cat ../concourse-release/tag; else echo ''; fi)"
               }
               EOF
               cat manifest.json

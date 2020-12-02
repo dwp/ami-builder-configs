@@ -45,6 +45,8 @@ jobs:
       - get: dw-al2-base-ami-pr
         trigger: true
         version: every
+      - get: dw-al2-base-ami-template
+        trigger: false
       - put: dw-al2-base-ami-pr
         params:
           path: dw-al2-base-ami-pr

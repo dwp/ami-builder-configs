@@ -17,6 +17,8 @@ resources:
 jobs:
   - name: dw-al2-base-ami
     plan:
+      - get: amzn2-ami-hvm
+        trigger: true
       - get: dw-al2-base-ami-config
         trigger: true
       - get: dw-al2-base-ami-template
@@ -41,10 +43,8 @@ jobs:
     plan:
       - get: amzn2-ami-hvm
         trigger: true
-        version: every
       - get: dw-al2-base-ami-pr
         trigger: true
-        version: every
       - get: dw-al2-base-ami-template
         trigger: false
       - put: dw-al2-base-ami-pr

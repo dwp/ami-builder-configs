@@ -19,4 +19,4 @@ systemctl enable --now ecs
 amazon-linux-extras install -y epel
 rpm --import https://download.sysdig.com/DRAIOS-GPG-KEY.public
 curl -s -o /etc/yum.repos.d/draios.repo https://download.sysdig.com/stable/rpm/draios.repo
-yum install -y sysdig
+yum install -y sysdig s3fs-fuse

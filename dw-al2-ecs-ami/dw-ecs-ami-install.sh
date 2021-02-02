@@ -9,14 +9,19 @@ SELINUX=permissive
 SELINUXTYPE=targeted
 EOF
 
+echo "Ensure latest docker is installed"
+yum update -y docker
+systemctl restart docker
+
 # Download and Install ECS Agent
 amazon-linux-extras disable docker
 amazon-linux-extras install -y ecs
 systemctl enable --now ecs
 
+
 # Ensure latest agent is installed
 echo "Ensure latest agent is installed"
-yum update -y ecs-init
+yum update -y ecs-int
 
 # Install Sysdig
 

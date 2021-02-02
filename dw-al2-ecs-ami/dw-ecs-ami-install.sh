@@ -14,6 +14,9 @@ amazon-linux-extras disable docker
 amazon-linux-extras install -y ecs
 systemctl enable --now ecs
 
+# Ensure latest agent is installed
+yum update -y ecs-init
+
 # Install Sysdig
 
 amazon-linux-extras install -y epel

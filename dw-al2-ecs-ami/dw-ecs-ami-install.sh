@@ -10,8 +10,7 @@ SELINUXTYPE=targeted
 EOF
 
 echo "Ensure latest docker is installed"
-yum update -y docker
-systemctl restart docker
+yum install -y docker
 
 # Download and Install ECS Agent
 amazon-linux-extras disable docker

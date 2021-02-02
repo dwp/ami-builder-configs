@@ -15,6 +15,7 @@ amazon-linux-extras install -y ecs
 systemctl enable --now ecs
 
 # Ensure latest agent is installed
+echo "Ensure latest agent is installed"
 yum update -y ecs-init
 
 # Install Sysdig

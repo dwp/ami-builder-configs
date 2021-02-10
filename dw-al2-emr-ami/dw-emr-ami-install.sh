@@ -20,3 +20,5 @@ cat > /etc/security/limits.d/nofile.conf << EOF
 *  soft  nofile 504386
 *  hard  nofile 504386
 EOF
+
+chmod 0644 /etc/security/limits.d/nofile.conf

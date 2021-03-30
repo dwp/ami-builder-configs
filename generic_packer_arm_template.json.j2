@@ -22,7 +22,7 @@
         "owners": ["{{ event['source_ami_owner'] or '137112412989' }}"],
         "most_recent": true
       },
-      "instance_type": "{{ event['instance_type'] or 'a1.large' }}",
+      "instance_type": "{{ event['instance_type'] or 't4g.micro' }}",
       "iam_instance_profile": "instance_ami_builder",
       "ssh_username": "{{ event['ssh_username'] or 'ec2-user' }}",
       "subnet_id": "{{ event['subnet_id'] }}",

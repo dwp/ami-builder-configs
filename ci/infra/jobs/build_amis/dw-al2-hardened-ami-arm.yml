@@ -106,7 +106,7 @@ jobs:
           source_ami: dw-al2-untested-hardened-ami-arm
         config:
           params:
-            LAUNCH_TEMPLATE_OUTPUT_NAME: "hardened_test_launch_template"
+            LAUNCH_TEMPLATE_OUTPUT_NAME: "hardened_arm_test_launch_template"
       - .: (( inject meta.plan.run-inspector ))
       - .: (( inject meta.plan.evaluate-assessment-run))
         config:

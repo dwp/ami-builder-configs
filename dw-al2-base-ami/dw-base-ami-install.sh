@@ -41,13 +41,10 @@ sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
 -e '/.-.cudatoolkit.*/ d' /etc/cloud/cloud.cfg
 
 yum install -y python3
-yum install -y python3-pip gcc yum-plugin-remove-with-leaves sudo
+yum install -y python-pip gcc yum-plugin-remove-with-leaves sudo
 
-echo "Updating pip"
-pip3 install -U pip
-
-pip install jinja2
-pip install pyyaml
+pip3 install jinja2
+pip3 install pyyaml
 
 echo "Install acm cert helper"
 echo "Getting default region"
@@ -59,12 +56,19 @@ echo "Getting cert helper"
 $(which aws) s3 cp s3://$ARTEFACT_BUCKET/acm-pca-cert-generator/acm_cert_helper-${acm_cert_helper_version}.tar.gz .
 
 if [[ $ARCH != "x86_64" ]]; then
+  pip3 install -U pip
+  set -e
+    which pip
+    which pip3
+    which python
+    which python3
+  set +e
   echo "Installing ARM specific dependencies"
   yum install libffi-devel -y
   echo "Installing acm_cert_helper"
-  pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
+  pip3 install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
 else
-  pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
+  pip3 install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
 fi
 
 yum remove -y gcc --remove-leaves

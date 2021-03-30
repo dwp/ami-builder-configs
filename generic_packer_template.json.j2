@@ -51,7 +51,49 @@
       },
       {% endif %}
       "encrypt_boot": false
-    }],
+    },
+    {
+          "type": "amazon-ebs",
+          "source_ami_filter": {
+            "filters": {
+              "virtualization-type": "{{ event['source_ami_virt_type'] or 'hvm' }}",
+              "name": "{{ event['source_ami_name'] or 'amzn2-ami-hvm-*' }}",
+              "root-device-type": "{{ event['source_ami_root_device_type'] or 'ebs' }}",
+              "architecture": "arm64"
+            },
+            "owners": ["{{ event['source_ami_owner'] or '137112412989' }}"],
+            "most_recent": true
+          },
+          "instance_type": "{{ event['instance_type'] or 't2.micro' }}",
+          "iam_instance_profile": "instance_ami_builder",
+          "ssh_username": "{{ event['ssh_username'] or 'ec2-user' }}",
+          "subnet_id": "{{ event['subnet_id'] }}",
+          "ami_name": "{{ event['ami_name'] }}-{{ '{{' }} timestamp {{ '}}' }}",
+          "packer_template_key": "{{ event['packer_template_key'] }}",
+          {% if 'profile' in event %}
+          "profile": "{{ event['profile'] }}",
+          {% endif %}
+          {% if 'security_group_id' in event %}
+          "security_group_id": "{{ event['security_group_id'] }}",
+          {% endif %}
+          {% if 'ami_regions' in event %}
+          "ami_regions": "{{ event['ami_regions'] }}",
+          {% endif %}
+          {% if 'ami_users' in event %}
+          "ami_users": "{{ event['ami_users'] }}",
+          "snapshot_users": "{{ event['ami_users'] }}",
+          {% endif %}
+          "region": "{{ event['region'] }}",
+          {% if 'run_tags' in event %}
+          "run_tags": {{ event['run_tags']|tojson }},
+          {% endif %}
+          {% if 'concourse_version' in event and event['concourse_version']|length > 0 %}
+          "tags": {
+            "Concourse_Version": "{{ event['concourse_version'] }}"
+          },
+          {% endif %}
+          "encrypt_boot": false
+        }],
     "provisioners": [
     {% if 'concourse_version' in event and event['concourse_version']|length > 0 %}
         {

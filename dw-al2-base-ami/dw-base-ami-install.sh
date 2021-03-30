@@ -47,8 +47,8 @@ yum install -y python3
 echo "Updating pip"
 python -m pip install -U pip
 
-pip3 install jinja2
-pip3 install pyyaml
+pip install jinja2
+pip install pyyaml
 
 echo "Install acm cert helper"
 echo "Getting default region"
@@ -63,9 +63,9 @@ if [[ $ARCH != "x86_64" ]]; then
   echo "Installing ARM specific dependencies"
   yum install libffi-devel -y
   echo "Installing acm_cert_helper"
-  pip3 install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
+  pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
 else
-  pip3 install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
+  pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
 fi
 
 yum remove -y gcc --remove-leaves

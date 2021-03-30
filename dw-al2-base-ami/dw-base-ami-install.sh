@@ -45,7 +45,7 @@ yum install -y python-pip gcc yum-plugin-remove-with-leaves sudo
 yum install -y python3
 
 echo "Updating pip"
-python -m pip install
+python -m pip install -U pip
 
 pip3 install jinja2
 pip3 install pyyaml

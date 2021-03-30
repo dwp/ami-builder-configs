@@ -49,7 +49,7 @@ echo "Getting default region"
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -d'"' -f4)
 echo $AWS_DEFAULT_REGION
 acm_cert_helper_repo=acm-pca-cert-generator
-acm_cert_helper_version=0.39.0
+acm_cert_helper_version=0.40.0
 echo "Getting cert helper"
 $(which aws) s3 cp s3://$ARTEFACT_BUCKET/acm-pca-cert-generator/acm_cert_helper-${acm_cert_helper_version}.tar.gz .
 pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz

@@ -55,8 +55,8 @@ acm_cert_helper_version=0.39.0
 echo "Getting cert helper"
 $(which aws) s3 cp s3://$ARTEFACT_BUCKET/acm-pca-cert-generator/acm_cert_helper-${acm_cert_helper_version}.tar.gz .
 
-if $ARCH != "x86_64"; then
-  echo "Installing ARM specific depencies"
+if [[ $ARCH != "x86_64" ]]; then
+  echo "Installing ARM specific dependencies"
   pip3 install libffi
   echo "Installing acm_cert_helper"
   pip3 install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz

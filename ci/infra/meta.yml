@@ -284,8 +284,8 @@ meta:
               count=0
               set +x
               while [[ ${CURRENT_TAG_VALUE} != 'True' ]]; do
-                echo "waiting for the instance to become ready: ${count}0 passed of 240 seconds"
-                if [[ ${count} -le 24 ]]; then
+                echo "waiting for the instance to become ready: ${count}0 passed of 300 seconds"
+                if [[ ${count} -le 30 ]]; then
                   CURRENT_TAG_VALUE=$(aws ec2 describe-tags --filters Name=resource-id,Values=${RUNNING_INSTANCE_ID} Name=key,Values=${TAG_NAME} | jq -r '.Tags[0].Value')
                   count=$((count+1))
                 else

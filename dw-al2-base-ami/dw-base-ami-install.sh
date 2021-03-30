@@ -43,6 +43,10 @@ sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
 yum install -y python-pip gcc yum-plugin-remove-with-leaves sudo
 
 yum install -y python3
+
+echo "Updating pip"
+python -m pip install
+
 pip3 install jinja2
 pip3 install pyyaml
 

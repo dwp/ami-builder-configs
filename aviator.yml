@@ -7,6 +7,8 @@ spruce:
         regexp: ".*yml"
       - with_in: ci/infra/jobs/build_amis/
         regexp: ".*yml"
+      - with_in: ci/infra/jobs/build_amis_arm/
+        regexp: ".*yml"
     to: aviator_pipeline.yml
 fly:
   name: ami-builder

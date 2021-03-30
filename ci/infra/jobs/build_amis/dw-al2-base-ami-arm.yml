@@ -27,8 +27,8 @@ jobs:
         config:
           params:
             AMI_NAME: dw-al2-base-ami-arm
-            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-config/dw-al2-base-ami-arm/dw-base-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami-arm/"
+            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-config/dw-al2-base-ami/dw-base-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-base-ami-config
@@ -59,6 +59,8 @@ jobs:
             PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-pr/dw-al2-base-ami/dw-base-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-pr/dw-al2-base-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
+        params:
+          architecture: arm64
         input_mapping:
           source_config: dw-al2-base-ami-pr
           source_template: dw-al2-base-ami-arm-template

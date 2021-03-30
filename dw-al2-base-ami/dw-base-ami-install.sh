@@ -56,10 +56,12 @@ echo "Getting cert helper"
 $(which aws) s3 cp s3://$ARTEFACT_BUCKET/acm-pca-cert-generator/acm_cert_helper-${acm_cert_helper_version}.tar.gz .
 
 if $ARCH != "x86_64"; then
-  python pip install libffi
-  pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
+  echo "Installing ARM specific depencies"
+  pip3 install libffi
+  echo "Installing acm_cert_helper"
+  pip3 install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
 else
-  pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
+  pip3 install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
 fi
 
 yum remove -y gcc --remove-leaves

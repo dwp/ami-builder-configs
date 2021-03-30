@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eEu
 
+ARCH=$(uname -m)
+
 # Update packages on the instance
 yum update -y
 
@@ -52,7 +54,13 @@ acm_cert_helper_repo=acm-pca-cert-generator
 acm_cert_helper_version=0.40.0
 echo "Getting cert helper"
 $(which aws) s3 cp s3://$ARTEFACT_BUCKET/acm-pca-cert-generator/acm_cert_helper-${acm_cert_helper_version}.tar.gz .
-pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
+
+if $ARCH != "x86_64"; then
+  python pip install libffi
+  pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
+else
+  pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
+fi
 
 yum remove -y gcc --remove-leaves
 

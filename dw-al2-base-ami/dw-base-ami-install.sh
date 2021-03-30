@@ -44,7 +44,7 @@ yum install -y python3
 yum install -y python3-pip gcc yum-plugin-remove-with-leaves sudo
 
 echo "Updating pip"
-pip3 install -U pip3
+pip3 install -U pip
 
 which pip
 which python

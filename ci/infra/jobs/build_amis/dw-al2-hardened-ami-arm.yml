@@ -1,6 +1,6 @@
 resources:
   - name: dw-al2-hardened-ami-config
-    .: (( inject meta.resources.ami-builder-configs ))
+    .: (( inject meta.resources.ami-builder-configs-arm ))
     source:
       paths:
         - dw-al2-hardened-ami/*

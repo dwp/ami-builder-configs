@@ -1,10 +1,10 @@
 resources:
   - name: dw-al2-base-ami-config
-    .: (( inject meta.resources.ami-builder-configs ))
+    .: (( inject meta.resources.ami-builder-configs-arm ))
     source:
       paths:
         - dw-al2-base-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
+        - ci/infra/jobs/build_amis/dw-al2-base-ami-arm.yml
 
   - name: dw-al2-base-ami-pr
     .: (( inject meta.resources.ami-builder-configs-pr ))

@@ -16,7 +16,7 @@ resources:
         - generic_packer_template.json.j2
 
   - name: dw-al2-base-ami-arm-template
-    .: (( inject meta.resources.ami-builder-configs ))
+    .: (( inject meta.resources.ami-builder-configs-arm ))
     source:
       paths:
         - generic_packer_arm_template.json.j2
@@ -104,6 +104,18 @@ resources:
         is-public: false
         state: available
         name: dw-al2-hardened-ami-*
+
+  - name: dw-al2-hardened-ami-arm
+    type: ami
+    check_every: 5m
+    source:
+      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+      region: ((dataworks.aws_region))
+      filters:
+        owner-id: ((dataworks.aws_management_acc))
+        is-public: false
+        state: available
+        name: dw-al2-hardened-ami-arm-*
 
   - name: aws-security-tools
     type: git

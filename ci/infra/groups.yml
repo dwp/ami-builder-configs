@@ -14,6 +14,7 @@ groups:
       - dw-al2-untested-hardened-ami-arm
       - dw-al2-test-and-promote-hardened-ami-arm
       - dw-al2-base-ami-arm
+      - dw-al2-emr-ami-arm
 
   - name: pull-requests
     jobs:
@@ -28,6 +29,7 @@ groups:
     jobs:
       - dw-al2-base-ami-arm-pr
       - dw-al2-hardened-ami-arm-pr
+      - dw-al2-emr-ami-arm-pr
 
   - name: AMI weekly test
     jobs:

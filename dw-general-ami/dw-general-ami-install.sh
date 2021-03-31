@@ -50,7 +50,7 @@ sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
 
 yum install -y python27-devel python27-pip gcc
 
-pip install --upgrade awscli
+pip install --upgrade awscli retrying
 
 # Install acm cert helper
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -d'"' -f4)

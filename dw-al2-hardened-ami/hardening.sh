@@ -20,7 +20,7 @@ echo "3.5.4 Ensure TIPC is disabled"
 export ARCH=$(uname -m)
 echo "Architecture: $ARCH"
 
-if [[ $ARCH != 'x86_amd64']]; then
+if [[ $ARCH != 'x86_amd64' ]]; then
     > /etc/modprobe.d/CIS.conf
     for fs in cramfs jffs2 hfs hfsplus squashfs udf \
         dccp sctp rds tipc; do

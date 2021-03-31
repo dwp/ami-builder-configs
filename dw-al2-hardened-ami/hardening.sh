@@ -17,7 +17,7 @@ echo "3.5.1 Ensure DCCP is disabled"
 echo "3.5.2 Ensure SCTP is disabled"
 echo "3.5.3 Ensure RDS is disabled"
 echo "3.5.4 Ensure TIPC is disabled"
-export $ARCH=(uname -m)
+export ARCH=$(uname -m)
 echo "Architecture: $ARCH"
 
 if [[ $ARCH != 'x86_amd64']]; then

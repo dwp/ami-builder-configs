@@ -1,0 +1,87 @@
+resources:
+  - name: dw-al2-emr-ami-arm-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-emr-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-emr-ami-arm.yml
+
+  - name: dw-al2-emr-ami-pr
+    .: (( inject meta.resources.ami-builder-configs-pr ))
+    source:
+      paths:
+        - dw-al2-emr-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-emr-ami-arm.yml
+
+jobs:
+  - name: dw-al2-emr-ami-arm
+    plan:
+      - get: dw-al2-emr-ami-arm-config
+        trigger: true
+      - get: dw-al2-base-ami-arm-template
+        trigger: false
+      - .: (( inject meta.plan.get-al2-hardened-ami-arm ))
+      - .: (( inject meta.plan.generate-manifest ))
+        input_mapping:
+          source_ami: dw-al2-hardened-ami-arm
+        config:
+          params:
+            AMI_NAME: dw-al2-emr-ami-arm
+            SOURCE_AMI_NAME: dw-al2-hardened-ami-arm-*
+            SOURCE_AMI_OWNER: ((aws_account.management))
+            PROVISION_SCRIPT_KEYS: '["dw-al2-emr-ami-config/dw-al2-emr-ami/dw-emr-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-emr-ami-config/dw-al2-emr-ami/"
+      - .: (( inject meta.plan.packer-bootstrap ))
+        input_mapping:
+          source_config: dw-al2-emr-ami-arm-config
+          source_template: dw-al2-base-ami-arm-template
+      - .: (( inject meta.plan.build-ami ))
+        config:
+          inputs:
+            - name: dw-al2-emr-ami-arm-config
+
+  - name: dw-al2-emr-ami-arm-pr
+    max_in_flight: 1
+    plan:
+      - get: dw-al2-emr-ami-pr
+        trigger: true
+        version: every
+      - get: dw-al2-base-ami-arm-template
+        trigger: false
+      - put: dw-al2-emr-ami-pr
+        params:
+          path: dw-al2-emr-ami-pr
+          status: pending
+      - .: (( inject meta.plan.get-al2-hardened-ami-arm ))
+        trigger: false
+      - .: (( inject meta.plan.generate-manifest ))
+        input_mapping:
+          source_ami: dw-al2-hardened-ami-arm
+        config:
+          params:
+            AMI_NAME: pr-dw-al2-emr-ami-arm
+            SOURCE_AMI_NAME: dw-al2-hardened-ami-arm-*
+            SOURCE_AMI_OWNER: ((aws_account.management))
+            AMI_USERS: ((aws_account.development))
+            PROVISION_SCRIPT_KEYS: '["dw-al2-emr-ami-pr/dw-al2-emr-ami/dw-emr-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-emr-ami-pr/dw-al2-emr-ami/"
+      - .: (( inject meta.plan.packer-bootstrap ))
+        input_mapping:
+          source_config: dw-al2-emr-ami-pr
+          source_template: dw-al2-base-ami-arm-template
+      - .: (( inject meta.plan.build-ami ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
+          inputs:
+            - name: dw-al2-emr-ami-pr
+        on_failure:
+          put: dw-al2-emr-ami-pr
+          params:
+            path: dw-al2-emr-ami-pr
+            status: failure
+        on_success:
+          put: dw-al2-emr-ami-pr
+          params:
+            path: dw-al2-emr-ami-pr
+            status: success

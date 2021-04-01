@@ -15,6 +15,12 @@ resources:
       paths:
         - generic_packer_template.json.j2
 
+  - name: dw-al2-base-ami-arm-template
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - generic_packer_arm_template.json.j2
+
   - name: amzn2-ami-hvm
     type: ami
     check_every: 5m
@@ -25,6 +31,19 @@ resources:
         is-public: true
         state: available
         name: amzn2-ami-hvm-*
+        architecture: x86_64
+
+  - name: amzn2-ami-hvm-arm
+    type: ami
+    check_every: 5m
+    source:
+      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+      region: ((dataworks.aws_region))
+      filters:
+        is-public: true
+        state: available
+        name: amzn2-ami-hvm-*
+        architecture: arm64
 
   - name: dw-al2-base-ami
     type: ami
@@ -38,6 +57,18 @@ resources:
         state: available
         name: dw-al2-base-ami-*
 
+  - name: dw-al2-base-ami-arm
+    type: ami
+    check_every: 5m
+    source:
+      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+      region: ((dataworks.aws_region))
+      filters:
+        owner-id: ((dataworks.aws_management_acc))
+        is-public: false
+        state: available
+        name: dw-al2-base-ami-arm-*
+
   - name: dw-al2-untested-hardened-ami
     type: ami
     check_every: 5m
@@ -50,6 +81,18 @@ resources:
         state: available
         name: dw-al2-untested-hardened-ami-*
 
+  - name: dw-al2-untested-hardened-ami-arm
+    type: ami
+    check_every: 5m
+    source:
+      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+      region: ((dataworks.aws_region))
+      filters:
+        owner-id: ((dataworks.aws_management_acc))
+        is-public: false
+        state: available
+        name: dw-al2-untested-hardened-ami-arm-*
+
   - name: dw-al2-hardened-ami
     type: ami
     check_every: 5m
@@ -61,6 +104,18 @@ resources:
         is-public: false
         state: available
         name: dw-al2-hardened-ami-*
+
+  - name: dw-al2-hardened-ami-arm
+    type: ami
+    check_every: 5m
+    source:
+      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+      region: ((dataworks.aws_region))
+      filters:
+        owner-id: ((dataworks.aws_management_acc))
+        is-public: false
+        state: available
+        name: dw-al2-hardened-ami-arm-*
 
   - name: aws-security-tools
     type: git

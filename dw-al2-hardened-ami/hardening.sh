@@ -17,12 +17,26 @@ echo "3.5.1 Ensure DCCP is disabled"
 echo "3.5.2 Ensure SCTP is disabled"
 echo "3.5.3 Ensure RDS is disabled"
 echo "3.5.4 Ensure TIPC is disabled"
-> /etc/modprobe.d/CIS.conf
-for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
-    dccp sctp rds tipc; do
-    echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
-done
-chmod 0644 /etc/modprobe.d/CIS.conf
+export ARCH=$(uname -m)
+echo "Architecture: $ARCH"
+
+if [[ $ARCH != 'x86_amd64' ]]; then
+    > /etc/modprobe.d/CIS.conf
+    for fs in cramfs jffs2 hfs hfsplus squashfs udf \
+        dccp sctp rds tipc; do
+        echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
+        echo "Disabled $fs"
+    done
+    chmod 0644 /etc/modprobe.d/CIS.conf
+else
+    > /etc/modprobe.d/CIS.conf
+    for fs in cramfs freevxfs jffs2 hfs hfsplus squashfs udf vfat \
+        dccp sctp rds tipc; do
+        echo "install $fs /bin/true" >> /etc/modprobe.d/CIS.conf
+        echo "Disabled $fs"
+    done
+    chmod 0644 /etc/modprobe.d/CIS.conf
+fi
 
 echo "#############################################################"
 echo "1.1.2 Ensure separate partition exists for /tmp"

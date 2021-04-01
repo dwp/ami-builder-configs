@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eEu
 
+ARCH=$(uname -m)
+
 # Update packages on the instance
 yum update -y
 
@@ -38,9 +40,9 @@ sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
 -e '/.-.kernel.*/ d' \
 -e '/.-.cudatoolkit.*/ d' /etc/cloud/cloud.cfg
 
+yum install -y python3
 yum install -y python-pip gcc yum-plugin-remove-with-leaves sudo
 
-yum install -y python3
 pip3 install jinja2
 pip3 install pyyaml
 
@@ -52,7 +54,17 @@ acm_cert_helper_repo=acm-pca-cert-generator
 acm_cert_helper_version=0.41.0
 echo "Getting cert helper"
 $(which aws) s3 cp s3://$ARTEFACT_BUCKET/acm-pca-cert-generator/acm_cert_helper-${acm_cert_helper_version}.tar.gz .
-pip install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
+
+PATH=$PATH:/usr/local/bin
+
+pip3 install -U pip
+
+echo "Installing ARM specific dependencies"
+yum install libffi-devel python3-devel -y
+pip3 install setuptools_rust
+
+echo "Installing acm_cert_helper"
+pip3 install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
 
 yum remove -y gcc --remove-leaves
 

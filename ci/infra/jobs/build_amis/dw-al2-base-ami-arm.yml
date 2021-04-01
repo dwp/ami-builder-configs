@@ -11,7 +11,7 @@ resources:
     source:
       paths:
         - dw-al2-base-ami/*
-        - generic_packer_template.json.j2
+        - generic_packer_arm_template.json.j2
         - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
 
 jobs:
@@ -27,8 +27,8 @@ jobs:
         config:
           params:
             AMI_NAME: dw-al2-base-ami-arm
-            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-config/dw-al2-base-ami/dw-base-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami/"
+            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-arm-config/dw-al2-base-ami/dw-base-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-arm-config/dw-al2-base-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-base-ami-arm-config

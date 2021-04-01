@@ -19,7 +19,6 @@ groups:
   - name: pull-requests
     jobs:
       - dw-al2-base-ami-pr
-      - dw-al2-base-ami-arm-pr
       - dw-al2-hardened-ami-pr
       - dw-al2-emr-ami-pr
       - dw-al2-ecs-ami-pr

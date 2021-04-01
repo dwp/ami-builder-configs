@@ -68,7 +68,7 @@ pip3 install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
 
 yum remove -y gcc --remove-leaves
 
-echo "export PATH=$PATH:/usr/local/bin" >> /etc/environment
+echo "export PATH=$PATH:/usr/local/bin:/bin" >> /etc/environment
 
 cat > /usr/local/bin/set_yum_proxy.sh << 'SETYUMPROXY'
 TAG_NAME="internet_proxy"

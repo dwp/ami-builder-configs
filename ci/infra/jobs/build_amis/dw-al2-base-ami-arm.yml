@@ -1,6 +1,6 @@
 resources:
-  - name: dw-al2-base-ami-config
-    .: (( inject meta.resources.ami-builder-configs-arm ))
+  - name: dw-al2-base-ami-arm-config
+    .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
         - dw-al2-base-ami/*
@@ -19,7 +19,7 @@ jobs:
     plan:
       - get: amzn2-ami-hvm-arm
         trigger: true
-      - get: dw-al2-base-ami-config
+      - get: dw-al2-base-ami-arm-config
         trigger: true
       - get: dw-al2-base-ami-arm-template
         trigger: true
@@ -31,12 +31,12 @@ jobs:
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
-          source_config: dw-al2-base-ami-config
+          source_config: dw-al2-base-ami-arm-config
           source_template: dw-al2-base-ami-arm-template
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
-            - name: dw-al2-base-ami-config
+            - name: dw-al2-base-ami-arm-config
 
   - name: dw-al2-base-ami-arm-pr
     max_in_flight: 1

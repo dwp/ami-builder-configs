@@ -16,7 +16,7 @@ resources:
         - generic_packer_template.json.j2
 
   - name: dw-al2-base-ami-arm-template
-    .: (( inject meta.resources.ami-builder-configs-arm ))
+    .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
         - generic_packer_arm_template.json.j2

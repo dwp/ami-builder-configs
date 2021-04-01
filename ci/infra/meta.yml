@@ -8,14 +8,6 @@ meta:
       webhook_token: ((dataworks.concourse_github_webhook_token))
       check_every: 720h
 
-    - name: ami-builder-configs-arm
-      type: git
-      source:
-        branch: make-it-arm
-        uri: https://github.com/dwp/ami-builder-configs.git
-      webhook_token: ((dataworks.concourse_github_webhook_token))
-      check_every: 720h
-
     - name: ami-builder-configs-pr
       type: pull-request
       source:

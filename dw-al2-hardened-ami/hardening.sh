@@ -2,7 +2,7 @@
 
 # Hardens an Amazon Linux AMI according to CIS Amazon Linux Benchmark v2.1.0
 
-set -eEux
+set -eEu
 
 echo "#############################################################"
 echo "1.1.1.1 Ensure mounting of cramfs filesystems is disabled"

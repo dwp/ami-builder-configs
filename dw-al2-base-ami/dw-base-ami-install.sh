@@ -61,7 +61,7 @@ pip3 install -U pip
 
 echo "Installing ARM specific dependencies"
 yum install libffi-devel python3-devel -y
-pip3 install setuptools_rust -y
+pip3 install setuptools_rust
 
 echo "Installing acm_cert_helper"
 pip3 install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz

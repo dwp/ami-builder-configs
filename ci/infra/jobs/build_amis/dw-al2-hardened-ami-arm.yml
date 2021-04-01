@@ -52,22 +52,22 @@ jobs:
       - get: dw-al2-base-ami-arm
       - put: dw-al2-hardened-ami-arm-pr
         params:
-          path: dw-al2-hardened-ami-pr
+          path: dw-al2-hardened-ami-arm-pr
           status: pending
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
           source_ami: dw-al2-base-ami-arm
         config:
           params:
-            AMI_NAME: pr-dw-al2-hardened-ami
+            AMI_NAME: pr-dw-al2-hardened-ami-arm
             SOURCE_AMI_NAME: dw-al2-base-ami-arm-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
-            PROVISION_SCRIPT_KEYS: '["dw-al2-hardened-ami-pr/dw-al2-hardened-ami/hardening.sh","dw-al2-hardened-ami-pr/dw-al2-hardened-ami/dw-hardened-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hardened-ami-pr/dw-al2-hardened-ami/"
+            PROVISION_SCRIPT_KEYS: '["dw-al2-hardened-ami-arm-pr/dw-al2-hardened-ami/hardening.sh","dw-al2-hardened-ami-arm-pr/dw-al2-hardened-ami/dw-hardened-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hardened-ami-arm-pr/dw-al2-hardened-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
-          source_config: dw-al2-hardened-ami-pr
+          source_config: dw-al2-hardened-ami-arm-pr
           source_template: dw-al2-base-ami-arm-template
       - .: (( inject meta.plan.build-ami ))
         config:
@@ -76,14 +76,14 @@ jobs:
           inputs:
             - name: dw-al2-hardened-ami-arm-pr
         on_failure:
-          put: dw-al2-hardened-ami-pr
+          put: dw-al2-hardened-ami-arm-pr
           params:
-            path: dw-al2-hardened-ami-pr
+            path: dw-al2-hardened-ami-arm-pr
             status: failure
         on_success:
-          put: dw-al2-hardened-ami-pr
+          put: dw-al2-hardened-ami-arm-pr
           params:
-            path: dw-al2-hardened-ami-pr
+            path: dw-al2-hardened-ami-arm-pr
             status: success
 
   - name: dw-al2-test-and-promote-hardened-ami-arm

@@ -55,20 +55,16 @@ acm_cert_helper_version=0.40.0
 echo "Getting cert helper"
 $(which aws) s3 cp s3://$ARTEFACT_BUCKET/acm-pca-cert-generator/acm_cert_helper-${acm_cert_helper_version}.tar.gz .
 
-if [[ $ARCH != "x86_64" ]]; then
-  PATH=$PATH:/usr/local/bin
+PATH=$PATH:/usr/local/bin
 
-  pip3 install -U pip
+pip3 install -U pip
 
-  echo "Installing ARM specific dependencies"
-  yum install libffi-devel python3-devel -y
-  pip3 install setuptools_rust -y
+echo "Installing ARM specific dependencies"
+yum install libffi-devel python3-devel -y
+pip3 install setuptools_rust -y
 
-  echo "Installing acm_cert_helper"
-  pip3 install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
-else
-  pip3 install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
-fi
+echo "Installing acm_cert_helper"
+pip3 install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
 
 yum remove -y gcc --remove-leaves
 

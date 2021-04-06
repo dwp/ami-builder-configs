@@ -55,6 +55,8 @@ acm_cert_helper_version=0.41.0
 echo "Getting cert helper"
 $(which aws) s3 cp s3://$ARTEFACT_BUCKET/acm-pca-cert-generator/acm_cert_helper-${acm_cert_helper_version}.tar.gz .
 
+echo "export PATH=$PATH:/usr/local/bin:/bin" >> /etc/environment
+
 pip3 install -U pip
 
 echo "Installing ARM specific dependencies"
@@ -65,8 +67,6 @@ echo "Installing acm_cert_helper"
 pip3 install ./acm_cert_helper-${acm_cert_helper_version}.tar.gz
 
 yum remove -y gcc --remove-leaves
-
-echo "export PATH=$PATH:/usr/local/bin:/bin" >> /etc/environment
 
 cat > /usr/local/bin/set_yum_proxy.sh << 'SETYUMPROXY'
 TAG_NAME="internet_proxy"

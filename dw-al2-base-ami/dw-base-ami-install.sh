@@ -54,7 +54,7 @@ acm_cert_helper_version=0.41.0
 echo "Getting cert helper"
 $(which aws) s3 cp s3://$ARTEFACT_BUCKET/acm-pca-cert-generator/acm_cert_helper-${acm_cert_helper_version}.tar.gz .
 
-if [[ $ARCH == "aarch64" ]] then;
+if [[ $ARCH == "aarch64" ]]; then
     
     PATH=$PATH:/usr/local/bin
     

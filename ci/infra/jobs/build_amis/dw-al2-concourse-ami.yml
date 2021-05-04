@@ -17,7 +17,7 @@ jobs:
   - name: dw-al2-concourse-ami
     plan:
       - .: (( inject meta.plan.get-concourse-release ))
-        version: { tag: "v6.6.0" }
+        version: { tag: "v7.2.0" }
       - get: dw-al2-concourse-ami-config
         trigger: true
       - get: dw-al2-base-ami-template
@@ -33,6 +33,9 @@ jobs:
             SOURCE_AMI_OWNER: ((aws_account.management))
             PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-config/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami-config/dw-al2-concourse-ami/"
+            CONCOURSE_VERSION: "v7.2.0"
+          inputs:
+            - name: concourse-release
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-concourse-ami-config
@@ -41,6 +44,7 @@ jobs:
         config:
           inputs:
             - name: dw-al2-concourse-ami-config
+            - name: concourse-release
 
   - name: dw-al2-concourse-ami-pr
     max_in_flight: 1

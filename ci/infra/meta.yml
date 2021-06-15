@@ -464,3 +464,94 @@ meta:
         params:
           channel: "#dataworks-alerts"
           icon_emoji: ":concourse-red:"
+
+    terraform-bootstrap-ami-consumer-infra:
+      task: terraform-bootstrap
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: dwpdigital/jinja-yaml-aws
+            version: 0.0.19
+            tag: 0.0.19
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              python bootstrap_terraform.py
+              cp terraform.tf ../${REPO_NAME}-terraform-bootstrap
+          dir: $REPO_NAME
+        outputs:
+          - name: ${REPO_NAME}-terraform-bootstrap
+      params:
+        AWS_REGION: eu-west-2
+
+    terraform-apply-ami-consumer-infra:
+      task: terraform-apply
+      .: (( inject meta.plan.terraform-common-config ))
+      config:
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              export TF_VAR_ecs_hardened_ami_id="${untested_ami_id}"
+              cp ../${REPO_NAME}-terraform-bootstrap/terraform.tf .
+              terraform workspace select qa
+              terraform init
+              terraform plan -out terraform.plan
+              terraform apply -auto-approve terraform.plan
+          dir: $REPO_NAME
+
+    terraform-plan-ami-consumer-infra:
+      task: terraform-plan
+      .: (( inject meta.plan.terraform-common-config ))
+      config:
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              export TF_VAR_ecs_hardened_ami_id="${untested_ami_id}"
+              cp ../${REPO_NAME}-terraform-bootstrap/terraform.tf .
+              terraform workspace show
+              terraform init
+              TF_VAR_UNTESTED_AMI_ID="${untested_ami_id}" terraform plan $DETAILED_EXITCODE
+          dir: $REPO_NAME
+      params:
+        DETAILED_EXITCODE: -detailed-exitcode
+
+    run-behave-job:
+      task: run-behave-job
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_python_boto_behave_repository))
+            tag: ((dataworks.docker_python_boto_behave_version))
+        params:
+          AWS_REGION: ((dataworks.aws_region))
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
+          E2E_TEST_TIMEOUT: 500
+          ASSUME_DURATION: 36000
+        run:
+          dir: dataworks-behavioural-framework
+          path: sh
+          args:
+            - -exc
+            - |
+              source /assume-role
+              set +x
+
+              export E2E_FEATURE_TAG_FILTER="@${E2E_FEATURE_TAG_FILTER}"
+              cd src/runners
+              ./run-ci.sh \
+              "../../../meta"
+        inputs:
+          - name: dataworks-behavioural-framework
+          - name: meta
+
+# TODO: Use above 4 generic jobs to plan and apply infra using untested AMI in QA then run correct E2E tests to validate that the new image works with the master branch. On success message to slack that AMI can be updated on this repo on failure message to slack that new AMI doesn't work with master for this repo.

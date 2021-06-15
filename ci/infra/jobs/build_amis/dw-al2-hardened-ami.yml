@@ -22,6 +22,8 @@ jobs:
         trigger: false
       - get: dw-al2-base-ami
         trigger: true
+        passed:
+          - dw-al2-base-ami
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
           source_ami: dw-al2-base-ami

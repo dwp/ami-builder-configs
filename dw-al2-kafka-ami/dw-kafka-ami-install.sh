@@ -9,6 +9,10 @@ SELINUX=permissive
 SELINUXTYPE=targeted
 EOF
 
+# Enable ssm agent
+systemctl enable amazon-ssm-agent
+systemctl start amazon-ssm-agent
+
 # Install Kafka binaries
 mkdir /usr/local/kafka && cd /usr/local/kafka
 curl "http://archive.apache.org/dist/kafka/2.6.2/kafka_2.12-2.6.2.tgz" -o /usr/local/kafka/kafka.tgz

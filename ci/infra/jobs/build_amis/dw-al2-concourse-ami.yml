@@ -23,6 +23,8 @@ jobs:
       - get: dw-al2-base-ami-template
         trigger: false
       - .: (( inject meta.plan.get-al2-hardened-ami ))
+        passed:
+          - dw-al2-test-and-promote-hardened-ami
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
           source_ami: dw-al2-hardened-ami

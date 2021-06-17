@@ -42,22 +42,6 @@ jobs:
           inputs:
             - name: dw-al2-ecs-ami-config
 
-# TODO: work out how this will work with inputs and params needed by the dataworks-aws-ingestion-ecs-cluster tf jobs
-  - name: aws-ingestion-infra
-    max_in_flight: 1
-    plan:
-      - get: dw-al2-untested-ecs-ami
-        trigger: true
-      - get: dataworks-aws-ingestion-ecs-cluster
-        trigger: false
-      - .: (( inject meta.plan.terraform-bootstrap-ami-consumer-infra ))
-      - .: (( inject meta.plan.terraform-apply-ami-consumer-infra ))
-        params:
-          TF_WORKSPACE: 'qa'
-      - .: (( inject meta.plan.terraform-plan-ami-consumer-infra ))
-        params:
-          TF_WORKSPACE: 'qa'
-
   - name: dw-al2-ecs-ami-pr
     max_in_flight: 1
     plan:

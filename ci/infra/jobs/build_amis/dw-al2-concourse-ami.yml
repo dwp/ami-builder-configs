@@ -14,10 +14,12 @@ resources:
         - ci/infra/jobs/build_amis/dw-al2-concourse-ami.yml
 
 jobs:
-  - name: dw-al2-concourse-ami
+  - name: untested-dw-al2-concourse-ami
     plan:
       - .: (( inject meta.plan.get-concourse-release ))
         version: { tag: "v7.2.0" }
+      - get: untested-dw-al2-concourse-ami
+        trigger: false
       - get: dw-al2-concourse-ami-config
         trigger: true
       - get: dw-al2-base-ami-template
@@ -25,6 +27,41 @@ jobs:
       - .: (( inject meta.plan.get-al2-hardened-ami ))
         passed:
           - dw-al2-test-and-promote-hardened-ami
+      - .: (( inject meta.plan.generate-manifest ))
+        input_mapping:
+          source_ami: dw-al2-hardened-ami
+        config:
+          params:
+            AMI_NAME: untested-dw-al2-concourse-ami
+            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
+            SOURCE_AMI_OWNER: ((aws_account.management))
+            PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-config/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami-config/dw-al2-concourse-ami/"
+            CONCOURSE_VERSION: "v7.2.0"
+          inputs:
+            - name: concourse-release
+      - .: (( inject meta.plan.packer-bootstrap ))
+        input_mapping:
+          source_config: dw-al2-concourse-ami-config
+          source_template: dw-al2-base-ami-template
+      - .: (( inject meta.plan.build-ami ))
+        config:
+          inputs:
+            - name: dw-al2-concourse-ami-config
+            - name: concourse-release
+
+  - name: dw-al2-concourse-ami
+    plan:
+      - .: (( inject meta.plan.get-concourse-release ))
+        version: { tag: "v7.2.0" }
+      - get: untested-dw-al2-concourse-ami
+        trigger: true
+        passed:
+          - untested-dw-al2-concourse-ami
+      - get: dw-al2-concourse-ami-config
+        trigger: false
+      - get: dw-al2-base-ami-template
+        trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
           source_ami: dw-al2-hardened-ami

@@ -49,6 +49,14 @@ jobs:
           inputs:
             - name: dw-al2-concourse-ami-config
             - name: concourse-release
+  
+  - name: validate-concourse-ami
+    plan:
+      - get: untested-dw-al2-concourse-ami
+        trigger: true
+        passed:
+          - untested-dw-al2-concourse-ami
+      - .: (( inject meta.plan.validate-ami ))
 
   - name: dw-al2-concourse-ami
     plan:
@@ -57,7 +65,7 @@ jobs:
       - get: untested-dw-al2-concourse-ami
         trigger: true
         passed:
-          - untested-dw-al2-concourse-ami
+          - validate-concourse-ami
       - get: dw-al2-concourse-ami-config
         trigger: false
       - get: dw-al2-base-ami-template

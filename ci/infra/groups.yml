@@ -8,6 +8,10 @@ groups:
       - untested-dw-al2-ecs-ami
       - untested-dw-al2-concourse-ami
       - untested-dw-al2-kafka-ami
+      - validate-emr-ami
+      - validate-ecs-ami
+      - validate-concourse-ami
+      - validate-kafka-ami
       - dw-al2-emr-ami
       - dw-al2-ecs-ami
       - dw-al2-concourse-ami

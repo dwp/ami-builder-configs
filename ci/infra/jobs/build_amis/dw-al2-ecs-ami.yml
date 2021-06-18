@@ -44,12 +44,20 @@ jobs:
           inputs:
             - name: dw-al2-ecs-ami-config
 
-  - name: dw-al2-ecs-ami
+  - name: validate-ecs-ami
     plan:
       - get: untested-dw-al2-ecs-ami
         trigger: true
         passed:
           - untested-dw-al2-ecs-ami
+      - .: (( inject meta.plan.validate-ami ))
+
+  - name: dw-al2-ecs-ami
+    plan:
+      - get: untested-dw-al2-ecs-ami
+        trigger: true
+        passed:
+          - validate-ecs-ami
       - get: dw-al2-ecs-ami-config
         trigger: false
       - get: dw-al2-base-ami-template

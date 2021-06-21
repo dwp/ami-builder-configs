@@ -47,7 +47,7 @@ jobs:
   - name: validate-kafka-ami
     plan:
       - get: untested-dw-al2-kafka-ami
-        trigger: true
+        trigger: false
         passed:
           - untested-dw-al2-kafka-ami
       - .: (( inject meta.plan.validate-ami ))

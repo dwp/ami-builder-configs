@@ -47,7 +47,7 @@ jobs:
   - name: validate-ecs-ami
     plan:
       - get: untested-dw-al2-ecs-ami
-        trigger: true
+        trigger: false
         passed:
           - untested-dw-al2-ecs-ami
       - .: (( inject meta.plan.validate-ami ))

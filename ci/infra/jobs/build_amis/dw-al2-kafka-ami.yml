@@ -51,6 +51,9 @@ jobs:
         passed:
           - untested-dw-al2-kafka-ami
       - .: (( inject meta.plan.validate-ami ))
+        config:
+          params:
+            SERVICE: kafka
 
   - name: dw-al2-kafka-ami
     plan:
@@ -58,28 +61,12 @@ jobs:
         trigger: true
         passed:
           - validate-kafka-ami
-      - get: dw-al2-kafka-ami-config
-        trigger: false
-      - get: dw-al2-base-ami-template
-        trigger: false
-      - .: (( inject meta.plan.generate-manifest ))
+      - .: (( inject meta.plan.promote-ami ))
         input_mapping:
-          source_ami: dw-al2-hardened-ami
+          source_ami: untested-dw-al2-kafka-ami
         config:
           params:
-            AMI_NAME: dw-al2-kafka-ami
-            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
-            SOURCE_AMI_OWNER: ((aws_account.management))
-            PROVISION_SCRIPT_KEYS: '["dw-al2-kafka-ami-config/dw-al2-kafka-ami/dw-kafka-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-kafka-ami-config/dw-al2-kafka-ami/"
-      - .: (( inject meta.plan.packer-bootstrap ))
-        input_mapping:
-          source_config: dw-al2-kafka-ami-config
-          source_template: dw-al2-base-ami-template
-      - .: (( inject meta.plan.build-ami ))
-        config:
-          inputs:
-            - name: dw-al2-kafka-ami-config
+            AMI_NAME_PREFIX: "dw-al2-kafka-ami-"
 
   - name: dw-al2-kafka-ami-pr
     max_in_flight: 1

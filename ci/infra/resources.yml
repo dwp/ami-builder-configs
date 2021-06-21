@@ -10,7 +10,7 @@ resources:
     webhook_token: ((dataworks.concourse_github_webhook_token))
 
   - name: dw-al2-base-ami-template
-    .: (( inject meta.resources.ami-builder-configs ))
+    .: (( inject meta.resources.ami-builder-configs-test ))
     source:
       paths:
         - generic_packer_template.json.j2
@@ -20,6 +20,54 @@ resources:
     source:
       paths:
         - generic_packer_arm_template.json.j2
+
+  - name: current-base-ami
+    .: (( inject meta.resources.ami-builder-configs-test ))
+    source:
+      paths:
+        - current-ami/base
+
+  - name: current-hardened-ami
+    .: (( inject meta.resources.ami-builder-configs-test ))
+    source:
+      paths:
+        - current-ami/hardened
+
+  - name: current-emr-ami
+    .: (( inject meta.resources.ami-builder-configs-test ))
+    source:
+      paths:
+        - current-ami/emr
+
+#  - name: current-ecs-ami
+#    .: (( inject meta.resources.ami-builder-configs ))
+#    source:
+#      paths:
+#        - current-ami/ecs
+#
+#  - name: current-kafka-ami
+#    .: (( inject meta.resources.ami-builder-configs ))
+#    source:
+#      paths:
+#        - current-ami/kafka
+#
+#  - name: current-concourse-ami
+#    .: (( inject meta.resources.ami-builder-configs ))
+#    source:
+#      paths:
+#        - current-ami/concourse
+
+  - name: dw-al2-base-ami
+    type: ami
+    check_every: 5m
+    source:
+      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+      region: ((dataworks.aws_region))
+      filters:
+        is-public: true
+        state: available
+        name: dw-al2-base-ami-*
+        architecture: x86_64
 
   - name: amzn2-ami-hvm
     type: ami
@@ -44,18 +92,6 @@ resources:
         state: available
         name: amzn2-ami-hvm-*
         architecture: arm64
-
-  - name: dw-al2-base-ami
-    type: ami
-    check_every: 5m
-    source:
-      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
-      region: ((dataworks.aws_region))
-      filters:
-        owner-id: ((dataworks.aws_management_acc))
-        is-public: false
-        state: available
-        name: dw-al2-base-ami-*
 
   - name: dw-al2-base-ami-arm
     type: ami
@@ -116,18 +152,6 @@ resources:
         is-public: false
         state: available
         name: dw-al2-hardened-ami-arm-*
-
-  - name: untested-dw-al2-emr-ami
-    type: ami
-    check_every: 5m
-    source:
-      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
-      region: ((dataworks.aws_region))
-      filters:
-        owner-id: ((dataworks.aws_management_acc))
-        is-public: false
-        state: available
-        name: untested-dw-al2-emr-ami-*
 
   - name: untested-dw-al2-ecs-ami
     type: ami

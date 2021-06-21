@@ -8,6 +8,14 @@ meta:
       webhook_token: ((dataworks.concourse_github_webhook_token))
       check_every: 720h
 
+    - name: ami-builder-configs-test
+      type: git
+      source:
+        branch: DW-6496_ami_rolling_release_pipeline
+        uri: https://github.com/dwp/ami-builder-configs.git
+      webhook_token: ((dataworks.concourse_github_webhook_token))
+      check_every: 720h
+
     - name: ami-builder-configs-pr
       type: pull-request
       source:
@@ -24,8 +32,8 @@ meta:
           type: docker-image
           source:
             repository: ((dataworks.terraform_repository))
-            version: ((dataworks.terraform_version))
-            tag: ((dataworks.terraform_version))
+            version: ((dataworks.terraform_13_version))
+            tag: ((dataworks.terraform_13_version))
         params:
           TF_INPUT: false
           TF_CLI_ARGS_apply: -lock-timeout=300s
@@ -172,6 +180,8 @@ meta:
             tag: 0.0.2
         inputs:
           - name: packer-config
+        outputs:
+          - name: built-ami
         params:
           AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
           AWS_DEFAULT_REGION: ((dataworks.aws_region))
@@ -190,6 +200,8 @@ meta:
               cat packer-config/packer.json
               packer validate packer-config/packer.json
               packer build -on-error=cleanup packer-config/packer.json
+              AMI_ID="$(cat manifest.json | jq -r .builds[0].artifact_id |  cut -d':' -f2)"
+              echo "${AMI_ID}" > built-ami/id
 
     proxy-test:
       task: proxy-test
@@ -482,16 +494,53 @@ meta:
           args:
             - -exc
             - |
-              AMI_ID=$(cat untested-dw-al2-emr-ami/id)
-              REPOS=$(ls | grep -v untested-dw-al2-emr-ami)
+              AMI_ID=$(cat "current-${SERVICE}-id/id")
+              REPOS=$(ls | "grep -v untested-dw-al2-${SERVICE}-ami")
 
               for i in $REPOS; do
-                if [[ $(cat $i/id) == $AMI_ID ]]; then
-                    echo $i has passed
+                if [[ $(cat "${i}.test") == "$AMI_ID SUCCESS" ]]; then
+                    echo "$i has passed"
+                elif [[ $(cat "${i}.test") == "$AMI_ID FAILED" ]]; then
+                    echo "$i has failed."
+                    exit 1
                 else
-                    echo $i has failed
+                    echo "$i has not run yet."
                     exit 1
                 fi
               done
 
+    put-current-ami:
+      task: put-current-ami
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ((dataworks.docker_awscli_repository))
+            version: ((dataworks.docker_awscli_version))
+            tag: ((dataworks.docker_awscli_version))
+        params:
+          AWS_DEFAULT_REGION: ((dataworks.aws_region))
+          GIT_USERNAME: ((dataworks.concourse_github_username))
+          GIT_EMAIL: ((dataworks.concourse_github_email))
+          GITHUB_TOKEN: ((dataworks-secrets.concourse_github_pat))
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              AMI_ID=$(cat built-ami/id)
+              DATE=$(date -u)
+              PIPELINE=${PWD##*/}
 
+              git config --global user.name "${GIT_USERNAME}"
+              git config --global user.email "${GIT_EMAIL}"
+
+              git clone https://github.com/dwp/ami-builder-config
+              cd ami-builder-config
+
+              cp built-ami/id "current-ami/${SERVICE}/id"
+
+              git add current-ami/id
+              git commit -m "Updating current AMI on ${DATE}"
+              git push https://${GITHUB_TOKEN}:x-oauth-basic@github.com/dwp/ami-builder-config

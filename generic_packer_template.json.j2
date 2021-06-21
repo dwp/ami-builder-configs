@@ -1,4 +1,12 @@
 {
+    "post-processors": [
+        [
+            {
+                "output": "manifest.json",
+                "type": "manifest"
+            }
+        ]
+    ],
     "variables": {
         {% if 'artefact_bucket' in event %}
         "ARTEFACT_BUCKET": "{{ event['artefact_bucket'] }}",

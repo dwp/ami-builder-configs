@@ -22,18 +22,15 @@ resources:
 jobs:
   - name: untested-dw-al2-emr-ami
     plan:
-      - get: untested-dw-al2-emr-ami
-        trigger: false
+      - get: hardened-ami-id
+        trigger: true
+        passed:
+          - dw-al2-test-and-promote-hardened-ami
       - get: dw-al2-emr-ami-config
         trigger: true
       - get: dw-al2-base-ami-template
         trigger: false
-      - .: (( inject meta.plan.get-al2-hardened-ami ))
-        passed:
-          - dw-al2-test-and-promote-hardened-ami
       - .: (( inject meta.plan.generate-manifest ))
-        input_mapping:
-          source_ami: dw-al2-hardened-ami
         config:
           params:
             AMI_NAME: untested-dw-al2-emr-ami
@@ -49,20 +46,26 @@ jobs:
         config:
           inputs:
             - name: dw-al2-hardened-ami-config
+      - put: emr-ami-id
+        params:
+          file: built-ami/id
 
   - name: validate-emr-ami
     plan:
-      - get: untested-dw-al2-emr-ami
-        trigger: false
+      - get: emr-ami-id
+        trigger: true
         passed:
           - untested-dw-al2-emr-ami
       - get: ami-test-adg
         trigger: true
       - .: (( inject meta.plan.validate-ami ))
+      - put: emr-ami-id
+        params:
+          file: built-ami/id
 
   - name: dw-al2-emr-ami
     plan:
-      - get: untested-dw-al2-emr-ami
+      - get: emr-ami-id
         trigger: true
         passed:
           - validate-emr-ami

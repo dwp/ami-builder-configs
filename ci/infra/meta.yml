@@ -24,8 +24,8 @@ meta:
           type: docker-image
           source:
             repository: ((dataworks.terraform_repository))
-            version: ((dataworks.terraform_version))
-            tag: ((dataworks.terraform_version))
+            version: ((dataworks.terraform_13_version))
+            tag: ((dataworks.terraform_13_version))
         params:
           TF_INPUT: false
           TF_CLI_ARGS_apply: -lock-timeout=300s
@@ -108,7 +108,7 @@ meta:
               "provision_file_keys":            ${PROVISION_FILE_KEYS},
               "provisioner_type_file_source":   "${PROVISIONER_TYPE_FILE_SOURCE}",
               "source_ami_virt_type":           "${SOURCE_AMI_VIRT_TYPE}",
-              "source_ami_id":                  "$(if [ -f ../source_ami/id ]; then cat ../source_ami/id; else echo ''; fi)",
+              "source_ami_id":                  "$(if [ -f ../source_ami/id ]; then cat ../source_ami/id; elif [ -f ../*-ami-id ]; then cat ../*-ami-id; else echo ''; fi)",
               "source_ami_name":                "${SOURCE_AMI_NAME}",
               "source_ami_root_device_type":    "${SOURCE_AMI_ROOT_DEVICE_TYPE}",
               "source_ami_owner":               "${SOURCE_AMI_OWNER}",
@@ -157,7 +157,6 @@ meta:
           - name: manifest
           - name: source_config
           - name: source_template
-
         outputs:
           - name: packer-config
 
@@ -172,6 +171,8 @@ meta:
             tag: 0.0.2
         inputs:
           - name: packer-config
+        outputs:
+          - name: built-ami
         params:
           AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
           AWS_DEFAULT_REGION: ((dataworks.aws_region))
@@ -189,7 +190,8 @@ meta:
               source /assume-role
               cat packer-config/packer.json
               packer validate packer-config/packer.json
-              packer build -on-error=cleanup packer-config/packer.json
+              AMI_ID="$(packer build -on-error=cleanup packer-config/packer.json | grep "${AWS_DEFAULT_REGION}:" | awk '{print $2}')"
+              echo "${AMI_ID}" > built-ami/id
 
     proxy-test:
       task: proxy-test
@@ -275,7 +277,7 @@ meta:
               LAUNCH_TEMPLATE_ID="$(cat ./terraform-output-management/outputs.json | jq -r .${LAUNCH_TEMPLATE_OUTPUT_NAME}.value.id)"
               LAUNCH_TEMPLATE_NAME="$(cat ./terraform-output-management/outputs.json | jq -r .${LAUNCH_TEMPLATE_OUTPUT_NAME}.value.name)"
               TAG_NAME="$(cat ./terraform-output-management/outputs.json | jq -r '.inspector_test_instance_tag.value.name')"
-              SOURCE_AMI_ID="$(cat ./source_ami/id)"
+              SOURCE_AMI_ID="$(if [ -f ./*-ami-id ]; then cat ./*-ami-id; else cat ./source_ami/id;  fi)"
               SOURCE_TEMPLATE_VERSION=$(aws ec2 describe-launch-templates --filters Name=launch-template-name,Values=${LAUNCH_TEMPLATE_NAME} | jq -r .LaunchTemplates[0].LatestVersionNumber)
               LAUNCH_TEMPLATE_VERSION=$(aws ec2 create-launch-template-version --launch-template-id ${LAUNCH_TEMPLATE_ID} --source-version ${SOURCE_TEMPLATE_VERSION} --launch-template-data "{\"ImageId\":\"${SOURCE_AMI_ID}\"}" | jq -r '.LaunchTemplateVersion.VersionNumber')
               RUNNING_INSTANCE_ID=$(aws ec2 run-instances --launch-template LaunchTemplateId=${LAUNCH_TEMPLATE_ID},Version=${LAUNCH_TEMPLATE_VERSION} --subnet-id ${SUBNET_ID} | jq -r '.Instances[0].InstanceId')
@@ -393,6 +395,8 @@ meta:
             tag: ((dataworks.docker_awscli_version))
         inputs:
           - name: source_ami
+        outputs:
+          - name: promoted-ami
         params:
           AWS_REGION: ((dataworks.aws_region))
           AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
@@ -423,6 +427,7 @@ meta:
               PERMISSIONS_JSON=$(aws ec2 describe-image-attribute --image-id ${SOURCE_AMI_ID} --attribute launchPermission | jq -r '.LaunchPermissions | { LaunchPermission: { Add: .}}')
               aws ec2 modify-image-attribute --image-id ${AMI_ID} --attribute launchPermission --cli-input-json "${PERMISSIONS_JSON}"
               echo "AMI copy complete - ${AMI_ID} / ${AMI_NAME}"
+              echo "${AMI_ID}" > promoted-ami/id
 
     inspector-cleanup:
       task: inspector-cleanup

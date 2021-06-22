@@ -117,18 +117,6 @@ resources:
         state: available
         name: dw-al2-hardened-ami-arm-*
 
-  - name: untested-dw-al2-emr-ami
-    type: ami
-    check_every: 5m
-    source:
-      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
-      region: ((dataworks.aws_region))
-      filters:
-        owner-id: ((dataworks.aws_management_acc))
-        is-public: false
-        state: available
-        name: untested-dw-al2-emr-ami-*
-
   - name: untested-dw-al2-ecs-ami
     type: ami
     check_every: 5m
@@ -194,3 +182,12 @@ resources:
     type: slack-notification
     source:
       url: ((dataworks.slack_webhook_url))
+
+  - name: base-ami-id
+    type: file
+
+  - name: hardened-ami-id
+    type: file
+
+  - name: emr-ami-id
+    type: file

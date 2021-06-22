@@ -18,15 +18,14 @@ jobs:
     plan:
       - .: (( inject meta.plan.get-concourse-release ))
         version: { tag: "v7.2.0" }
-      - get: untested-dw-al2-concourse-ami
-        trigger: false
       - get: dw-al2-concourse-ami-config
         trigger: true
       - get: dw-al2-base-ami-template
         trigger: false
-      - .: (( inject meta.plan.get-al2-hardened-ami ))
         passed:
           - dw-al2-test-and-promote-hardened-ami
+      - .: (( inject meta.plan.get-al2-hardened-ami ))
+        trigger: true
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
           source_ami: dw-al2-hardened-ami
@@ -53,6 +52,8 @@ jobs:
   - name: validate-concourse-ami
     plan:
       - get: untested-dw-al2-concourse-ami
+        trigger: true
+      - get: dw-al2-base-ami-template
         trigger: false
         passed:
           - untested-dw-al2-concourse-ami

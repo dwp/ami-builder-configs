@@ -21,23 +21,23 @@ resources:
       paths:
         - generic_packer_arm_template.json.j2
 
-  - name: current-base-ami
-    .: (( inject meta.resources.ami-builder-configs-test ))
-    source:
-      paths:
-        - current-ami/base
+  # - name: current-base-ami
+  #   .: (( inject meta.resources.ami-builder-configs-test ))
+  #   source:
+  #     paths:
+  #       - current-ami/base
 
-  - name: current-hardened-ami
-    .: (( inject meta.resources.ami-builder-configs-test ))
-    source:
-      paths:
-        - current-ami/hardened
+  # - name: current-hardened-ami
+  #   .: (( inject meta.resources.ami-builder-configs-test ))
+  #   source:
+  #     paths:
+  #       - current-ami/hardened
 
-  - name: current-emr-ami
-    .: (( inject meta.resources.ami-builder-configs-test ))
-    source:
-      paths:
-        - current-ami/emr
+  # - name: current-emr-ami
+  #   .: (( inject meta.resources.ami-builder-configs-test ))
+  #   source:
+  #     paths:
+  #       - current-ami/emr
 
 #  - name: current-ecs-ami
 #    .: (( inject meta.resources.ami-builder-configs ))
@@ -152,6 +152,18 @@ resources:
         is-public: false
         state: available
         name: dw-al2-hardened-ami-arm-*
+
+  - name: untested-dw-al2-emr-ami
+    type: ami
+    check_every: 5m
+    source:
+      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+      region: ((dataworks.aws_region))
+      filters:
+        owner-id: ((dataworks.aws_management_acc))
+        is-public: false
+        state: available
+        name: untested-dw-al2-emr-ami-*
 
   - name: untested-dw-al2-ecs-ami
     type: ami

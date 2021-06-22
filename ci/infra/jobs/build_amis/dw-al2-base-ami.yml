@@ -17,8 +17,6 @@ resources:
 jobs:
   - name: dw-al2-base-ami
     plan:
-      - get: current-base-ami
-        trigger: false
       - get: amzn2-ami-hvm
         trigger: true
       - get: dw-al2-base-ami-config
@@ -39,12 +37,12 @@ jobs:
         config:
           inputs:
             - name: dw-al2-base-ami-config
-      - .: (( inject meta.plan.put-current-ami ))
-        config:
-          inputs:
-            - name: built-ami
-          params:
-            SERVICE: base
+      # - .: (( inject meta.plan.put-current-ami ))
+      #   config:
+      #     inputs:
+      #       - name: built-ami
+      #     params:
+      #       SERVICE: base
 
   - name: dw-al2-base-ami-pr
     max_in_flight: 1

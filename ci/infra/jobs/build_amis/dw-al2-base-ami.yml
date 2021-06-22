@@ -39,6 +39,9 @@ jobs:
         config:
           inputs:
             - name: dw-al2-base-ami-config
+      - put: base-ami-id
+        params:
+          file: built-ami/id
 
   - name: dw-al2-base-ami-pr
     max_in_flight: 1

@@ -487,8 +487,8 @@ meta:
           args:
             - -exc
             - |
-              AMI_ID=$(cat untested-dw-al2-emr-ami/id)
-              REPOS=$(ls | grep -v untested-dw-al2-emr-ami)
+              AMI_ID=$(cat "$UNTESTED_AMI/id")
+              REPOS=$(ls | grep -v "$UNTESTED_AMI")
 
               for i in $REPOS; do
                 if [[ ! -f "$i/results/$i.test" ]]; then
@@ -501,5 +501,3 @@ meta:
                     exit 1
                 fi
               done
-
-

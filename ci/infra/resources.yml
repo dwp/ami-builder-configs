@@ -188,7 +188,7 @@ resources:
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
-        - results/aws-analytical-dataset-generation.test
+        - results/analytical-dataset-generation.test
 
   - name: dw-al2-hardened-ami-config
     .: (( inject meta.resources.ami-builder-configs ))

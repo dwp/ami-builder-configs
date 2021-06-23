@@ -6,7 +6,7 @@ resources:
       uri: https://((dataworks.enterprise_github_url))/dip/aws-management-infrastructure.git
       username: ((dataworks.enterprise_github_username))
       password: ((dataworks-secrets.enterprise_github_pat))
-    check_every: 720h
+    check_every: 5m
     webhook_token: ((dataworks.concourse_github_webhook_token))
 
   - name: dw-al2-base-ami-template
@@ -160,8 +160,135 @@ resources:
       uri: https://((dataworks.enterprise_github_url))/dip/aws-security-tools.git
       username: ((dataworks.enterprise_github_username))
       password: ((dataworks-secrets.enterprise_github_pat))
-    check_every: 720h
+    check_every: 5m
     webhook_token: ((dataworks.concourse_github_webhook_token))
+
+  - name: dw-al2-emr-ami-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-emr-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-emr-ami.yml
+
+  - name: dw-al2-emr-ami-pr
+    .: (( inject meta.resources.ami-builder-configs-pr ))
+    source:
+      paths:
+        - dw-al2-emr-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-emr-ami.yml
+
+  - name: dw-al2-emr-ami-arm-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-emr-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-emr-ami-arm.yml
+
+  - name: aws-analytical-dataset-generation
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/aws-analytical-dataset-generation.test
+
+  - name: dw-al2-hardened-ami-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-hardened-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-hardened-ami.yml
+
+  - name: dw-al2-hardened-ami-pr
+    .: (( inject meta.resources.ami-builder-configs-pr ))
+    source:
+      paths:
+        - dw-al2-hardened-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-hardened-ami.yml
+
+  - name: dw-al2-base-ami-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-base-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
+
+  - name: dw-al2-base-ami-pr
+    .: (( inject meta.resources.ami-builder-configs-pr ))
+    source:
+      paths:
+        - dw-al2-base-ami/*
+        - generic_packer_template.json.j2
+        - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
+
+  - name: dw-al2-base-ami-arm-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-base-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-base-ami-arm.yml
+
+  - name: dw-al2-base-ami-pr
+    .: (( inject meta.resources.ami-builder-configs-pr ))
+    source:
+      paths:
+        - dw-al2-base-ami/*
+        - generic_packer_arm_template.json.j2
+        - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
+
+  - name: dw-al2-concourse-ami-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-concourse-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-concourse-ami.yml
+
+  - name: dw-al2-concourse-ami-pr
+    .: (( inject meta.resources.ami-builder-configs-pr ))
+    source:
+      paths:
+        - dw-al2-concourse-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-concourse-ami.yml
+
+  - name: dw-al2-ecs-ami-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-ecs-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-ecs-ami.yml
+
+  - name: dw-al2-ecs-ami-pr
+    .: (( inject meta.resources.ami-builder-configs-pr ))
+    source:
+      paths:
+        - dw-al2-ecs-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-ecs-ami.yml
+
+  - name: dw-al2-hardened-ami-arm-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-hardened-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-hardened-ami-arm.yml
+
+  - name: dw-al2-hardened-ami-arm-pr
+    .: (( inject meta.resources.ami-builder-configs-pr ))
+    source:
+      paths:
+        - dw-al2-hardened-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-hardened-ami-arm.yml
+
+  - name: dw-al2-kafka-ami-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-kafka-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-kafka-ami.yml
+
+  - name: dw-al2-kafka-ami-pr
+    .: (( inject meta.resources.ami-builder-configs-pr ))
+    source:
+      paths:
+        - dw-al2-kafka-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-kafka-ami.yml
 
   - name: concourse-release
     type: github-release

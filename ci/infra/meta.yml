@@ -6,7 +6,7 @@ meta:
         branch: master
         uri: https://github.com/dwp/ami-builder-configs.git
       webhook_token: ((dataworks.concourse_github_webhook_token))
-      check_every: 720h
+      check_every: 5m
 
     - name: ami-builder-configs-pr
       type: pull-request
@@ -14,7 +14,7 @@ meta:
         access_token: ((dataworks-secrets.concourse_github_pat))
         repository: dwp/ami-builder-configs
       webhook_token: ((dataworks.concourse_github_webhook_token))
-      check_every: 720h
+      check_every: 5m
 
   plan:
     terraform-common-config:
@@ -491,10 +491,13 @@ meta:
               REPOS=$(ls | grep -v untested-dw-al2-emr-ami)
 
               for i in $REPOS; do
-                if [[ $(cat $i/id) == $AMI_ID ]]; then
-                    echo $i has passed
+                if [[ ! -f "$i/results/$i.test" ]]; then
+                    echo "$i has not run"
+                    exit 1
+                elif [[ $(cat "$i/results/$i.test") == "$AMI_ID SUCCESS" ]]; then
+                    echo "$i has passed"
                 else
-                    echo $i has failed
+                    echo "$i has failed"
                     exit 1
                 fi
               done

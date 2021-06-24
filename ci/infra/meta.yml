@@ -494,7 +494,7 @@ meta:
                 if [[ ! -f "$i/results/$i.test" ]]; then
                     echo "$i has not run"
                     exit 1
-                elif [[ $(cat "$i/results/$i.test") == "$AMI_ID SUCCESS" ]]; then
+                elif [[ "$(cat "$i/results/$i.test")" == "$AMI_ID SUCCESS" ]]; then
                     echo "$i has passed"
                 else
                     echo "$i has failed"

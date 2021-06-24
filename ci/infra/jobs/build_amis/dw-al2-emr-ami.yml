@@ -37,14 +37,14 @@ jobs:
         trigger: true
         passed:
           - untested-dw-al2-emr-ami
-      - get: aws-analytical-dataset-generation
+      - get: analytical-dataset-generation
         trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
           params:
             UNTESTED_AMI: untested-dw-al2-emr-ami
           inputs:
-            - name: aws-analytical-dataset-generation
+            - name: analytical-dataset-generation
             - name: untested-dw-al2-emr-ami
       - put: emr-ami-id
         params:

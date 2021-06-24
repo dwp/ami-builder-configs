@@ -184,7 +184,7 @@ resources:
         - dw-al2-emr-ami/*
         - ci/infra/jobs/build_amis/dw-al2-emr-ami-arm.yml
 
-  - name: aws-analytical-dataset-generation
+  - name: analytical-dataset-generation
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:

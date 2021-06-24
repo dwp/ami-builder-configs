@@ -226,13 +226,13 @@ resources:
         - dw-al2-base-ami/*
         - ci/infra/jobs/build_amis/dw-al2-base-ami-arm.yml
 
-  - name: dw-al2-base-ami-pr
+  - name: dw-al2-base-ami-arm-pr
     .: (( inject meta.resources.ami-builder-configs-pr ))
     source:
       paths:
         - dw-al2-base-ami/*
         - generic_packer_arm_template.json.j2
-        - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
+        - ci/infra/jobs/build_amis/dw-al2-base-ami-arm.yml
 
   - name: dw-al2-concourse-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
@@ -317,4 +317,7 @@ resources:
     type: file
 
   - name: emr-ami-id
+    type: file
+  
+  - name: untested-dw-al2-emr-ami
     type: file

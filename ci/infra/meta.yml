@@ -396,11 +396,7 @@ meta:
         inputs:
           - name: source_ami
         outputs:
-<<<<<<< HEAD
-          - name: promoted_ami
-=======
           - name: promoted-ami
->>>>>>> dd28923460ecfd379d2dd3fb9de56cac83e5923c
         params:
           AWS_REGION: ((dataworks.aws_region))
           AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
@@ -491,7 +487,7 @@ meta:
           args:
             - -exc
             - |
-              AMI_ID=$(cat "$UNTESTED_AMI/id")
+              AMI_ID=$(grep ami- $UNTESTED_AMI/keyval.properties | cut -d '=' -f 1)
               REPOS=$(ls | grep -v "$UNTESTED_AMI")
 
               for i in $REPOS; do

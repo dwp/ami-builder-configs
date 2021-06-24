@@ -27,40 +27,40 @@ jobs:
     plan:
       - get: amzn2-ami-hvm-arm
         trigger: true
-      - get: dw-al2-base-ami-pr
+      - get: dw-al2-base-ami-arm-pr
         trigger: true
       - get: dw-al2-base-ami-arm-template
         trigger: true
-      - put: dw-al2-base-ami-pr
+      - put: dw-al2-base-ami-arm-pr
         params:
-          path: dw-al2-base-ami-pr
+          path: dw-al2-base-ami-arm-pr
           status: pending
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
             AMI_NAME: pr-dw-al2-base-ami-arm
             AMI_USERS: ((aws_account.development))
-            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-pr/dw-al2-base-ami/dw-base-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-pr/dw-al2-base-ami/"
+            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-arm-pr/dw-al2-base-ami/dw-base-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-arm-pr/dw-al2-base-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         params:
           architecture: arm64
         input_mapping:
-          source_config: dw-al2-base-ami-pr
+          source_config: dw-al2-base-ami-arm-pr
           source_template: dw-al2-base-ami-arm-template
       - .: (( inject meta.plan.build-ami ))
         config:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           inputs:
-            - name: dw-al2-base-ami-pr
+            - name: dw-al2-base-ami-arm-pr
         on_failure:
-          put: dw-al2-base-ami-pr
+          put: dw-al2-base-ami-arm-pr
           params:
-            path: dw-al2-base-ami-pr
+            path: dw-al2-base-ami-arm-pr
             status: failure
         on_success:
-          put: dw-al2-base-ami-pr
+          put: dw-al2-base-ami-arm-pr
           params:
-            path: dw-al2-base-ami-pr
+            path: dw-al2-base-ami-arm-pr
             status: success

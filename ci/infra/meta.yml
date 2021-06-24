@@ -408,7 +408,12 @@ meta:
             - |
               export AWS_DEFAULT_REGION
               source /assume-role
-              SOURCE_AMI_ID="$(cat ./source_ami/id)"
+              if [[ -f source_ami/keyval.properties ]]; then
+                raw_id="$(grep ami- source_ami/keyval.properties)"
+                SOURCE_AMI_ID="${raw_id::-1}"
+              else
+                SOURCE_AMI_ID="$(cat ./source_ami/id)"
+              fi
               TIMESTAMP=$(date +%s)
               AMI_NAME="${AMI_NAME_PREFIX}${TIMESTAMP}"
               AMI_ID=$(aws ec2 copy-image --name ${AMI_NAME} --source-image-id ${SOURCE_AMI_ID} --source-region ${AWS_REGION} | jq -r .ImageId)
@@ -482,13 +487,15 @@ meta:
             tag: ((dataworks.docker_awscli_version))
         params:
           AWS_DEFAULT_REGION: ((dataworks.aws_region))
+        outputs:
+          - name: tested_ami
         run:
           path: sh
           args:
             - -exc
             - |
               AMI_ID=$(grep ami- $UNTESTED_AMI/keyval.properties | cut -d '=' -f 1)
-              REPOS=$(ls | grep -v "$UNTESTED_AMI")
+              REPOS=$(ls | grep -v -e "$UNTESTED_AMI" -e "tested_ami")
 
               for i in $REPOS; do
                 if [[ ! -f "$i/results/$i.test" ]]; then
@@ -496,8 +503,10 @@ meta:
                     exit 1
                 elif [[ "$(cat "$i/results/$i.test")" == "$AMI_ID SUCCESS" ]]; then
                     echo "$i has passed"
+                    echo "$AMI_ID" > tested_ami/id
                 else
                     echo "$i has failed"
                     exit 1
                 fi
               done
+

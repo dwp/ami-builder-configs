@@ -222,3 +222,17 @@ The general pattern for creating a new AMI and having it available for use is:
 
 ## Deployment within EC2
 * Use `userdata` to overwrite any files that require Terraform-based values - eg, `htme` uses `userdata` to replace the `appname.sh` file as it requires eg `dataKeyServiceUrl`, `hbase.zookeeper.quorum` which are Terraform outputs from different repos
+
+## Automated AMI testing and deployment
+
+Within `ci/jobs/build_amis` you will find some service specific ami build jobs such as EMR and ECS. These are built off of the back of the tested and promoted hardened general purpose AMI.
+
+In order to automate the release process, these have been set up to follow a similar pattern to the hardening of the general purpose image:
+
+####Newly built AMI ----> Tests ----> Tested and promoted AMI 
+
+In this pattern, we build a new image on the left, run tests against it in the centre and the tested image is promoted into general use on the right.
+
+The tests that are implemented from `dw-al2-base-ami` to `dw-al2-hardened-ami` are security scans. This is not sufficient for the service specific testing so, the testing is done within the repo that consumes the AMI. The release of a new untested AMI triggers a build for each consumer in a lower environment, runs the tests available in each repo against it, then pushes the result in `<AMI_ID> <SUCCESS or FAILED>` to `results/<REPO_NAME>.test` in this repo.
+
+When this dir is updated, it triggers the `validate-emr-ami` job that checks to see if all expected consumers have posted a `SUCCESS` mapped against the current `AMI_ID`. Once they all pass for an AMI, the AMI is promoted.

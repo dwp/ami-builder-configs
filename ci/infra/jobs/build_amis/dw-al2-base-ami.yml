@@ -1,19 +1,3 @@
-resources:
-  - name: dw-al2-base-ami-config
-    .: (( inject meta.resources.ami-builder-configs ))
-    source:
-      paths:
-        - dw-al2-base-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
-
-  - name: dw-al2-base-ami-pr
-    .: (( inject meta.resources.ami-builder-configs-pr ))
-    source:
-      paths:
-        - dw-al2-base-ami/*
-        - generic_packer_template.json.j2
-        - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
-
 jobs:
   - name: dw-al2-base-ami
     plan:
@@ -39,6 +23,9 @@ jobs:
         config:
           inputs:
             - name: dw-al2-base-ami-config
+      - put: base-ami-id
+        params:
+          file: built-ami/id
 
   - name: dw-al2-base-ami-pr
     max_in_flight: 1

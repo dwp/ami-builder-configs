@@ -1,18 +1,3 @@
-resources:
-  - name: dw-al2-concourse-ami-config
-    .: (( inject meta.resources.ami-builder-configs ))
-    source:
-      paths:
-        - dw-al2-concourse-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-concourse-ami.yml
-
-  - name: dw-al2-concourse-ami-pr
-    .: (( inject meta.resources.ami-builder-configs-pr ))
-    source:
-      paths:
-        - dw-al2-concourse-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-concourse-ami.yml
-
 jobs:
   - name: untested-dw-al2-concourse-ami
     plan:

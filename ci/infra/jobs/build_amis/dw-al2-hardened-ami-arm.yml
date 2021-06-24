@@ -1,18 +1,3 @@
-resources:
-  - name: dw-al2-hardened-ami-arm-config
-    .: (( inject meta.resources.ami-builder-configs ))
-    source:
-      paths:
-        - dw-al2-hardened-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-hardened-ami-arm.yml
-
-  - name: dw-al2-hardened-ami-arm-pr
-    .: (( inject meta.resources.ami-builder-configs-pr ))
-    source:
-      paths:
-        - dw-al2-hardened-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-hardened-ami-arm.yml
-
 jobs:
   - name: dw-al2-untested-hardened-ami-arm
     plan:

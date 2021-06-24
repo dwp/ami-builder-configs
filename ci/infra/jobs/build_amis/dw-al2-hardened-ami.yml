@@ -1,18 +1,3 @@
-resources:
-  - name: dw-al2-hardened-ami-config
-    .: (( inject meta.resources.ami-builder-configs ))
-    source:
-      paths:
-        - dw-al2-hardened-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-hardened-ami.yml
-
-  - name: dw-al2-hardened-ami-pr
-    .: (( inject meta.resources.ami-builder-configs-pr ))
-    source:
-      paths:
-        - dw-al2-hardened-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-hardened-ami.yml
-
 jobs:
   - name: dw-al2-untested-hardened-ami
     plan:
@@ -22,13 +7,11 @@ jobs:
         trigger: true
       - get: dw-al2-base-ami-template
         trigger: false
-      - get: dw-al2-base-ami
+      - get: base-ami-id
         trigger: true
         passed:
           - dw-al2-base-ami
       - .: (( inject meta.plan.generate-manifest ))
-        input_mapping:
-          source_ami: dw-al2-base-ami
         config:
           params:
             AMI_NAME: dw-al2-untested-hardened-ami
@@ -44,6 +27,9 @@ jobs:
         config:
           inputs:
             - name: dw-al2-hardened-ami-config
+      - put: hardened-ami-id
+        params:
+          file: built-ami/id
 
   - name: dw-al2-hardened-ami-pr
     max_in_flight: 1
@@ -93,11 +79,13 @@ jobs:
   - name: dw-al2-test-and-promote-hardened-ami
     max_in_flight: 1
     plan:
+      - get: dw-al2-untested-hardened-ami
+        trigger: false
       - get: dw-al2-hardened-ami
         trigger: false
-      - get: dw-al2-untested-hardened-ami
+      - get: hardened-ami-id
         trigger: true
-        passed: 
+        passed:
           - dw-al2-untested-hardened-ami
       - get: aws-management-infrastructure
         trigger: false
@@ -124,6 +112,9 @@ jobs:
         config:
           params:
             AMI_NAME_PREFIX: "dw-al2-hardened-ami-"
+      - put: hardened-ami-id
+        params:
+          file: promoted-ami/id
     ensure:
       do:
         - .: (( inject meta.plan.inspector-cleanup ))

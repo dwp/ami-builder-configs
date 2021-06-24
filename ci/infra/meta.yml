@@ -6,7 +6,7 @@ meta:
         branch: master
         uri: https://github.com/dwp/ami-builder-configs.git
       webhook_token: ((dataworks.concourse_github_webhook_token))
-      check_every: 720h
+      check_every: 5m
 
     - name: ami-builder-configs-pr
       type: pull-request
@@ -14,7 +14,7 @@ meta:
         access_token: ((dataworks-secrets.concourse_github_pat))
         repository: dwp/ami-builder-configs
       webhook_token: ((dataworks.concourse_github_webhook_token))
-      check_every: 720h
+      check_every: 5m
 
   plan:
     terraform-common-config:
@@ -24,8 +24,8 @@ meta:
           type: docker-image
           source:
             repository: ((dataworks.terraform_repository))
-            version: ((dataworks.terraform_version))
-            tag: ((dataworks.terraform_version))
+            version: ((dataworks.terraform_13_version))
+            tag: ((dataworks.terraform_13_version))
         params:
           TF_INPUT: false
           TF_CLI_ARGS_apply: -lock-timeout=300s
@@ -108,7 +108,7 @@ meta:
               "provision_file_keys":            ${PROVISION_FILE_KEYS},
               "provisioner_type_file_source":   "${PROVISIONER_TYPE_FILE_SOURCE}",
               "source_ami_virt_type":           "${SOURCE_AMI_VIRT_TYPE}",
-              "source_ami_id":                  "$(if [ -f ../source_ami/id ]; then cat ../source_ami/id; else echo ''; fi)",
+              "source_ami_id":                  "$(if [ -f ../source_ami/id ]; then cat ../source_ami/id; elif [ -f ../*-ami-id ]; then cat ../*-ami-id; else echo ''; fi)",
               "source_ami_name":                "${SOURCE_AMI_NAME}",
               "source_ami_root_device_type":    "${SOURCE_AMI_ROOT_DEVICE_TYPE}",
               "source_ami_owner":               "${SOURCE_AMI_OWNER}",
@@ -157,7 +157,6 @@ meta:
           - name: manifest
           - name: source_config
           - name: source_template
-
         outputs:
           - name: packer-config
 
@@ -172,6 +171,8 @@ meta:
             tag: 0.0.2
         inputs:
           - name: packer-config
+        outputs:
+          - name: built-ami
         params:
           AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
           AWS_DEFAULT_REGION: ((dataworks.aws_region))
@@ -189,7 +190,8 @@ meta:
               source /assume-role
               cat packer-config/packer.json
               packer validate packer-config/packer.json
-              packer build -on-error=cleanup packer-config/packer.json
+              AMI_ID="$(packer build -on-error=cleanup packer-config/packer.json | grep "${AWS_DEFAULT_REGION}:" | awk '{print $2}')"
+              echo "${AMI_ID}" > built-ami/id
 
     proxy-test:
       task: proxy-test
@@ -275,7 +277,7 @@ meta:
               LAUNCH_TEMPLATE_ID="$(cat ./terraform-output-management/outputs.json | jq -r .${LAUNCH_TEMPLATE_OUTPUT_NAME}.value.id)"
               LAUNCH_TEMPLATE_NAME="$(cat ./terraform-output-management/outputs.json | jq -r .${LAUNCH_TEMPLATE_OUTPUT_NAME}.value.name)"
               TAG_NAME="$(cat ./terraform-output-management/outputs.json | jq -r '.inspector_test_instance_tag.value.name')"
-              SOURCE_AMI_ID="$(cat ./source_ami/id)"
+              SOURCE_AMI_ID="$(if [ -f ./*-ami-id ]; then cat ./*-ami-id; else cat ./source_ami/id;  fi)"
               SOURCE_TEMPLATE_VERSION=$(aws ec2 describe-launch-templates --filters Name=launch-template-name,Values=${LAUNCH_TEMPLATE_NAME} | jq -r .LaunchTemplates[0].LatestVersionNumber)
               LAUNCH_TEMPLATE_VERSION=$(aws ec2 create-launch-template-version --launch-template-id ${LAUNCH_TEMPLATE_ID} --source-version ${SOURCE_TEMPLATE_VERSION} --launch-template-data "{\"ImageId\":\"${SOURCE_AMI_ID}\"}" | jq -r '.LaunchTemplateVersion.VersionNumber')
               RUNNING_INSTANCE_ID=$(aws ec2 run-instances --launch-template LaunchTemplateId=${LAUNCH_TEMPLATE_ID},Version=${LAUNCH_TEMPLATE_VERSION} --subnet-id ${SUBNET_ID} | jq -r '.Instances[0].InstanceId')
@@ -393,6 +395,8 @@ meta:
             tag: ((dataworks.docker_awscli_version))
         inputs:
           - name: source_ami
+        outputs:
+          - name: promoted-ami
         params:
           AWS_REGION: ((dataworks.aws_region))
           AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
@@ -404,7 +408,12 @@ meta:
             - |
               export AWS_DEFAULT_REGION
               source /assume-role
-              SOURCE_AMI_ID="$(cat ./source_ami/id)"
+              if [[ -f source_ami/keyval.properties ]]; then
+                raw_id="$(grep ami- source_ami/keyval.properties)"
+                SOURCE_AMI_ID="${raw_id::-1}"
+              else
+                SOURCE_AMI_ID="$(cat ./source_ami/id)"
+              fi
               TIMESTAMP=$(date +%s)
               AMI_NAME="${AMI_NAME_PREFIX}${TIMESTAMP}"
               AMI_ID=$(aws ec2 copy-image --name ${AMI_NAME} --source-image-id ${SOURCE_AMI_ID} --source-region ${AWS_REGION} | jq -r .ImageId)
@@ -423,6 +432,7 @@ meta:
               PERMISSIONS_JSON=$(aws ec2 describe-image-attribute --image-id ${SOURCE_AMI_ID} --attribute launchPermission | jq -r '.LaunchPermissions | { LaunchPermission: { Add: .}}')
               aws ec2 modify-image-attribute --image-id ${AMI_ID} --attribute launchPermission --cli-input-json "${PERMISSIONS_JSON}"
               echo "AMI copy complete - ${AMI_ID} / ${AMI_NAME}"
+              echo "${AMI_ID}" > promoted-ami/id
 
     inspector-cleanup:
       task: inspector-cleanup
@@ -477,21 +487,26 @@ meta:
             tag: ((dataworks.docker_awscli_version))
         params:
           AWS_DEFAULT_REGION: ((dataworks.aws_region))
+        outputs:
+          - name: tested_ami
         run:
           path: sh
           args:
             - -exc
             - |
-              AMI_ID=$(cat untested-dw-al2-emr-ami/id)
-              REPOS=$(ls | grep -v untested-dw-al2-emr-ami)
+              AMI_ID=$(grep ami- $UNTESTED_AMI/keyval.properties | cut -d '=' -f 1)
+              REPOS=$(ls | grep -v -e "$UNTESTED_AMI" -e "tested_ami")
 
               for i in $REPOS; do
-                if [[ $(cat $i/id) == $AMI_ID ]]; then
-                    echo $i has passed
+                if [[ ! -f "$i/results/$i.test" ]]; then
+                    echo "$i has not run"
+                    exit 1
+                elif [[ "$(cat "$i/results/$i.test")" == "$AMI_ID SUCCESS" ]]; then
+                    echo "$i has passed"
+                    echo "$AMI_ID" > tested_ami/id
                 else
-                    echo $i has failed
+                    echo "$i has failed"
                     exit 1
                 fi
               done
-
 

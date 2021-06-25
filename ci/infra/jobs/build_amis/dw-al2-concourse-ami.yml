@@ -39,14 +39,11 @@ jobs:
         trigger: true
         passed:
           - untested-dw-al2-concourse-ami
-      - get: analytical-dataset-generation
-        trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
           params:
             UNTESTED_AMI: untested-dw-al2-concourse-ami
           inputs:
-            - name: analytical-dataset-generation
             - name: untested-dw-al2-concourse-ami
       - put: concourse-ami-id
         params:

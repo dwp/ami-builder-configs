@@ -37,14 +37,11 @@ jobs:
         trigger: true
         passed:
           - untested-dw-al2-ecs-ami
-      - get: analytical-dataset-generation
-        trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
           params:
             UNTESTED_AMI: untested-dw-al2-ecs-ami
           inputs:
-            - name: analytical-dataset-generation
             - name: untested-dw-al2-ecs-ami
       - put: ecs-ami-id
         params:

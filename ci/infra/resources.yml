@@ -117,42 +117,6 @@ resources:
         state: available
         name: dw-al2-hardened-ami-arm-*
 
-  - name: untested-dw-al2-ecs-ami
-    type: ami
-    check_every: 5m
-    source:
-      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
-      region: ((dataworks.aws_region))
-      filters:
-        owner-id: ((dataworks.aws_management_acc))
-        is-public: false
-        state: available
-        name: untested-dw-al2-ecs-ami-*
-
-  - name: untested-dw-al2-concourse-ami
-    type: ami
-    check_every: 5m
-    source:
-      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
-      region: ((dataworks.aws_region))
-      filters:
-        owner-id: ((dataworks.aws_management_acc))
-        is-public: false
-        state: available
-        name: untested-dw-al2-concourse-ami-*
-
-  - name: untested-dw-al2-kafka-ami
-    type: ami
-    check_every: 5m
-    source:
-      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
-      region: ((dataworks.aws_region))
-      filters:
-        owner-id: ((dataworks.aws_management_acc))
-        is-public: false
-        state: available
-        name: untested-dw-al2-kafka-ami-*
-
   - name: aws-security-tools
     type: git
     source:
@@ -320,4 +284,22 @@ resources:
     type: file
 
   - name: untested-dw-al2-emr-ami
+    type: file
+
+  - name: ecs-ami-id
+    type: file
+
+  - name: untested-dw-al2-ecs-ami
+    type: file
+
+  - name: concourse-ami-id
+    type: file
+
+  - name: untested-dw-al2-concourse-ami
+    type: file
+
+  - name: kafka-ami-id
+    type: file
+
+  - name: untested-dw-al2-kafka-ami
     type: file

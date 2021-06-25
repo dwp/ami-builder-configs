@@ -1,18 +1,17 @@
 jobs:
   - name: untested-dw-al2-kafka-ami
     plan:
-      - get: untested-dw-al2-kafka-ami
-        trigger: false
+      - get: hardened-ami-id
+        trigger: true
+        passed:
+          - dw-al2-test-and-promote-hardened-ami
       - get: dw-al2-kafka-ami-config
         trigger: true
       - get: dw-al2-base-ami-template
         trigger: false
-      - .: (( inject meta.plan.get-al2-hardened-ami ))
-        passed:
-          - dw-al2-test-and-promote-hardened-ami
+      - get: dw-al2-hardened-ami-config
+        trigger: false
       - .: (( inject meta.plan.generate-manifest ))
-        input_mapping:
-          source_ami: dw-al2-hardened-ami
         config:
           params:
             AMI_NAME: untested-dw-al2-kafka-ami
@@ -22,49 +21,43 @@ jobs:
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-kafka-ami-config/dw-al2-kafka-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
-          source_config: dw-al2-kafka-ami-config
+          source_config: dw-al2-hardened-ami-config
           source_template: dw-al2-base-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
             - name: dw-al2-kafka-ami-config
+      - put: untested-dw-al2-kafka-ami
+        params:
+          file: built-ami/id
 
   - name: validate-kafka-ami
     plan:
       - get: untested-dw-al2-kafka-ami
-        trigger: false
+        trigger: true
         passed:
           - untested-dw-al2-kafka-ami
+      - get: analytical-dataset-generation
+        trigger: true
       - .: (( inject meta.plan.validate-ami ))
+        config:
+          params:
+            UNTESTED_AMI: untested-dw-al2-kafka-ami
+          inputs:
+            - name: analytical-dataset-generation
+            - name: untested-dw-al2-kafka-ami
+      - put: kafka-ami-id
+        params:
+          file: tested_ami/id
 
   - name: dw-al2-kafka-ami
     plan:
-      - get: untested-dw-al2-kafka-ami
+      - get: source_ami
+        resource: kafka-ami-id
         trigger: true
         passed:
           - validate-kafka-ami
-      - get: dw-al2-kafka-ami-config
-        trigger: false
-      - get: dw-al2-base-ami-template
-        trigger: false
-      - .: (( inject meta.plan.generate-manifest ))
-        input_mapping:
-          source_ami: dw-al2-hardened-ami
-        config:
-          params:
-            AMI_NAME: dw-al2-kafka-ami
-            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
-            SOURCE_AMI_OWNER: ((aws_account.management))
-            PROVISION_SCRIPT_KEYS: '["dw-al2-kafka-ami-config/dw-al2-kafka-ami/dw-kafka-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-kafka-ami-config/dw-al2-kafka-ami/"
-      - .: (( inject meta.plan.packer-bootstrap ))
-        input_mapping:
-          source_config: dw-al2-kafka-ami-config
-          source_template: dw-al2-base-ami-template
-      - .: (( inject meta.plan.build-ami ))
-        config:
-          inputs:
-            - name: dw-al2-kafka-ami-config
+      - .: (( inject meta.plan.promote-ami ))
 
   - name: dw-al2-kafka-ami-pr
     max_in_flight: 1
@@ -88,9 +81,9 @@ jobs:
             AMI_NAME: pr-dw-al2-kafka-ami
             SOURCE_AMI_NAME: dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
+            AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-kafka-ami-pr/dw-al2-kafka-ami/dw-kafka-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-kafka-ami-pr/dw-al2-kafka-ami/"
-            AMI_USERS: ((aws_account.development))
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-kafka-ami-pr

@@ -254,6 +254,20 @@ resources:
         - dw-al2-kafka-ami/*
         - ci/infra/jobs/build_amis/dw-al2-kafka-ami.yml
 
+  - name: dw-al2-nginx-ami-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-nginx-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-nginx-ami.yml
+
+  - name: dw-al2-nginx-ami-pr
+    .: (( inject meta.resources.ami-builder-configs-pr ))
+    source:
+      paths:
+        - dw-al2-nginx-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-nginx-ami.yml
+
   - name: concourse-release
     type: github-release
     source:
@@ -303,3 +317,9 @@ resources:
 
   - name: untested-dw-al2-kafka-ami
     type: file
+
+  - name: nginx-ami-id
+    type: file
+
+  - name: untested-dw-al2-nginx-ami
+    type: file  

@@ -15,6 +15,13 @@ resources:
       paths:
         - generic_packer_template.json.j2
 
+  - name: ami-builder-configs-update-pipeline
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - ci/*
+        - aviator.yml
+
   - name: dw-al2-base-ami-arm-template
     .: (( inject meta.resources.ami-builder-configs ))
     source:

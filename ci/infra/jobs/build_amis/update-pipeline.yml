@@ -1,0 +1,28 @@
+jobs:
+  - name: update-pipeline
+    plan:
+      - get: ami-builder-configs-update-pipeline
+        trigger: true
+      - task: aviator
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ((dataworks.docker_aviator_repository))
+              version: ((dataworks.docker_aviator_version))
+          run:
+            path: sh
+            args:
+              - -exc
+              - |
+                sed -i 's/fly/nofly/' aviator.yml
+                /usr/bin/aviator -f aviator.yml
+                mv aviator_pipeline.yml ../pipeline
+            dir: ami-builder-configs
+          inputs:
+            - name: ami-builder-configs
+          outputs:
+            - name: pipeline
+      - set_pipeline: ami-builder
+        file: pipeline/aviator_pipeline.yml

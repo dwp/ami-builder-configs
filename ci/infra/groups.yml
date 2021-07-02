@@ -50,3 +50,6 @@ groups:
       - dw-al2-weekly-test-hardened-ami
       - dw-al2-weekly-test-hardened-ami-arm
 
+  - name: update-pipeline
+    jobs:
+      - update-pipeline

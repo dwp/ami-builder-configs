@@ -37,7 +37,7 @@ jobs:
         trigger: true
         passed:
           - untested-dw-al2-hbase-ami
-      - get: analytical-dataset-generation
+      - get: aws-internal-compute
         trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:

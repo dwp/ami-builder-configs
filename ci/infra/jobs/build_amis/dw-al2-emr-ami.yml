@@ -43,7 +43,9 @@ jobs:
         trigger: true
       - get: aws-clive
         trigger: true
-      - get: dataworks-aws-mongo-latest
+      - get: aws-mongo-latest
+        trigger: true
+      - get: analytical-env
         trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
@@ -53,7 +55,8 @@ jobs:
             - name: analytical-dataset-generation
             - name: pdm-dataset-generation
             - name: aws-clive
-            - name: dataworks-aws-mongo-latest
+            - name: aws-mongo-latest
+            - name: analytical-env
             - name: untested-dw-al2-emr-ami
       - put: emr-ami-id
         params:

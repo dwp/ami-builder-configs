@@ -182,11 +182,11 @@ resources:
       paths:
         - results/analytical-dataset-generation.test
 
-  - name: dataworks-aws-mongo-latest
+  - name: aws-mongo-latest
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
-        - results/dataworks-aws-mongo-latest.test
+        - results/aws-mongo-latest.test
 
   - name: pdm-dataset-generation
     .: (( inject meta.resources.ami-builder-configs ))
@@ -199,6 +199,12 @@ resources:
     source:
       paths:
         - results/aws-clive.test
+
+  - name: analytical-env
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/analytical-env.test
 
   - name: aws-internal-compute
     .: (( inject meta.resources.ami-builder-configs ))

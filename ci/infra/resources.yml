@@ -161,6 +161,18 @@ resources:
       paths:
         - results/analytical-dataset-generation.test
 
+  - name: pdm-dataset-generation
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/pdm-dataset-generation.test
+
+  - name: aws-clive
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/aws-clive.test
+
   - name: dw-al2-hardened-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
     source:

@@ -17,7 +17,7 @@ jobs:
             AMI_NAME: untested-dw-al2-hbase-ami
             SOURCE_AMI_NAME: dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
-            PROVISION_SCRIPT_KEYS: '["dw-al2-hbase-ami-config/dw-al2-hbase-ami/dw-hbase-ami-install.sh"]'
+            PROVISION_SCRIPT_KEYS: '["dw-al2-emr-ami-pr/dw-al2-emr-ami/dw-emr-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hbase-ami-config/dw-al2-hbase-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
@@ -37,14 +37,14 @@ jobs:
         trigger: true
         passed:
           - untested-dw-al2-hbase-ami
-      - get: analytical-dataset-generation
+      - get: aws-internal-compute
         trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
           params:
             UNTESTED_AMI: untested-dw-al2-hbase-ami
           inputs:
-            - name: analytical-dataset-generation
+            - name: aws-internal-compute
             - name: untested-dw-al2-hbase-ami
       - put: emr-ami-id
         params:
@@ -82,7 +82,7 @@ jobs:
             SOURCE_AMI_NAME: dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
-            PROVISION_SCRIPT_KEYS: '["dw-al2-hbase-ami-pr/dw-al2-hbase-ami/dw-hbase-ami-install.sh"]'
+            PROVISION_SCRIPT_KEYS: '["dw-al2-emr-ami-pr/dw-al2-emr-ami/dw-emr-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hbase-ami-pr/dw-al2-hbase-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:

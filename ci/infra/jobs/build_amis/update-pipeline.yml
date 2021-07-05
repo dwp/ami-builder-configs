@@ -1,7 +1,8 @@
 jobs:
   - name: update-pipeline
     plan:
-      - get: ami-builder-configs-update-pipeline
+      - get: ami-builder-configs
+        resource: ami-builder-configs-update-pipeline
         trigger: true
       - task: aviator
         config:

@@ -155,12 +155,39 @@ resources:
         - dw-al2-emr-ami/*
         - ci/infra/jobs/build_amis/dw-al2-emr-ami-arm.yml
 
+  - name: dw-al2-hbase-ami-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-hbase-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-hbase-ami.yml
+
+  - name: dw-al2-hbase-ami-pr
+    .: (( inject meta.resources.ami-builder-configs-pr ))
+    source:
+      paths:
+        - dw-al2-hbase-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-hbase-ami.yml
+
+  - name: dw-al2-hbase-ami-arm-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-hbase-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-hbase-ami-arm.yml
+
   - name: analytical-dataset-generation
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
         - results/analytical-dataset-generation.test
 
+  - name: aws-internal-compute
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/aws-internal-compute.test
+        -
   - name: dw-al2-hardened-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
     source:
@@ -305,6 +332,9 @@ resources:
     type: file
 
   - name: untested-dw-al2-emr-ami
+    type: file
+
+  - name: untested-dw-al2-hbase-ami
     type: file
 
   - name: ecs-ami-id

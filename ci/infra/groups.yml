@@ -5,16 +5,19 @@ groups:
       - dw-al2-untested-hardened-ami
       - dw-al2-test-and-promote-hardened-ami
       - untested-dw-al2-emr-ami
+      - untested-dw-al2-hbase-ami
       - untested-dw-al2-ecs-ami
       - untested-dw-al2-concourse-ami
       - untested-dw-al2-kafka-ami
       - untested-dw-al2-nginx-ami
       - validate-emr-ami
+      - validate-hbase-ami
       - validate-ecs-ami
       - validate-concourse-ami
       - validate-kafka-ami
       - validate-nginx-ami
       - dw-al2-emr-ami
+      - dw-al2-hbase-ami
       - dw-al2-ecs-ami
       - dw-al2-concourse-ami
       - dw-al2-kafka-ami
@@ -27,12 +30,14 @@ groups:
       - dw-al2-test-and-promote-hardened-ami-arm
       - dw-al2-base-ami-arm
       - dw-al2-emr-ami-arm
+      - dw-al2-hbase-ami-arm
 
   - name: pull-requests
     jobs:
       - dw-al2-base-ami-pr
       - dw-al2-hardened-ami-pr
       - dw-al2-emr-ami-pr
+      - dw-al2-hbase-ami-pr
       - dw-al2-ecs-ami-pr
       - dw-al2-concourse-ami-pr
       - dw-al2-kafka-ami-pr
@@ -44,6 +49,7 @@ groups:
       - dw-al2-base-ami-arm-pr
       - dw-al2-hardened-ami-arm-pr
       - dw-al2-emr-ami-arm-pr
+      - dw-al2-hbase-ami-arm-pr
 
   - name: ami-weekly-test
     jobs:

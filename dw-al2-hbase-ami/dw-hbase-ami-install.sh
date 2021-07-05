@@ -1,0 +1,1 @@
+../dw-al2-emr-ami/dw-emr-ami-install.sh

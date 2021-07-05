@@ -31,22 +31,6 @@ jobs:
         params:
           file: built-ami/id
 
-  - name: validate-nginx-ami
-    plan:
-      - get: untested-dw-al2-nginx-ami
-        trigger: true
-        passed:
-          - untested-dw-al2-nginx-ami
-      - .: (( inject meta.plan.validate-ami ))
-        config:
-          params:
-            UNTESTED_AMI: untested-dw-al2-nginx-ami
-          inputs:
-            - name: untested-dw-al2-nginx-ami
-      - put: nginx-ami-id
-        params:
-          file: tested_ami/id
-
   - name: dw-al2-nginx-ami
     plan:
       - get: source_ami

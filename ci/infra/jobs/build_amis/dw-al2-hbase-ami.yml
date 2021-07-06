@@ -47,14 +47,14 @@ jobs:
           inputs:
             - name: aws-internal-compute
             - name: untested-dw-al2-hbase-ami
-      - put: emr-ami-id
+      - put: hbase-ami-id
         params:
           file: tested_ami/id
 
   - name: dw-al2-hbase-ami
     plan:
       - get: source_ami
-        resource: emr-ami-id
+        resource: hbase-ami-id
         trigger: true
         passed:
           - validate-hbase-ami

@@ -182,12 +182,35 @@ resources:
       paths:
         - results/analytical-dataset-generation.test
 
+  - name: aws-mongo-latest
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/aws-mongo-latest.test
+
+  - name: pdm-dataset-generation
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/pdm-dataset-generation.test
+
+  - name: aws-clive
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/aws-clive.test
+
+  - name: analytical-env
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/analytical-env.test
+
   - name: aws-internal-compute
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
         - results/aws-internal-compute.test
-        -
   - name: dw-al2-hardened-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
     source:

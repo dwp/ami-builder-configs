@@ -39,12 +39,24 @@ jobs:
           - untested-dw-al2-emr-ami
       - get: analytical-dataset-generation
         trigger: true
+      - get: pdm-dataset-generation
+        trigger: true
+      - get: aws-clive
+        trigger: true
+      - get: aws-mongo-latest
+        trigger: true
+      - get: analytical-env
+        trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
           params:
             UNTESTED_AMI: untested-dw-al2-emr-ami
           inputs:
             - name: analytical-dataset-generation
+            - name: pdm-dataset-generation
+            - name: aws-clive
+            - name: aws-mongo-latest
+            - name: analytical-env
             - name: untested-dw-al2-emr-ami
       - put: emr-ami-id
         params:

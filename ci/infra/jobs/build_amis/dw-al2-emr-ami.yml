@@ -54,6 +54,7 @@ jobs:
           params:
             UNTESTED_AMI: untested-dw-al2-emr-ami
           inputs:
+            - name: untested-dw-al2-emr-ami
             - name: analytical-dataset-generation
             - name: pdm-dataset-generation
             - name: aws-clive

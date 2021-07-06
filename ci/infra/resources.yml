@@ -206,6 +206,12 @@ resources:
       paths:
         - results/analytical-env.test
 
+  - name: dataworks-aws-kickstart-adg
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/dataworks-aws-kickstart-adg.test
+
   - name: aws-internal-compute
     .: (( inject meta.resources.ami-builder-configs ))
     source:

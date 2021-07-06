@@ -354,6 +354,9 @@ resources:
   - name: emr-ami-id
     type: file
 
+  - name: hbase-ami-id
+    type: file
+
   - name: untested-dw-al2-emr-ami
     type: file
 

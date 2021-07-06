@@ -176,7 +176,6 @@ resources:
         - dw-al2-hbase-ami/*
         - ci/infra/jobs/build_amis/dw-al2-hbase-ami-arm.yml
 
-
   - name: analytical-dataset-generation
     .: (( inject meta.resources.ami-builder-configs ))
     source:

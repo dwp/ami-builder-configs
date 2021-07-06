@@ -60,7 +60,7 @@ jobs:
             - name: aws-mongo-latest
             - name: analytical-env
             - name: dataworks-aws-kickstart-adg
-            - name: untested-dw-al2-emr-ami
+            - name: aws-clive
       - put: emr-ami-id
         params:
           file: tested_ami/id

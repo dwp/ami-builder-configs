@@ -1,12 +1,11 @@
 jobs:
   - name: untested-dw-al2-concourse-ami
     plan:
+      - .: (( inject meta.plan.get-concourse-release ))
       - get: hardened-ami-id
         trigger: true
         passed:
           - dw-al2-test-and-promote-hardened-ami
-      - get: concourse-release
-        trigger: true
       - get: dw-al2-concourse-ami-config
         trigger: true
       - get: dw-al2-base-ami-template

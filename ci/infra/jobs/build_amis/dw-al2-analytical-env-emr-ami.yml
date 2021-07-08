@@ -46,17 +46,17 @@ jobs:
           inputs:
             - name: untested-dw-al2-analytical-env-emr-ami
             - name: analytical-env
-      - put: emr-ami-id
+      - put: analytical-env-emr-ami-id
         params:
           file: tested_ami/id
 
   - name: dw-al2-analytical-env-emr-ami
     plan:
       - get: source_ami
-        resource: emr-ami-id
+        resource: analytical-env-emr-ami-id
         trigger: true
         passed:
-          - validate-emr-ami
+          - validate-analytical-env-emr-ami
       - .: (( inject meta.plan.promote-ami ))
 
   - name: dw-al2-analytical-env-emr-ami-pr

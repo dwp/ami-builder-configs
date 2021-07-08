@@ -206,6 +206,12 @@ resources:
       paths:
         - results/analytical-env.test
 
+  - name: concourse
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/concourse.test
+
   - name: dataworks-aws-kickstart-adg
     .: (( inject meta.resources.ami-builder-configs ))
     source:
@@ -217,6 +223,12 @@ resources:
     source:
       paths:
         - results/aws-internal-compute.test
+
+  - name: metrics-infrastructure
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/metrics-infrastructure.test
 
   - name: dw-al2-hardened-ami-config
     .: (( inject meta.resources.ami-builder-configs ))

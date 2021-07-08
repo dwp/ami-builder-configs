@@ -419,3 +419,6 @@ resources:
 
   - name: untested-dw-al2-nginx-ami
     type: file
+
+  - name: untested-dw-al2-analytical-env-emr-ami
+    type: file

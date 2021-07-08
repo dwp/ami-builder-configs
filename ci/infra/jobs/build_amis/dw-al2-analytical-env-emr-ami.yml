@@ -14,11 +14,11 @@ jobs:
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
-            AMI_NAME: untested-dw-al2-emr-ami
+            AMI_NAME: untested-dw-al2-analytical-env-emr-ami
             SOURCE_AMI_NAME: dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
-            PROVISION_SCRIPT_KEYS: '["dw-al2-emr-ami-config/dw-al2-emr-ami/dw-emr-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-emr-ami-config/dw-al2-emr-ami/"
+            PROVISION_SCRIPT_KEYS: '["dw-al2-analytical-env-emr-ami-config/dw-al2-analytical-env-emr-ami/dw-analytical-env-emr-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-analytical-env-emr-ami-config/dw-al2-analytical-env-emr-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-hardened-ami-config
@@ -26,46 +26,31 @@ jobs:
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
-            - name: dw-al2-emr-ami-config
-      - put: untested-dw-al2-emr-ami
+            - name: dw-al2-analytical-env-emr-ami-config
+      - put: untested-dw-al2-analytical-env-emr-ami
         params:
           file: built-ami/id
 
-  - name: validate-emr-ami
+  - name: validate-analytical-env-emr-ami
     plan:
-      - get: untested-dw-al2-emr-ami
+      - get: untested-dw-al2-analytical-env-emr-ami
         trigger: true
         passed:
-          - untested-dw-al2-emr-ami
-      - get: analytical-dataset-generation
-        trigger: true
-      - get: pdm-dataset-generation
-        trigger: true
-      - get: aws-clive
-        trigger: true
-      - get: aws-mongo-latest
-        trigger: true
+          - untested-dw-al2-analytical-env-emr-ami
       - get: analytical-env
-        trigger: true
-      - get: dataworks-aws-kickstart-adg
         trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
           params:
-            UNTESTED_AMI: untested-dw-al2-emr-ami
+            UNTESTED_AMI: untested-dw-al2-analytical-env-emr-ami
           inputs:
-            - name: untested-dw-al2-emr-ami
-            - name: analytical-dataset-generation
-            - name: pdm-dataset-generation
-            - name: aws-clive
-            - name: aws-mongo-latest
+            - name: untested-dw-al2-analytical-env-emr-ami
             - name: analytical-env
-            - name: dataworks-aws-kickstart-adg
       - put: emr-ami-id
         params:
           file: tested_ami/id
 
-  - name: dw-al2-emr-ami
+  - name: dw-al2-analytical-env-emr-ami
     plan:
       - get: source_ami
         resource: emr-ami-id
@@ -74,17 +59,17 @@ jobs:
           - validate-emr-ami
       - .: (( inject meta.plan.promote-ami ))
 
-  - name: dw-al2-emr-ami-pr
+  - name: dw-al2-analytical-env-emr-ami-pr
     max_in_flight: 1
     plan:
-      - get: dw-al2-emr-ami-pr
+      - get: dw-al2-analytical-env-emr-ami-pr
         trigger: true
         version: every
       - get: dw-al2-base-ami-template
         trigger: false
-      - put: dw-al2-emr-ami-pr
+      - put: dw-al2-analytical-env-emr-ami-pr
         params:
-          path: dw-al2-emr-ami-pr
+          path: dw-al2-analytical-env-emr-ami-pr
           status: pending
       - .: (( inject meta.plan.get-al2-hardened-ami ))
         trigger: false
@@ -93,29 +78,29 @@ jobs:
           source_ami: dw-al2-hardened-ami
         config:
           params:
-            AMI_NAME: pr-dw-al2-emr-ami
+            AMI_NAME: pr-dw-al2-analytical-env-emr-ami
             SOURCE_AMI_NAME: dw-al2-hardened-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
-            PROVISION_SCRIPT_KEYS: '["dw-al2-emr-ami-pr/dw-al2-emr-ami/dw-emr-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-emr-ami-pr/dw-al2-emr-ami/"
+            PROVISION_SCRIPT_KEYS: '["dw-al2-analytical-env-emr-ami-pr/dw-al2-analytical-env-emr-ami/dw-analytical-env-emr-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-analytical-env-emr-ami-pr/dw-al2-analytical-env-emr-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
-          source_config: dw-al2-emr-ami-pr
+          source_config: dw-al2-analytical-env-emr-ami-pr
           source_template: dw-al2-base-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           inputs:
-            - name: dw-al2-emr-ami-pr
+            - name: dw-al2-analytical-env-emr-ami-pr
         on_failure:
-          put: dw-al2-emr-ami-pr
+          put: dw-al2-analytical-env-emr-ami-pr
           params:
-            path: dw-al2-emr-ami-pr
+            path: dw-al2-analytical-env-emr-ami-pr
             status: failure
         on_success:
-          put: dw-al2-emr-ami-pr
+          put: dw-al2-analytical-env-emr-ami-pr
           params:
-            path: dw-al2-emr-ami-pr
+            path: dw-al2-analytical-env-emr-ami-pr
             status: success

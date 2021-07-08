@@ -422,3 +422,6 @@ resources:
 
   - name: untested-dw-al2-analytical-env-emr-ami
     type: file
+
+  - name: analytical-env-emr-ami-id
+    type: file

@@ -224,6 +224,12 @@ resources:
       paths:
         - results/aws-internal-compute.test
 
+  - name: metrics-infrastructure
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/metrics-infrastructure.test
+
   - name: dw-al2-hardened-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
     source:

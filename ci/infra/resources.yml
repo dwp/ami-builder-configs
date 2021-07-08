@@ -1,4 +1,4 @@
-hardened-ami-idresources:
+resources:
   - name: aws-management-infrastructure
     type: git
     source:

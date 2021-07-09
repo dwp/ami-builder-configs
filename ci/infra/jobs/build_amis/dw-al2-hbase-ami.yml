@@ -59,6 +59,9 @@ jobs:
         passed:
           - validate-hbase-ami
       - .: (( inject meta.plan.promote-ami ))
+        config:
+          params:
+            AMI_NAME_PREFIX: "dw-al2-hbase-ami-"
 
   - name: dw-al2-hbase-ami-pr
     max_in_flight: 1

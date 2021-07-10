@@ -55,6 +55,9 @@ jobs:
         passed:
           - validate-nginx-ami
       - .: (( inject meta.plan.promote-ami ))
+        config:
+          params:
+            AMI_NAME_PREFIX: "dw-al2-nginx-ami-"
 
   - name: dw-al2-nginx-ami-pr
     max_in_flight: 1

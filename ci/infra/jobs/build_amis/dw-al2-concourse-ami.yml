@@ -62,6 +62,9 @@ jobs:
         passed:
           - validate-concourse-ami
       - .: (( inject meta.plan.promote-ami ))
+        config:
+          params:
+            AMI_NAME_PREFIX: "dw-al2-concourse-ami-"
 
   - name: dw-al2-concourse-ami-pr
     max_in_flight: 1

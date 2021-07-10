@@ -55,6 +55,9 @@ jobs:
         passed:
           - validate-kafka-ami
       - .: (( inject meta.plan.promote-ami ))
+        config:
+          params:
+            AMI_NAME_PREFIX: "dw-al2-kafka-ami-"
 
   - name: dw-al2-kafka-ami-pr
     max_in_flight: 1

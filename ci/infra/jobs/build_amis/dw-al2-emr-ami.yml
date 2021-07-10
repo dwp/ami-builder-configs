@@ -73,6 +73,9 @@ jobs:
         passed:
           - validate-emr-ami
       - .: (( inject meta.plan.promote-ami ))
+        config:
+          params:
+            AMI_NAME_PREFIX: "dw-al2-emr-ami-"
 
   - name: dw-al2-emr-ami-pr
     max_in_flight: 1

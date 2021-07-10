@@ -28,4 +28,4 @@ scipy==1.6.2
 seaborn==0.11.1
 EOF
 
-pip3 install -r /tmp/py_requirements.txt || true
+pip3 install -r /tmp/py_requirements.txt

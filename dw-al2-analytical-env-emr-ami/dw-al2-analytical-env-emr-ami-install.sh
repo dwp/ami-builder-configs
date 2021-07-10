@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eEu
+#set -eEu
 
 # Make changes to hardened-ami that are required for EMR to work
 
@@ -28,4 +28,8 @@ scipy==1.6.2
 seaborn==0.11.1
 EOF
 
+cat /tmp/py_requirements.txt
+
 pip3 install -r /tmp/py_requirements.txt
+
+echo "pip3 install -r /tmp/py_requirements.txt"

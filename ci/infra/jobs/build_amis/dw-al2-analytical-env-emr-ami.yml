@@ -58,6 +58,9 @@ jobs:
         passed:
           - validate-analytical-env-emr-ami
       - .: (( inject meta.plan.promote-ami ))
+        config:
+          params:
+            AMI_NAME_PREFIX: "dw-al2-analytical-env-emr-ami-"
 
   - name: dw-al2-analytical-env-emr-ami-pr
     max_in_flight: 1

@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eEu
+#set -eEu
 
 # Make changes to hardened-ami that are required for EMR to work
 
@@ -16,7 +16,7 @@ sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile
 sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile.d/*.sh
 sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
 
-cat <<EOF > /etc/py_requirements.txt
+cat <<EOF > ~/py_requirements.txt
 nltk==3.6.1
 yake==0.4.7
 spark-nlp==3.0.1
@@ -28,4 +28,5 @@ scipy==1.6.2
 seaborn==0.11.1
 EOF
 
-pip3 install -r /etc/py_requirements.txt > /etc/py_requirements.logs
+pip3 install -r ~/py_requirements.txt > ~/py_requirements.logs
+

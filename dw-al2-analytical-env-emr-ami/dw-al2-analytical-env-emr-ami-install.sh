@@ -11,6 +11,10 @@ echo "https_proxy=$https_proxy"
 echo "NO_PROXY=$NO_PROXY"
 echo "no_proxy=$no_proxy"
 
+export https_proxy=$https_proxy
+export http_proxy=$http_proxy
+export no_proxy=$no_proxy
+
 # Change SELinux config to be permissive
 cat > /etc/selinux/config << EOF
 SELINUX=permissive

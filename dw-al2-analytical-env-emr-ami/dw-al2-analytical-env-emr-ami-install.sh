@@ -15,6 +15,10 @@ export https_proxy=$https_proxy
 export http_proxy=$http_proxy
 export no_proxy=$no_proxy
 
+
+apk update
+apk add make automake gcc g++ subversion python3-dev
+
 # Change SELinux config to be permissive
 cat > /etc/selinux/config << EOF
 SELINUX=permissive

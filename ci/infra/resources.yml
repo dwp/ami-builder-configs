@@ -236,6 +236,12 @@ resources:
       paths:
         - results/ingestion-ecs-cluster.test
 
+  - name: data-egress
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/data-egress.test
+
   - name: dw-al2-hardened-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
     source:

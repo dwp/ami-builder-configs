@@ -40,6 +40,7 @@ jobs:
       - get: metrics-infrastructure
         trigger: true
       - get: ingestion-ecs-cluster
+      - get: data-egress
         trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
@@ -49,6 +50,7 @@ jobs:
             - name: untested-dw-al2-ecs-ami
             - name: metrics-infrastructure
             - name: ingestion-ecs-cluster
+            - name: data-egress
       - put: ecs-ami-id
         params:
           file: tested_ami/id

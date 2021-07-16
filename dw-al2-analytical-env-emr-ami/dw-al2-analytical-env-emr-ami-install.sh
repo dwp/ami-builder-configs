@@ -37,5 +37,5 @@ scipy==1.6.2
 seaborn==0.11.1
 EOF
 
-pip3 --no-cache-dir install -r ~/py_requirements.txt > ~/py_requirements.logs
+pip3 --no-cache-dir install -r ~/py_requirements.txt
 

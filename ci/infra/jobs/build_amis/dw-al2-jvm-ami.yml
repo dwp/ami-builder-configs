@@ -40,12 +40,15 @@ jobs:
           - untested-dw-al2-jvm-ami
       - get: dataworks-aws-ingest-consumers
         trigger: true
+      - get: aws-snapshot-sender
+        trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
           params:
             UNTESTED_AMI: untested-dw-al2-jvm-ami
           inputs:
             - name: dataworks-aws-ingest-consumers
+            - name: aws-snapshot-sender
             - name: untested-dw-al2-jvm-ami
       - put: jvm-ami-id
         params:

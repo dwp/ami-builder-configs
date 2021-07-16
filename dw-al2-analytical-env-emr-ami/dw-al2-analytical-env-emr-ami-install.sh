@@ -4,20 +4,13 @@
 # Make changes to hardened-ami that are required for EMR to work
 
 # Set Proxy
-echo "HTTP_PROXY=$HTTP_PROXY"
-echo "HTTPS_PROXY=$HTTPS_PROXY"
 echo "http_proxy=$http_proxy"
 echo "https_proxy=$https_proxy"
-echo "NO_PROXY=$NO_PROXY"
 echo "no_proxy=$no_proxy"
 
 export https_proxy=$https_proxy
 export http_proxy=$http_proxy
 export no_proxy=$no_proxy
-
-
-apk update
-apk add make automake gcc g++ subversion python3-dev
 
 # Change SELinux config to be permissive
 cat > /etc/selinux/config << EOF
@@ -38,10 +31,11 @@ yake==0.4.7
 spark-nlp==3.0.1
 scikit-learn==0.24.1
 scikit-spark==0.4.0
+torch==1.8.1
 keras==2.4.3
 scipy==1.6.2
 seaborn==0.11.1
 EOF
 
-pip3 install -r ~/py_requirements.txt > ~/py_requirements.logs
+pip3 --no-cache-dir install -r ~/py_requirements.txt > ~/py_requirements.logs
 

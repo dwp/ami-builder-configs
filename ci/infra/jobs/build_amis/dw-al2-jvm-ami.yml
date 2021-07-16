@@ -1,0 +1,110 @@
+jobs:
+  - name: untested-dw-al2-jvm-ami
+    plan:
+      - get: hardened-ami-id
+        trigger: true
+        passed:
+          - dw-al2-test-and-promote-hardened-ami
+      - get: dw-al2-jvm-ami-config
+        trigger: true
+      - get: dw-al2-base-ami-template
+        trigger: false
+      - get: dw-al2-hardened-ami-config
+        trigger: false
+      - .: (( inject meta.plan.generate-manifest ))
+        config:
+          params:
+            AMI_NAME: untested-dw-al2-jvm-ami
+            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
+            SOURCE_AMI_OWNER: ((aws_account.management))
+            PROVISION_SCRIPT_KEYS: '["dw-al2-jvm-ami-config/dw-al2-jvm-ami/dw-jvm-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-jvm-ami-config/dw-al2-jvm-ami/"
+
+      - .: (( inject meta.plan.packer-bootstrap ))
+        input_mapping:
+          source_config: dw-al2-hardened-ami-config
+          source_template: dw-al2-base-ami-template
+      - .: (( inject meta.plan.build-ami ))
+        config:
+          inputs:
+            - name: dw-al2-jvm-ami-config
+      - put: untested-dw-al2-jvm-ami
+        params:
+          file: built-ami/id
+
+  - name: validate-jvm-ami
+    plan:
+      - get: untested-dw-al2-jvm-ami
+        trigger: true
+        passed:
+          - untested-dw-al2-jvm-ami
+      - get: dataworks-aws-ingest-consumers
+        trigger: true
+      - .: (( inject meta.plan.validate-ami ))
+        config:
+          params:
+            UNTESTED_AMI: untested-dw-al2-jvm-ami
+          inputs:
+            - name: dataworks-aws-ingest-consumers
+            - name: untested-dw-al2-jvm-ami
+      - put: jvm-ami-id
+        params:
+          file: tested_ami/id
+
+  - name: dw-al2-jvm-ami
+    plan:
+      - get: source_ami
+        resource: jvm-ami-id
+        trigger: true
+        passed:
+          - validate-jvm-ami
+      - .: (( inject meta.plan.promote-ami ))
+        config:
+          params:
+            AMI_NAME_PREFIX: "dw-al2-jvm-ami-"
+
+  - name: dw-al2-jvm-ami-pr
+    max_in_flight: 1
+    plan:
+      - get: dw-al2-jvm-ami-pr
+        trigger: true
+        version: every
+      - get: dw-al2-base-ami-template
+        trigger: false
+      - put: dw-al2-jvm-ami-pr
+        params:
+          path: dw-al2-jvm-ami-pr
+          status: pending
+      - .: (( inject meta.plan.get-al2-hardened-ami ))
+        trigger: false
+      - .: (( inject meta.plan.generate-manifest ))
+        input_mapping:
+          source_ami: dw-al2-hardened-ami
+        config:
+          params:
+            AMI_NAME: pr-dw-al2-jvm-ami
+            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
+            SOURCE_AMI_OWNER: ((aws_account.management))
+            AMI_USERS: ((aws_account.development))
+            PROVISION_SCRIPT_KEYS: '["dw-al2-jvm-ami-pr/dw-al2-jvm-ami/dw-jvm-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-jvm-ami-pr/dw-al2-jvm-ami/"
+      - .: (( inject meta.plan.packer-bootstrap ))
+        input_mapping:
+          source_config: dw-al2-jvm-ami-pr
+          source_template: dw-al2-base-ami-template
+      - .: (( inject meta.plan.build-ami ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
+          inputs:
+            - name: dw-al2-jvm-ami-pr
+        on_failure:
+          put: dw-al2-jvm-ami-pr
+          params:
+            path: dw-al2-jvm-ami-pr
+            status: failure
+        on_success:
+          put: dw-al2-jvm-ami-pr
+          params:
+            path: dw-al2-jvm-ami-pr
+            status: success

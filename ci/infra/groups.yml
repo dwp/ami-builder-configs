@@ -11,13 +11,15 @@ groups:
       - untested-dw-al2-kafka-ami
       - untested-dw-al2-nginx-ami
       - untested-dw-al2-analytical-env-emr-ami
+      - untested-dw-al2-jvm-ami
       - validate-emr-ami
       - validate-hbase-ami
       - validate-ecs-ami
       - validate-concourse-ami
       - validate-kafka-ami
       - validate-nginx-ami
-      - validate-analytical-env-emr-ami
+      - validate-analytical-env-emr-am
+      - validate-jvm-ami
       - dw-al2-emr-ami
       - dw-al2-hbase-ami
       - dw-al2-ecs-ami
@@ -25,6 +27,7 @@ groups:
       - dw-al2-kafka-ami
       - dw-al2-nginx-ami
       - dw-al2-analytical-env-emr-ami
+      - dw-al2-jvm-ami
 
   - name: al2-arm-amis
     jobs:
@@ -46,6 +49,7 @@ groups:
       - dw-al2-kafka-ami-pr
       - dw-al2-nginx-ami-pr
       - dw-al2-analytical-env-emr-ami-pr
+      - dw-al2-jvm-ami-pr
 
 
   - name: pull-requests-arm

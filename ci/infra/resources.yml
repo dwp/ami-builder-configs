@@ -169,6 +169,20 @@ resources:
         - dw-al2-hbase-ami/*
         - ci/infra/jobs/build_amis/dw-al2-hbase-ami.yml
 
+  - name: dw-al2-jvm-ami-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-jvm-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-jvm-ami.yml
+
+  - name: dw-al2-jvm-ami-pr
+    .: (( inject meta.resources.ami-builder-configs-pr ))
+    source:
+      paths:
+        - dw-al2-jvm-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-jvm-ami.yml
+
   - name: dw-al2-hbase-ami-arm-config
     .: (( inject meta.resources.ami-builder-configs ))
     source:
@@ -224,11 +238,23 @@ resources:
       paths:
         - results/aws-internal-compute.test
 
+  - name: dataworks-aws-ingest-consumers
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/dataworks-aws-ingest-consumers.test
+
   - name: metrics-infrastructure
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
         - results/metrics-infrastructure.test
+
+  - name: ingestion-ecs-cluster
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/ingestion-ecs-cluster.test
 
   - name: dw-al2-hardened-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
@@ -390,10 +416,16 @@ resources:
   - name: hbase-ami-id
     type: file
 
+  - name: jvm-ami-id
+    type: file
+
   - name: untested-dw-al2-emr-ami
     type: file
 
   - name: untested-dw-al2-hbase-ami
+    type: file
+
+  - name: untested-dw-al2-jvm-ami
     type: file
 
   - name: ecs-ami-id

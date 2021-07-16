@@ -230,6 +230,12 @@ resources:
       paths:
         - results/metrics-infrastructure.test
 
+  - name: ingestion-ecs-cluster
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/ingestion-ecs-cluster.test
+
   - name: dw-al2-hardened-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
     source:

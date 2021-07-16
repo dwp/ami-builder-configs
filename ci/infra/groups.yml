@@ -18,7 +18,7 @@ groups:
       - validate-concourse-ami
       - validate-kafka-ami
       - validate-nginx-ami
-      - validate-analytical-env-emr-am
+      - validate-analytical-env-emr-ami
       - validate-jvm-ami
       - dw-al2-emr-ami
       - dw-al2-hbase-ami

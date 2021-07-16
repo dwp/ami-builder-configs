@@ -38,7 +38,6 @@ yake==0.4.7
 spark-nlp==3.0.1
 scikit-learn==0.24.1
 scikit-spark==0.4.0
-torch==1.8.1
 keras==2.4.3
 scipy==1.6.2
 seaborn==0.11.1

@@ -370,6 +370,20 @@ resources:
         - dw-al2-nginx-ami/*
         - ci/infra/jobs/build_amis/dw-al2-nginx-ami.yml
 
+  - name: dw-al2-analytical-env-emr-ami-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-analytical-env-emr-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-analytical-env-emr-ami.yml
+
+  - name: dw-al2-analytical-env-emr-ami-pr
+    .: (( inject meta.resources.ami-builder-configs-pr ))
+    source:
+      paths:
+        - dw-al2-analytical-env-emr-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-analytical-env-emr-ami.yml
+
   - name: concourse-release
     type: github-release
     source:
@@ -436,4 +450,10 @@ resources:
     type: file
 
   - name: untested-dw-al2-nginx-ami
-    type: file  
+    type: file
+
+  - name: untested-dw-al2-analytical-env-emr-ami
+    type: file
+
+  - name: analytical-env-emr-ami-id
+    type: file

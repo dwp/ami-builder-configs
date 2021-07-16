@@ -45,8 +45,6 @@ jobs:
         trigger: true
       - get: aws-mongo-latest
         trigger: true
-      - get: analytical-env
-        trigger: true
       - get: dataworks-aws-kickstart-adg
         trigger: true
       - .: (( inject meta.plan.validate-ami ))
@@ -59,7 +57,6 @@ jobs:
             - name: pdm-dataset-generation
             - name: aws-clive
             - name: aws-mongo-latest
-            - name: analytical-env
             - name: dataworks-aws-kickstart-adg
       - put: emr-ami-id
         params:

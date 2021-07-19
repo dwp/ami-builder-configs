@@ -262,6 +262,12 @@ resources:
       paths:
         - results/ingestion-ecs-cluster.test
 
+  - name: orchestration-service
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/orchestration-service.test
+
   - name: dw-al2-hardened-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
     source:

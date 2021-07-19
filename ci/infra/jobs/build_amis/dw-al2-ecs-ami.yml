@@ -39,6 +39,8 @@ jobs:
           - untested-dw-al2-ecs-ami
       - get: metrics-infrastructure
         trigger: true
+      - get: orchestration-service
+        trigger: true
       - get: ingestion-ecs-cluster
         trigger: true
       - .: (( inject meta.plan.validate-ami ))
@@ -49,6 +51,7 @@ jobs:
             - name: untested-dw-al2-ecs-ami
             - name: metrics-infrastructure
             - name: ingestion-ecs-cluster
+            - name: orchestration-service
       - put: ecs-ami-id
         params:
           file: tested_ami/id

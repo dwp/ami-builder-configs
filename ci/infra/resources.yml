@@ -244,6 +244,12 @@ resources:
       paths:
         - results/dataworks-aws-ingest-consumers.test
 
+  - name: aws-snapshot-sender
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/aws-snapshot-sender.test
+
   - name: metrics-infrastructure
     .: (( inject meta.resources.ami-builder-configs ))
     source:

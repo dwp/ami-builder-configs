@@ -236,3 +236,7 @@ In this pattern, we build a new image on the left, run tests against it in the c
 The tests that are implemented from `dw-al2-base-ami` to `dw-al2-hardened-ami` are security scans. This is not sufficient for the service specific testing so, the testing is done within the repo that consumes the AMI. The release of a new untested AMI triggers a build for each consumer in a lower environment, runs the tests available in each repo against it, then pushes the result in `<AMI_ID> <SUCCESS or FAILED>` to `results/<REPO_NAME>.test` in this repo.
 
 When this dir is updated, it triggers the `validate-emr-ami` job that checks to see if all expected consumers have posted a `SUCCESS` mapped against the current `AMI_ID`. Once they all pass for an AMI, the AMI is promoted.
+
+## Per service AMI testing
+
+Sometimes a service requires a more individual test writing, due to its method of deployment or service type etc.  The process for bespoke testing of each service, can be found in the [Common Wiki](https://github.ucds.io/dip/aws-common-infrastructure/wiki/AMI-Testing).

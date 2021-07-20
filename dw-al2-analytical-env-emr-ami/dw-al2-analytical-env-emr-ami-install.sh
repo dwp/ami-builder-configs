@@ -35,6 +35,8 @@ torch==1.8.1
 keras==2.4.3
 scipy==1.6.2
 seaborn==0.11.1
+pandas==1.3.0
+numpy==1.17.3
 EOF
 
 pip3 --no-cache-dir install -r ~/py_requirements.txt

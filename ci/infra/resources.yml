@@ -274,6 +274,12 @@ resources:
       paths:
         - results/orchestration-service.test
 
+  - name: s3-object-tagger-infra
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/s3-object-tagger-infra.test
+
   - name: dw-al2-hardened-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
     source:

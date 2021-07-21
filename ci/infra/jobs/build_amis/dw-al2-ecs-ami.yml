@@ -39,6 +39,8 @@ jobs:
           - untested-dw-al2-ecs-ami
       - get: metrics-infrastructure
         trigger: true
+      - get: orchestration-service
+        trigger: true
       - get: ingestion-ecs-cluster
       - get: data-egress
         trigger: true
@@ -51,6 +53,7 @@ jobs:
             - name: metrics-infrastructure
             - name: ingestion-ecs-cluster
             - name: data-egress
+            - name: orchestration-service
       - put: ecs-ami-id
         params:
           file: tested_ami/id

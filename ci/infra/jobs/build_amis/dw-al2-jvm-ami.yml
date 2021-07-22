@@ -42,6 +42,11 @@ jobs:
         trigger: true
       - get: aws-snapshot-sender
         trigger: true
+      - get: aws-internal-compute-jvm-ami-test
+        trigger: true
+      - get: aws-crypto
+        resource: aws-crypto-dks
+        trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
           params:
@@ -50,6 +55,8 @@ jobs:
             - name: dataworks-aws-ingest-consumers
             - name: aws-snapshot-sender
             - name: untested-dw-al2-jvm-ami
+            - name: aws-internal-compute-jvm-ami-test
+            - name: aws-crypto
       - put: jvm-ami-id
         params:
           file: tested_ami/id

@@ -232,13 +232,13 @@ resources:
       paths:
         - results/dataworks-aws-kickstart-adg.test
 
-  - name: aws-internal-compute-hbase
+  - name: aws-internal-compute-hbase-ami-test
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
         - results/aws-internal-compute-hbase-ami-test.test
   
-  - name: aws-internal-compute-htme
+  - name: aws-internal-compute-jvm-ami-test
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:

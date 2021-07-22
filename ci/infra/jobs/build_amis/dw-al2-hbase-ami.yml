@@ -38,14 +38,14 @@ jobs:
         trigger: true
         passed:
           - untested-dw-al2-hbase-ami
-      - get: aws-internal-compute-hbase
+      - get: aws-internal-compute-hbase-ami-test
         trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
           params:
             UNTESTED_AMI: untested-dw-al2-hbase-ami
           inputs:
-            - name: aws-internal-compute
+            - name: aws-internal-compute-hbase-ami-test
             - name: untested-dw-al2-hbase-ami
       - put: hbase-ami-id
         params:

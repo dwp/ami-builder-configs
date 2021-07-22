@@ -42,6 +42,10 @@ jobs:
         trigger: true
       - get: aws-snapshot-sender
         trigger: true
+      - get: aws-internal-compute-htme
+        trigger: true
+      - get: aws-crypto-dks
+        trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
           params:

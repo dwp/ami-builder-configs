@@ -232,11 +232,23 @@ resources:
       paths:
         - results/dataworks-aws-kickstart-adg.test
 
-  - name: aws-internal-compute
+  - name: aws-internal-compute-hbase
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
-        - results/aws-internal-compute.test
+        - results/aws-internal-compute-hbase-ami-test.test
+  
+  - name: aws-internal-compute-htme
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/aws-internal-compute-jvm-ami-test.test
+
+  - name: aws-crypto-dks
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/aws-crypto.test
 
   - name: dataworks-aws-ingest-consumers
     .: (( inject meta.resources.ami-builder-configs ))

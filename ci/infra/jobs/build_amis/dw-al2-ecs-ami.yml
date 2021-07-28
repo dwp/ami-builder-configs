@@ -47,8 +47,6 @@ jobs:
         trigger: true
       - get: s3-object-tagger-infra
         trigger: true
-      - get: dataworks-aws-ingest-consumers
-        trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
           params:
@@ -60,7 +58,6 @@ jobs:
             - name: data-egress
             - name: orchestration-service
             - name: s3-object-tagger-infra
-            - name: dataworks-aws-ingest-consumers
       - put: ecs-ami-id
         params:
           file: tested_ami/id

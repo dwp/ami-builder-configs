@@ -9,7 +9,6 @@ groups:
       - untested-dw-al2-ecs-ami
       - untested-dw-al2-concourse-ami
       - untested-dw-al2-kafka-ami
-      - untested-dw-al2-nginx-ami
       - untested-dw-al2-analytical-env-emr-ami
       - untested-dw-al2-jvm-ami
       - validate-emr-ami
@@ -17,7 +16,6 @@ groups:
       - validate-ecs-ami
       - validate-concourse-ami
       - validate-kafka-ami
-      - validate-nginx-ami
       - validate-analytical-env-emr-ami
       - validate-jvm-ami
       - dw-al2-emr-ami
@@ -25,7 +23,6 @@ groups:
       - dw-al2-ecs-ami
       - dw-al2-concourse-ami
       - dw-al2-kafka-ami
-      - dw-al2-nginx-ami
       - dw-al2-analytical-env-emr-ami
       - dw-al2-jvm-ami
 
@@ -47,7 +44,6 @@ groups:
       - dw-al2-ecs-ami-pr
       - dw-al2-concourse-ami-pr
       - dw-al2-kafka-ami-pr
-      - dw-al2-nginx-ami-pr
       - dw-al2-analytical-env-emr-ami-pr
       - dw-al2-jvm-ami-pr
 

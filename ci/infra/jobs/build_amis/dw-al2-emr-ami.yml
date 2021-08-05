@@ -47,6 +47,8 @@ jobs:
         trigger: true
       - get: dataworks-aws-kickstart-adg
         trigger: true
+      - get: aws-uc-feature-infrastructure
+        trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
           params:
@@ -58,6 +60,7 @@ jobs:
             - name: aws-clive
             - name: aws-mongo-latest
             - name: dataworks-aws-kickstart-adg
+            - name: aws-uc-feature-infrastructure
       - put: emr-ami-id
         params:
           file: tested_ami/id

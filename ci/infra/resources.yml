@@ -22,12 +22,6 @@ resources:
         - ci/*
         - aviator.yml
 
-  - name: dw-al2-base-ami-arm-template
-    .: (( inject meta.resources.ami-builder-configs ))
-    source:
-      paths:
-        - generic_packer_arm_template.json.j2
-
   - name: amzn2-ami-hvm
     type: ami
     check_every: 5m
@@ -39,18 +33,6 @@ resources:
         state: available
         name: amzn2-ami-hvm-*
         architecture: x86_64
-
-  - name: amzn2-ami-hvm-arm
-    type: ami
-    check_every: 5m
-    source:
-      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
-      region: ((dataworks.aws_region))
-      filters:
-        is-public: true
-        state: available
-        name: amzn2-ami-hvm-*
-        architecture: arm64
 
   - name: dw-al2-base-ami
     type: ami
@@ -64,18 +46,6 @@ resources:
         state: available
         name: dw-al2-base-ami-*
 
-  - name: dw-al2-base-ami-arm
-    type: ami
-    check_every: 5m
-    source:
-      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
-      region: ((dataworks.aws_region))
-      filters:
-        owner-id: ((dataworks.aws_management_acc))
-        is-public: false
-        state: available
-        name: dw-al2-base-ami-arm-*
-
   - name: dw-al2-untested-hardened-ami
     type: ami
     check_every: 5m
@@ -88,18 +58,6 @@ resources:
         state: available
         name: dw-al2-untested-hardened-ami-*
 
-  - name: dw-al2-untested-hardened-ami-arm
-    type: ami
-    check_every: 5m
-    source:
-      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
-      region: ((dataworks.aws_region))
-      filters:
-        owner-id: ((dataworks.aws_management_acc))
-        is-public: false
-        state: available
-        name: dw-al2-untested-hardened-ami-arm-*
-
   - name: dw-al2-hardened-ami
     type: ami
     check_every: 5m
@@ -111,18 +69,6 @@ resources:
         is-public: false
         state: available
         name: dw-al2-hardened-ami-*
-
-  - name: dw-al2-hardened-ami-arm
-    type: ami
-    check_every: 5m
-    source:
-      aws_role_arn: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
-      region: ((dataworks.aws_region))
-      filters:
-        owner-id: ((dataworks.aws_management_acc))
-        is-public: false
-        state: available
-        name: dw-al2-hardened-ami-arm-*
 
   - name: aws-security-tools
     type: git
@@ -147,13 +93,6 @@ resources:
       paths:
         - dw-al2-emr-ami/*
         - ci/infra/jobs/build_amis/dw-al2-emr-ami.yml
-
-  - name: dw-al2-emr-ami-arm-config
-    .: (( inject meta.resources.ami-builder-configs ))
-    source:
-      paths:
-        - dw-al2-emr-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-emr-ami-arm.yml
 
   - name: dw-al2-hbase-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
@@ -182,13 +121,6 @@ resources:
       paths:
         - dw-al2-jvm-ami/*
         - ci/infra/jobs/build_amis/dw-al2-jvm-ami.yml
-
-  - name: dw-al2-hbase-ami-arm-config
-    .: (( inject meta.resources.ami-builder-configs ))
-    source:
-      paths:
-        - dw-al2-hbase-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-hbase-ami-arm.yml
 
   - name: analytical-dataset-generation
     .: (( inject meta.resources.ami-builder-configs ))
@@ -327,21 +259,6 @@ resources:
         - generic_packer_template.json.j2
         - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
 
-  - name: dw-al2-base-ami-arm-config
-    .: (( inject meta.resources.ami-builder-configs ))
-    source:
-      paths:
-        - dw-al2-base-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-base-ami-arm.yml
-
-  - name: dw-al2-base-ami-arm-pr
-    .: (( inject meta.resources.ami-builder-configs-pr ))
-    source:
-      paths:
-        - dw-al2-base-ami/*
-        - generic_packer_arm_template.json.j2
-        - ci/infra/jobs/build_amis/dw-al2-base-ami-arm.yml
-
   - name: dw-al2-concourse-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
     source:
@@ -369,20 +286,6 @@ resources:
       paths:
         - dw-al2-ecs-ami/*
         - ci/infra/jobs/build_amis/dw-al2-ecs-ami.yml
-
-  - name: dw-al2-hardened-ami-arm-config
-    .: (( inject meta.resources.ami-builder-configs ))
-    source:
-      paths:
-        - dw-al2-hardened-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-hardened-ami-arm.yml
-
-  - name: dw-al2-hardened-ami-arm-pr
-    .: (( inject meta.resources.ami-builder-configs-pr ))
-    source:
-      paths:
-        - dw-al2-hardened-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-hardened-ami-arm.yml
 
   - name: dw-al2-kafka-ami-config
     .: (( inject meta.resources.ami-builder-configs ))

@@ -144,12 +144,7 @@ meta:
           args:
             - -exc
             - |
-              pwd
-              if [[ -f ../source_template/generic_packer_arm_template.json.j2 ]]; then
-                cp ../source_template/generic_packer_arm_template.json.j2 generic_packer_template.json.j2
-              else
-                cp ../source_template/generic_packer_template.json.j2 .
-              fi
+              cp ../source_template/generic_packer_template.json.j2 .
               cp ../manifest/manifest.json .
               python3 bootstrap_packer.py
               cp packer.json ../packer-config
@@ -461,10 +456,6 @@ meta:
 
     get-al2-hardened-ami:
       get: dw-al2-hardened-ami
-      trigger: true
-
-    get-al2-hardened-ami-arm:
-      get: dw-al2-hardened-ami-arm
       trigger: true
 
     notify:

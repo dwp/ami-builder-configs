@@ -43,6 +43,8 @@ jobs:
         trigger: true
       - get: aws-clive
         trigger: true
+      - get: aws-cyi-infrastructure
+        trigger: true
       - get: aws-mongo-latest
         trigger: true
       - get: dataworks-aws-kickstart-adg
@@ -61,6 +63,7 @@ jobs:
             - name: aws-mongo-latest
             - name: dataworks-aws-kickstart-adg
             - name: aws-uc-feature-infrastructure
+            - name: aws-cyi-infrastructure
       - put: emr-ami-id
         params:
           file: tested_ami/id

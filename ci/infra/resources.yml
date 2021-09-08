@@ -146,6 +146,12 @@ resources:
       paths:
         - results/aws-clive.test
 
+  - name: aws-cyi-infrastructure
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/aws-cyi.test
+
   - name: aws-uc-feature-infrastructure
     .: (( inject meta.resources.ami-builder-configs ))
     source:

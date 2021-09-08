@@ -5,6 +5,7 @@ jobs:
         trigger: true
         passed:
           - dw-al2-test-and-promote-hardened-ami
+          - release-and-test-out-of-hours
       - get: dw-al2-jvm-ami-config
         trigger: true
       - get: dw-al2-base-ami-template

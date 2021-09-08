@@ -388,3 +388,10 @@ resources:
 
   - name: analytical-env-emr-ami-id
     type: file
+
+  - name: utc-7pm-trigger
+    type: time
+    source:
+      location: UTC
+      start: 19:00
+      stop: 20:00

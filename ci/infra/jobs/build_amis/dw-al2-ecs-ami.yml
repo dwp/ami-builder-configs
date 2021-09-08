@@ -4,6 +4,7 @@ jobs:
       - get: hardened-ami-id
         trigger: true
         passed:
+          - dw-al2-test-and-promote-hardened-ami
           - release-and-test-out-of-hours
       - get: dw-al2-ecs-ami-config
         trigger: true

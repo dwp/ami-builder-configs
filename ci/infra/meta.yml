@@ -169,7 +169,7 @@ meta:
         outputs:
           - name: built-ami
         params:
-          AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+          AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           AWS_DEFAULT_REGION: ((dataworks.aws_region))
           NO_PROXY: ((dataworks.proxy.no))
           ARTEFACT_BUCKET: ((manifest.artefact_bucket))
@@ -199,7 +199,7 @@ meta:
             version: ((dataworks.docker_awscli_version))
             tag: ((dataworks.docker_awscli_version))
         params:
-          AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+          AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           AWS_REGION: ((dataworks.aws_region))
         run:
           path: sh
@@ -258,7 +258,7 @@ meta:
           - name: source_ami
           - name: terraform-output-management
         params:
-          AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+          AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           AWS_DEFAULT_REGION: ((dataworks.aws_region))
         run:
           path: sh
@@ -306,7 +306,7 @@ meta:
         inputs:
           - name: terraform-output-management
         params:
-          AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+          AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           AWS_DEFAULT_REGION: ((dataworks.aws_region))
         run:
           path: sh
@@ -336,7 +336,7 @@ meta:
           - name: aws-security-tools
           - name: terraform-output-management
         params:
-          AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+          AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           AWS_DEFAULT_REGION: ((dataworks.aws_region))
           ASSUME_DURATION: 7200
         run:
@@ -394,7 +394,7 @@ meta:
           - name: promoted-ami
         params:
           AWS_REGION: ((dataworks.aws_region))
-          AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+          AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           AWS_DEFAULT_REGION: ((dataworks.aws_region))
         run:
           path: sh
@@ -442,7 +442,7 @@ meta:
         inputs:
           - name: running_instance_id
         params:
-          AWS_ROLE_ARN: arn:aws:iam::((dataworks.aws_management_acc)):role/ci
+          AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           AWS_DEFAULT_REGION: ((dataworks.aws_region))
         run:
           path: sh

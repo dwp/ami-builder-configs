@@ -1,6 +1,6 @@
 #!/bin/sh
 #set -eEu
-
+set -x
 # Make changes to hardened-ami that are required for EMR to work
 
 # Set Proxy
@@ -26,7 +26,7 @@ sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile.d/*.sh
 sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
 
 # building pandas from source requires installing a C compiler so just get a binary.
-cat <<EOF > /tmp/py_requirements.txt
+cat <<EOF > /tmp/debug_py_requirements.txt
 --only-binary=:pandas:
 nltk==3.6.1
 yake==0.4.7
@@ -47,7 +47,13 @@ python-docx==0.8.11
 python-Levenshtein==0.12.2
 EOF
 
-sudo -E pip3 install --upgrade pip setuptools || true
-sudo yum install -y python3-devel || true
-sudo -E python3 -m pip install -r /tmp/py_requirements.txt || true
-sudo yum remove -y python3-devel || true
+echo -n "Running as: $(whoami)" >> /tmp/pkg_debug.log
+echo -n "Running pip install --upgrade" >> /tmp/pkg_debug.log
+sudo -E pip3 install --upgrade pip setuptools >> /tmp/pkg_debug.log
+echo -n "Running yum install -y python3-devel" >> /tmp/pkg_debug.log
+sudo yum install -y python3-devel >> /tmp/pkg_debug.log
+echo -n "Running python3 -m pip install from req.txt" >> /tmp/pkg_debug.log
+sudo -E python3 -m pip install -r /tmp/debug_py_requirements.txt >> /tmp/pkg_debug.log
+echo -n "Running yum remove" >> /tmp/pkg_debug.log
+sudo yum remove -y python3-devel >> /tmp/pkg_debug.log
+echo -n "complete" >> /tmp/pkg_debug.log

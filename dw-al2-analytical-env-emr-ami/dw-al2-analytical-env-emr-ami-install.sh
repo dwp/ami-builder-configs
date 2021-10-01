@@ -27,7 +27,7 @@ sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
 
 # building pandas from source requires installing a C compiler so just get a binary.
 cat <<EOF > /tmp/debug_py_requirements1.txt
---only-binary=:pandas:
+# --only-binary=:pandas:
 # nltk==3.6.1
 # yake==0.4.7
 # spark-nlp==3.0.1
@@ -66,14 +66,14 @@ kaleido==0.2.1
 fuzzywuzzy==0.18.0
 openpyxl==3.0.7
 python-docx==0.8.11
-python-Levenshtein==0.12.2
+# python-Levenshtein==0.12.2
 EOF
 
 sudo -E pip3 install --upgrade pip setuptools
-sudo yum install -y python3-devel
+# sudo yum install -y python3-devel
 echo -e "\n\nRunning python3 -m pip install from req1.txt\n\n" >> /tmp/pkg_debug.log
-sudo -E python3 -m pip install -r /tmp/debug_py_requirements1.txt >> /tmp/pkg_debug.log
+sudo -E python3 -m pip --no-cache-dir install -r /tmp/debug_py_requirements1.txt >> /tmp/pkg_debug.log
 echo -e "\n\nRunning python3 -m pip install from req2.txt\n\n" >> /tmp/pkg_debug.log
-sudo -E python3 -m pip install -r /tmp/debug_py_requirements2.txt >> /tmp/pkg_debug.log
-sudo yum remove -y python3-devel
+sudo -E python3 -m pip --no-cache-dir install -r /tmp/debug_py_requirements2.txt >> /tmp/pkg_debug.log
+# sudo yum remove -y python3-devel
 echo -n "complete" >> /tmp/pkg_debug.log

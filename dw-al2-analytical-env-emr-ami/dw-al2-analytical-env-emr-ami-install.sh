@@ -47,5 +47,5 @@ python-docx==0.8.11
 # python-Levenshtein==0.12.2 - issue installing here
 EOF
 
-sudo -E pip3 install --upgrade pip setuptools || true
-sudo -E python3 -m pip --no-cache-dir install -r /tmp/py_requirements.txt || true
+sudo -E pip3 install --upgrade pip setuptools
+sudo -E python3 -m pip --no-cache-dir install -r /tmp/py_requirements.txt

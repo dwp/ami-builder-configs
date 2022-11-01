@@ -15,3 +15,6 @@ sed -i 's/^.*umask 0.*$/umask 002/' /etc/bashrc
 sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile
 sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile.d/*.sh
 sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
+
+# clean-up provision files
+rm -rf /home/ec2-user/*

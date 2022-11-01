@@ -105,3 +105,6 @@ systemctl start node_exporter
 
 # To maintain CIS compliance
 usermod -s /sbin/nologin cwagent
+
+# clean-up provision files
+rm -rf /home/ec2-user/*

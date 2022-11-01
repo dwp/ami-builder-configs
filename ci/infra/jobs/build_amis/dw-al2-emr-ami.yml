@@ -87,21 +87,21 @@ jobs:
       - get: dw-al2-emr-ami-pr
         trigger: true
         version: every
-      - get: dw-al2-base-ami-template
+      - get: dw-al2-base-ami-template-pr
         trigger: false
       - put: dw-al2-emr-ami-pr
         params:
           path: dw-al2-emr-ami-pr
           status: pending
-      - .: (( inject meta.plan.get-al2-hardened-ami ))
+      - get: base-ami-id
         trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: dw-al2-hardened-ami
+          source_ami: base-ami-id
         config:
           params:
             AMI_NAME: pr-dw-al2-emr-ami
-            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
+            SOURCE_AMI_NAME: dw-al2-base-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-emr-ami-pr/dw-al2-emr-ami/dw-emr-ami-install.sh"]'
@@ -109,7 +109,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-emr-ami-pr
-          source_template: dw-al2-base-ami-template
+          source_template: dw-al2-base-ami-template-pr
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

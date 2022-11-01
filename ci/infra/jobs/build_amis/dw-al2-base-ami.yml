@@ -15,7 +15,7 @@ jobs:
             AMI_NAME: dw-al2-base-ami
             PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-config/dw-al2-base-ami/dw-base-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami/"
-            SOURCE_AMI_NAME: "AMZN2-AWS-CIS2-2022*"
+            SOURCE_AMI_NAME: "AMZN2-SINGLEVOL-AWS-CIS2-20*"
             SOURCE_AMI_OWNER: "((dataworks.hcs_aws_account))"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:

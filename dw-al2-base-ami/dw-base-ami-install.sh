@@ -26,6 +26,13 @@ echo "baseurl=$(cat mirror.list)" >> /etc/yum.repos.d/amzn2-core.repo
 # Update packages on the instance
 yum update -y
 
+# Tidy cloud.cfg to prevent yum locks in hardened AMI builds
+sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
+-e 's/repo_upgrade_exclude:/repo_update: false/' \
+-e '/.-.nvidia.*/ d' \
+-e '/.-.kernel.*/ d' \
+-e '/.-.cudatoolkit.*/ d' /etc/cloud/cloud.cfg
+
 yum install -y python3 python-pip gcc yum-plugin-remove-with-leaves sudo
 
 pip3 install jinja2

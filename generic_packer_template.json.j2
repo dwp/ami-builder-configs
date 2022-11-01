@@ -80,7 +80,8 @@
             "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}"
             ],
           "use_env_var_file": true,
-          "execute_command": "sudo -E sh -eux -c '{% raw %}. {{.EnvVarFile}} && {{.Path}}{% endraw %}'"
+          "execute_command": "sudo -E sh -eux -c '{% raw %}. {{.EnvVarFile}} && {{.Path}}{% endraw %}'",
+          "remote_folder": "/home/ec2-user"
         }
         {% endfor %}
     {% endif %}

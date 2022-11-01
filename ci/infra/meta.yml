@@ -14,7 +14,7 @@ meta:
         access_token: ((dataworks-secrets.concourse_github_pat))
         repository: dwp/ami-builder-configs
       webhook_token: ((dataworks.concourse_github_webhook_token))
-      check_every: 720h
+      check_every: 5m
 
   plan:
     terraform-common-config:
@@ -186,6 +186,10 @@ meta:
               cat packer-config/packer.json
               packer validate packer-config/packer.json
               AMI_ID="$(packer build -on-error=cleanup packer-config/packer.json | grep "${AWS_DEFAULT_REGION}:" | awk '{print $2}')"
+              if [ -z "$AMI_ID" ]; then
+                echo "packer build was failed."
+                exit 1
+              fi
               echo "${AMI_ID}" > built-ami/id
 
     proxy-test:

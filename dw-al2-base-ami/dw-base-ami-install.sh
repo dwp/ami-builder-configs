@@ -3,35 +3,28 @@ set -eEu
 
 ARCH=$(uname -m)
 
+# disable extra un-necessary repo
+yum-config-manager --disablerepo=amzn2extra\* >/dev/null
+
+# re-write core repo file with fixed base url
+# this is a temp work around, may need little elegant solution
+cat > /etc/yum.repos.d/amzn2-core.repo << AMZNCOREREPO
+[amzn2-core]
+name=Amazon Linux 2 core repository
+priority=10
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-amazon-linux-2
+enabled=1
+metadata_expire=300
+mirrorlist_expire=300
+report_instanceid=yes
+AMZNCOREREPO
+cat /etc/yum.repos.d/amzn2-core.repo
+curl -O "http://amazonlinux.eu-west-2.amazonaws.com/2/core/2.0/x86_64/mirror.list"
+echo "baseurl=$(cat mirror.list)" >> /etc/yum.repos.d/amzn2-core.repo
+
 # Update packages on the instance
 yum update -y
-
-# Install Yum plugin that will remove unused dependencies after a package is uninstalled
-yum install -y yum-plugin-remove-with-leaves
-
-# Install AWS Inspector Agent for DW-3495
-echo "Installing AWS Inspector Agent"
-
-echo "Setting AWS Inspector Agent Proxy Config"
-cat > /etc/init.d/awsagent.env << AWSAGENTPROXYCONFIG
-export https_proxy=$https_proxy
-export http_proxy=$http_proxy
-export no_proxy=$no_proxy
-AWSAGENTPROXYCONFIG
-cat /etc/init.d/awsagent.env
-
-echo "Obtaining AWS Inspector Agent installer"
-curl -O https://inspector-agent.amazonaws.com/linux/latest/install
-
-echo "Running AWS Inspector Agent installer"
-bash install
-if [[ $? -eq 0 ]]; then
-    echo "AWS Inspector Agent install successful"
-else
-    echo "AWS Inspector Agent install failed"
-fi
-rm install
-rm /etc/init.d/awsagent.env
 
 # Tidy cloud.cfg to prevent yum locks in hardened AMI builds
 sed -i.bak -e 's/repo_upgrade: security/repo_upgrade: none/' \
@@ -109,9 +102,6 @@ touch /var/log/node_exporter.log && chown prometheus:prometheus /var/log/node_ex
 
 systemctl enable node_exporter
 systemctl start node_exporter
-
-# Download and install CloudWatch Agent
-yum -y install amazon-cloudwatch-agent
 
 # To maintain CIS compliance
 usermod -s /sbin/nologin cwagent

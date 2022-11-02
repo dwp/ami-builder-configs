@@ -28,7 +28,7 @@ resources:
         - ci/*
         - aviator.yml
 
-  - name: hcs-amzn2-single-vol-cis2-ami
+  - name: hcs-amzn2emr-cis2-ami
     type: ami
     check_every: 5m
     source:

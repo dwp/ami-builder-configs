@@ -4,7 +4,7 @@ set -eEu
 ARCH=$(uname -m)
 
 # disable extra un-necessary repo
-yum-config-manager --disablerepo=amzn2extra\* >/dev/null
+find /etc/yum.repos.d/ -type f -exec sed -i "/enabled/d" {} \;
 
 # re-write core repo file with fixed base url
 # this is a temp work around, may need little elegant solution

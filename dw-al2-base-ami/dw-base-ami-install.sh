@@ -3,26 +3,6 @@ set -eEu
 
 ARCH=$(uname -m)
 
-# disable extra un-necessary repo
-find /etc/yum.repos.d/ -type f -exec sed -i "/enabled/d" {} \;
-
-# re-write core repo file with fixed base url
-# this is a temp work around, may need little elegant solution
-cat > /etc/yum.repos.d/amzn2-core.repo << AMZNCOREREPO
-[amzn2-core]
-name=Amazon Linux 2 core repository
-priority=10
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-amazon-linux-2
-enabled=1
-metadata_expire=300
-mirrorlist_expire=300
-report_instanceid=yes
-AMZNCOREREPO
-cat /etc/yum.repos.d/amzn2-core.repo
-curl -O "http://amazonlinux.eu-west-2.amazonaws.com/2/core/2.0/x86_64/mirror.list"
-echo "baseurl=$(cat mirror.list)" >> /etc/yum.repos.d/amzn2-core.repo
-
 # Update packages on the instance
 yum update -y
 

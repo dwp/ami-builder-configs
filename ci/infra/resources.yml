@@ -156,7 +156,7 @@ resources:
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
-        - results/aws-cyi.test
+        - results/aws-cyi-infrastructure.test
 
   - name: aws-uc-feature-infrastructure
     .: (( inject meta.resources.ami-builder-configs ))

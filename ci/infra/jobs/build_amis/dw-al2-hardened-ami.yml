@@ -124,6 +124,10 @@ jobs:
     plan:
       - get: utc-7pm-trigger
         trigger: true
+      - get: base-ami-id
+        trigger: true
+        passed:
+          - dw-al2-base-ami
       - get: dw-al2-untested-hardened-ami
         trigger: false
         passed:

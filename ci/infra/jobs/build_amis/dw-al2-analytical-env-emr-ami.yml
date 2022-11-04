@@ -1,27 +1,25 @@
 jobs:
   - name: untested-dw-al2-analytical-env-emr-ami
     plan:
-      - get: hardened-ami-id
+      - get: base-ami-id
         trigger: true
         passed:
           - release-and-test-out-of-hours
+          - dw-al2-base-ami
       - get: dw-al2-analytical-env-emr-ami-config
         trigger: true
       - get: dw-al2-base-ami-template
-        trigger: false
-      - get: dw-al2-hardened-ami-config
         trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
             AMI_NAME: untested-dw-al2-analytical-env-emr-ami
-            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
+            SOURCE_AMI_NAME: dw-al2-base-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             PROVISION_SCRIPT_KEYS: '["dw-al2-analytical-env-emr-ami-config/dw-al2-analytical-env-emr-ami/dw-al2-analytical-env-emr-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-analytical-env-emr-ami-config/dw-al2-analytical-env-emr-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
-          source_config: dw-al2-hardened-ami-config
           source_template: dw-al2-base-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:

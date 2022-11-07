@@ -81,7 +81,7 @@ jobs:
         config:
           params:
             AMI_NAME: pr-dw-al2-analytical-env-emr-ami
-            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
+            SOURCE_AMI_NAME: dw-al2-base-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-analytical-env-emr-ami-pr/dw-al2-analytical-env-emr-ami/dw-al2-analytical-env-emr-ami-install.sh"]'

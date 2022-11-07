@@ -20,6 +20,7 @@ jobs:
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-analytical-env-emr-ami-config/dw-al2-analytical-env-emr-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
+          source_config: dw-al2-analytical-env-emr-ami-config
           source_template: dw-al2-base-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:

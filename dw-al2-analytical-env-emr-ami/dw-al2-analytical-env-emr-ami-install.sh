@@ -39,7 +39,6 @@ openpyxl==3.0.7
 pandas==1.3.0
 PyDriller==2.0
 python-docx==0.8.11
-python-Levenshtein==0.12.2
 scikit-learn==0.24.1
 scikit-spark==0.4.0
 scipy==1.6.2
@@ -48,6 +47,7 @@ spark-nlp==3.0.1
 statsmodels==0.12.2
 torch==1.8.1
 yake==0.4.7
+# python-Levenshtein==0.12.2 - issue installing here
 EOF
 
 sudo -E pip3 install --upgrade pip setuptools

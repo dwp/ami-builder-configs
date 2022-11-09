@@ -1,11 +1,10 @@
 jobs:
   - name: untested-dw-al2-analytical-env-emr-ami
     plan:
-      - get: base-ami-id
+      - get: emr-ami-id
         trigger: true
         passed:
-          - release-and-test-out-of-hours
-          - dw-al2-base-ami
+          - validate-emr-ami
       - get: dw-al2-analytical-env-emr-ami-config
         trigger: true
       - get: dw-al2-base-ami-template

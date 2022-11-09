@@ -33,7 +33,7 @@ jobs:
   - name: validate-analytical-env-emr-ami
     plan:
       - get: untested-dw-al2-analytical-env-emr-ami
-        trigger: true
+        trigger: false
         passed:
           - untested-dw-al2-analytical-env-emr-ami
       - get: analytical-env

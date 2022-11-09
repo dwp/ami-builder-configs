@@ -26,7 +26,7 @@ sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile.d/*.sh
 sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
 
 # building pandas from source requires installing a C compiler so just get a binary.
-cat <<EOF > /tmp/py_requirements.txt
+sudo cat > $HOME/py_requirements.txt << EOF
 --only-binary=:pandas:
 dfply==0.3.3
 dplython==0.0.7
@@ -51,4 +51,6 @@ yake==0.4.7
 EOF
 
 sudo -E pip3 install --upgrade pip setuptools
-sudo -E python3 -m pip --no-cache-dir install -r /tmp/py_requirements.txt
+sudo -E pip3 --no-cache-dir install -r $HOME/py_requirements.txt
+
+rm -f $HOME/py_requirements.txt

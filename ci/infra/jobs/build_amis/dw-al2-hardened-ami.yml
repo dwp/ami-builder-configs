@@ -119,35 +119,6 @@ jobs:
       do:
         - .: (( inject meta.plan.inspector-cleanup ))
 
-  - name: release-and-test-out-of-hours
-    max_in_flight: 1
-    plan:
-      - get: utc-7pm-trigger
-        trigger: true
-      - get: base-ami-id
-        trigger: true
-        passed:
-          - dw-al2-base-ami
-      - get: dw-al2-untested-hardened-ami
-        trigger: false
-        passed:
-          - dw-al2-test-and-promote-hardened-ami
-      - get: dw-al2-hardened-ami
-        trigger: false
-        passed:
-          - dw-al2-test-and-promote-hardened-ami
-      - get: aws-management-infrastructure
-        trigger: false
-        passed:
-          - dw-al2-test-and-promote-hardened-ami
-      - get: aws-security-tools
-        trigger: false
-        passed:
-          - dw-al2-test-and-promote-hardened-ami
-      - get: hardened-ami-id
-        trigger: true
-        passed:
-          - dw-al2-test-and-promote-hardened-ami
 
   - name: dw-al2-weekly-test-hardened-ami
     max_in_flight: 1

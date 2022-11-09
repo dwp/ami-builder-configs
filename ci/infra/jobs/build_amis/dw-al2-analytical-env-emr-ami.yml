@@ -72,11 +72,11 @@ jobs:
         params:
           path: dw-al2-analytical-env-emr-ami-pr
           status: pending
-      - get: base-ami-id
+      - get: emr-ami-id
         trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: base-ami-id
+          source_ami: emr-ami-id
         config:
           params:
             AMI_NAME: pr-dw-al2-analytical-env-emr-ami

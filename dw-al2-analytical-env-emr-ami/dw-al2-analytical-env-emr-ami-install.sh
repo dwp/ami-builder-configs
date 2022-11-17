@@ -12,19 +12,6 @@ export https_proxy=$https_proxy
 export http_proxy=$http_proxy
 export no_proxy=$no_proxy
 
-# Change SELinux config to be permissive
-cat > /etc/selinux/config << EOF
-SELINUX=permissive
-SELINUXTYPE=targeted
-EOF
-#sed -i -e 's/selinux=0/selinux=1 enforcing=0/' /boot/grub/menu.lst
-
-# Relax umask settings and defaults
-sed -i 's/^.*umask 0.*$/umask 002/' /etc/bashrc
-sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile
-sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile.d/*.sh
-sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
-
 # building pandas from source requires installing a C compiler so just get a binary.
 sudo cat > $HOME/py_requirements.txt << EOF
 --only-binary=:pandas:

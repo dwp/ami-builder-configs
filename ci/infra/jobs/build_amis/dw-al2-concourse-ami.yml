@@ -2,22 +2,19 @@ jobs:
   - name: untested-dw-al2-concourse-ami
     plan:
       - .: (( inject meta.plan.get-concourse-release ))
-      - get: hardened-ami-id
+      - get: base-ami-id
         trigger: true
         passed:
-          - dw-al2-test-and-promote-hardened-ami
           - release-and-test-out-of-hours
       - get: dw-al2-concourse-ami-config
         trigger: true
       - get: dw-al2-base-ami-template
         trigger: false
-      - get: dw-al2-hardened-ami-config
-        trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
             AMI_NAME: untested-dw-al2-concourse-ami
-            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
+            SOURCE_AMI_NAME: dw-al2-base-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-config/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami-config/dw-al2-concourse-ami/"
@@ -79,15 +76,15 @@ jobs:
         params:
           path: dw-al2-concourse-ami-pr
           status: pending
-      - .: (( inject meta.plan.get-al2-hardened-ami ))
+      - get: dw-al2-base-ami
         trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: dw-al2-hardened-ami
+          source_ami: dw-al2-base-ami
         config:
           params:
             AMI_NAME: pr-dw-al2-concourse-ami
-            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
+            SOURCE_AMI_NAME: dw-al2-base-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-pr/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'

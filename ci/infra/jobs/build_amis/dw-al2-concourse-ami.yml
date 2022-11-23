@@ -2,7 +2,7 @@ jobs:
   - name: untested-dw-al2-concourse-ami
     plan:
       - .: (( inject meta.plan.get-concourse-release ))
-      - get: base-ami-id
+      - get: base-emr-ami-id
         trigger: true
         passed:
           - release-and-test-out-of-hours
@@ -14,7 +14,7 @@ jobs:
         config:
           params:
             AMI_NAME: untested-dw-al2-concourse-ami
-            SOURCE_AMI_NAME: dw-al2-base-ami-*
+            SOURCE_AMI_NAME: dw-al2-base-emr-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-config/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami-config/dw-al2-concourse-ami/"

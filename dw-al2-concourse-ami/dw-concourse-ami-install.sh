@@ -10,6 +10,7 @@ SELINUXTYPE=targeted
 EOF
 
 sudo grubby --update-kernel ALL --args selinux=0
+sudo umount /opt
 
 # Relax umask settings and defaults
 sed -i 's/^.*umask 0.*$/umask 002/' /etc/bashrc

@@ -28,6 +28,18 @@ resources:
         - ci/*
         - aviator.yml
 
+  - name: hcs-amzn2-cis2-ami
+    type: ami
+    check_every: 5m
+    source:
+      aws_role_arn: arn:aws:iam::((aws_account.management)):role/ci
+      region: ((dataworks.aws_region))
+      filters:
+        owner-id: ((dataworks.hcs_aws_account))
+        is-public: false
+        state: available
+        name: AMZN2-AWS-CIS2-2022*
+
   - name: hcs-amzn2emr-cis2-ami
     type: ami
     check_every: 5m
@@ -360,6 +372,9 @@ resources:
       url: ((dataworks.slack_webhook_url))
 
   - name: base-ami-id
+    type: file
+
+  - name: base-emr-ami-id
     type: file
 
   - name: hardened-ami-id

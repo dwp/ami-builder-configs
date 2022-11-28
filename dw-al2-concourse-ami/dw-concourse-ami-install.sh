@@ -2,6 +2,9 @@
 set -eEu
 
 # Make changes to hardened-ami that are required for Concourse to work
+service iptables stop
+umount -fl /opt
+
 
 # Change SELinux config to be permissive
 cat > /etc/selinux/config << EOF

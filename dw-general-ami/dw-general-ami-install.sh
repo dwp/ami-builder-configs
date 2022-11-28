@@ -52,6 +52,10 @@ yum install -y python27-devel python27-pip gcc
 
 pip install --upgrade awscli
 
+#install pcre tools to provide access to pcregrep
+
+yum install pcre-tools.x86_64
+
 # Install acm cert helper
 export AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -d'"' -f4)
 acm_cert_helper_repo=acm-pca-cert-generator

@@ -2,8 +2,12 @@
 set -eEu
 
 # Make changes to hardened-ami that are required for Concourse to work
-service iptables stop
-umount -fl /opt
+iptables -P INPUT ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -F
+
+sed -i '/\/dev\/mapper\/rootvg-optvol/d' /etc/fstab
 
 
 # Change SELinux config to be permissive

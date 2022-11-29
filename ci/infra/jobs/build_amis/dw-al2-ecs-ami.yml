@@ -84,15 +84,15 @@ jobs:
         params:
           path: dw-al2-ecs-ami-pr
           status: pending
-      - get: base-ami-id
+      - get: base-singlevol-ami-id
         trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: base-ami-id
+          source_ami: dw-al2-base-singlevol-ami
         config:
           params:
             AMI_NAME: pr-dw-al2-ecs-ami
-            SOURCE_AMI_NAME: dw-al2-base-ami-*
+            SOURCE_AMI_NAME: dw-al2-base-singlevol-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-ecs-ami-pr/dw-al2-ecs-ami/dw-ecs-ami-install.sh"]'

@@ -2,6 +2,8 @@
 set -eEu
 
 # Make changes to hardened-ami that are required for Concourse to work
+sed -i '/\/dev\/mapper\/rootvg-optvol/d' /etc/fstab
+
 
 # Change SELinux config to be permissive
 cat > /etc/selinux/config << EOF

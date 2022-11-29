@@ -29,10 +29,42 @@ jobs:
         params:
           file: built-ami/id
 
+  - name: dw-al2-base-singlevol-ami
+    plan:
+      - get: hcs-amzn2-singlevol-cis2-ami
+        trigger: true
+      - get: dw-al2-base-ami-config
+        trigger: true
+      - get: dw-al2-base-ami-template
+        trigger: true
+      - get: dw-al2-base-singlevol-ami
+        trigger: false
+      - .: (( inject meta.plan.generate-manifest ))
+        config:
+          params:
+            AMI_NAME: dw-al2-base-singlevol-ami
+            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-config/dw-al2-base-ami/dw-base-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami/"
+            SOURCE_AMI_NAME: "AMZN2-SINGLEVOL-AWS-CIS2-2022*"
+            SOURCE_AMI_OWNER: "((dataworks.hcs_aws_account))"
+      - .: (( inject meta.plan.packer-bootstrap ))
+        input_mapping:
+          source_config: dw-al2-base-ami-config
+          source_template: dw-al2-base-ami-template
+      - .: (( inject meta.plan.build-ami ))
+        config:
+          inputs:
+            - name: dw-al2-base-ami-config
+      - put: base-singlevol-ami-id
+        params:
+          file: built-ami/id
+
   - name: dw-al2-base-ami-pr
     max_in_flight: 1
     plan:
       - get: hcs-amzn2-cis2-ami
+        trigger: false
+      - get: hcs-amzn2-singlevol-cis2-ami
         trigger: false
       - get: dw-al2-base-ami-pr
         trigger: true
@@ -50,6 +82,20 @@ jobs:
             PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-pr/dw-al2-base-ami/dw-base-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-pr/dw-al2-base-ami/"
             SOURCE_AMI_NAME: "AMZN2-AWS-CIS2-2022*"
+            SOURCE_AMI_OWNER: "((dataworks.hcs_aws_account))"
+      - .: (( inject meta.plan.packer-bootstrap ))
+        input_mapping:
+          source_config: dw-al2-base-ami-pr
+          source_template: dw-al2-base-ami-template-pr
+      - .: (( inject meta.plan.build-ami ))
+      - .: (( inject meta.plan.generate-manifest ))
+        config:
+          params:
+            AMI_NAME: pr-dw-al2-base-singlevol-ami
+            AMI_USERS: ((aws_account.development))
+            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-pr/dw-al2-base-ami/dw-base-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-pr/dw-al2-base-ami/"
+            SOURCE_AMI_NAME: "AMZN2-SINGLEVOL-AWS-CIS2-2022*"
             SOURCE_AMI_OWNER: "((dataworks.hcs_aws_account))"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
@@ -84,6 +130,10 @@ jobs:
         trigger: true
         passed:
           - dw-al2-base-ami
+      - get: base-singlevol-ami-id
+        trigger: true
+        passed:
+          - dw-al2-base-singlevol-ami
       - get: base-emr-ami-id
         trigger: true
         passed:

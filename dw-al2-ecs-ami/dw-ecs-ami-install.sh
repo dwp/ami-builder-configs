@@ -37,6 +37,7 @@ echo "baseurl=$(cat mirror.list)" >> /etc/yum.repos.d/amzn2-extras.repo && rm -f
 
 cat /etc/yum.repos.d/amzn2-extras.repo
 
+sudo yum install -y ecs-init
 systemctl enable --now ecs
 
 # Install Sysdig

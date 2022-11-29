@@ -1,7 +1,7 @@
 jobs:
   - name: untested-dw-al2-ecs-ami
     plan:
-      - get: base-ami-id
+      - get: base-singlevol-ami-id
         trigger: true
         passed:
           - release-and-test-out-of-hours
@@ -13,7 +13,7 @@ jobs:
         config:
           params:
             AMI_NAME: untested-dw-al2-ecs-ami
-            SOURCE_AMI_NAME: dw-al2-base-ami-*
+            SOURCE_AMI_NAME: dw-al2-base-singlevol-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             PROVISION_SCRIPT_KEYS: '["dw-al2-ecs-ami-config/dw-al2-ecs-ami/dw-ecs-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-ecs-ami-config/dw-al2-ecs-ami/"

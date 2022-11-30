@@ -47,7 +47,12 @@ yum install -y sysdig s3fs-fuse
 
 # accept anything that wasn't specifically covered
 # temp change until we configure iptables to mirror sg
-sudo iptables -P INPUT ACCEPT
-sudo iptables -P FORWARD ACCEPT
-sudo iptables -P OUTPUT ACCEPT
-sudo iptables -F
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+
+# flushing all rules 
+iptables -F
+
+# presisting rules for next boot
+service iptables save

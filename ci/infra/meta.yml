@@ -94,6 +94,7 @@ meta:
           SET_PROXY: true
           ARTEFACT_BUCKET: ((manifest.artefact_bucket))
           RUN_TAGS: '{"Persistence": "Ignore", "Owner": "dataworks platform", "Application": "packer"}'
+          HCS_COMPLIANT: false
         run:
           path: sh
           dir: manifest
@@ -124,7 +125,8 @@ meta:
               "set_proxy":                      ${SET_PROXY},
               "artefact_bucket":                "${ARTEFACT_BUCKET}",
               "run_tags":                       ${RUN_TAGS},
-              "concourse_version":              "$(if [ -f ../concourse-release/tag ]; then cat ../concourse-release/tag; else echo ''; fi)"
+              "concourse_version":              "$(if [ -f ../concourse-release/tag ]; then cat ../concourse-release/tag; else echo ''; fi)",
+              "hcs_compliant":                  ${HCS_COMPLIANT}
               }
               EOF
               cat manifest.json

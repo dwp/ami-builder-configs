@@ -96,8 +96,10 @@ mv node_exporter-1.0.1.linux-amd64 /home/prometheus/node_exporter
 rm -f node_exporter-1.0.1.linux-amd64.tar.gz
 chown -R prometheus:prometheus /home/prometheus/node_exporter
 
-# Add node_exporter as systemd service
-mkdir -p /etc/systemd/system/
+# Add node_exporter as systemd service and set HCS Compliance metric
+mkdir -p /etc/systemd/system/ && /var/node_exporter/metrics
+cp /tmp/hcs_compliant.prom /var/node_exporter/metrics/
+chown -R prometheus:prometheus /var/node_exporter
 
 cat > /etc/systemd/system/node_exporter.service << SERVICE
 [Unit]
@@ -106,7 +108,7 @@ Wants=network-online.target
 After=network-online.target
 [Service]
 User=prometheus
-ExecStart=/bin/bash -ce "exec /home/prometheus/node_exporter/node_exporter >> /var/log/node_exporter.log 2>&1"
+ExecStart=/bin/bash -ce "exec /home/prometheus/node_exporter/node_exporter --collector.textfile.directory=/var/node_exporter/metrics >> /var/log/node_exporter.log 2>&1"
 [Install]
 WantedBy=default.target
 SERVICE

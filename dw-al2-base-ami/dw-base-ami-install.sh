@@ -98,8 +98,16 @@ chown -R prometheus:prometheus /home/prometheus/node_exporter
 
 # Add node_exporter as systemd service and set HCS Compliance metric
 mkdir -p /etc/systemd/system/ && /var/node_exporter/metrics
+
 if [ -z "${HCS_COMPLIANT}" ] && [ "${HCS_COMPLIANT}" ]; then
+  touch /etc/hcs_compliant
+fi
+
+if [ -f /etc/hcs_compliant ]; then
   echo "hcs_compliant 1" > /var/node_exporter/metrics/hcs_compliant.prom
+else
+  echo "hcs_compliant 0" > /var/node_exporter/metrics/hcs_compliant.prom  
+fi
 
 chown -R prometheus:prometheus /var/node_exporter
 

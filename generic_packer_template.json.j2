@@ -10,7 +10,7 @@
         "https_proxy": "{% raw %}{{ env `https_proxy` }}{% endraw %}",
         "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}",
         {% if 'hcs_compliant' in event and event['hcs_compliant'] %}
-        "HCS_COMPLIANT": "true",
+        "HCS_COMPLIANT": "true"
         {% endif %}
     },
     "builders": [{

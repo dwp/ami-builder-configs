@@ -70,8 +70,6 @@ jobs:
         trigger: false
       - get: dw-al2-base-ami-pr
         trigger: true
-      - get: dw-al2-base-ami-template-pr
-        trigger: false
       - put: dw-al2-base-ami-pr
         params:
           path: dw-al2-base-ami-pr
@@ -89,7 +87,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-base-ami-pr
-          source_template: dw-al2-base-ami-template-pr
+          source_template:
       - .: (( inject meta.plan.build-ami ))
       - .: (( inject meta.plan.generate-manifest ))
         config:
@@ -103,7 +101,6 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-base-ami-pr
-          source_template: dw-al2-base-ami-template-pr
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

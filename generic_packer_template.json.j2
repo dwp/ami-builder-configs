@@ -64,9 +64,9 @@
         {
           "type": "shell",
           {% if 'hcs_compliant' in event and event['hcs_compliant'] %}
-          "inline": ["sudo -E sh -eux -c 'echo 1 >> hcs_compliant.prom'"]
+          "inline": ["sudo -E sh -eux -c 'echo 1 >> /tmp/hcs_compliant.prom'"]
           {% else %}
-          "inline": ["sudo -E sh -eux -c 'echo 0 >> hcs_compliant.prom'"]
+          "inline": ["sudo -E sh -eux -c 'echo 0 >> /tmp/hcs_compliant.prom'"]
           {% endif %}
         }
         ,

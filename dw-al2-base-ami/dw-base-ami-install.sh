@@ -103,7 +103,7 @@ if [ -z "${HCS_COMPLIANT}" ] && [ "${HCS_COMPLIANT}" ]; then
   touch /etc/hcs_compliant
 fi
 
-if [ -f /etc/hcs_compliant ]; then
+if [ -f "/etc/hcs_compliant" ]; then
   echo "hcs_compliant 1" > /var/node_exporter/metrics/hcs_compliant.prom
 else
   echo "hcs_compliant 0" > /var/node_exporter/metrics/hcs_compliant.prom

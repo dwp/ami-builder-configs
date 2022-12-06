@@ -347,20 +347,6 @@ resources:
         - dw-al2-ecs-ami/*
         - ci/infra/jobs/build_amis/dw-al2-ecs-ami.yml
 
-  - name: dw-al2-kafka-ami-config
-    .: (( inject meta.resources.ami-builder-configs ))
-    source:
-      paths:
-        - dw-al2-kafka-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-kafka-ami.yml
-
-  - name: dw-al2-kafka-ami-pr
-    .: (( inject meta.resources.ami-builder-configs-pr ))
-    source:
-      paths:
-        - dw-al2-kafka-ami/*
-        - ci/infra/jobs/build_amis/dw-al2-kafka-ami.yml
-
   - name: dw-al2-analytical-env-emr-ami-config
     .: (( inject meta.resources.ami-builder-configs ))
     source:
@@ -435,12 +421,6 @@ resources:
     type: file
 
   - name: untested-dw-al2-concourse-ami
-    type: file
-
-  - name: kafka-ami-id
-    type: file
-
-  - name: untested-dw-al2-kafka-ami
     type: file
 
   - name: untested-dw-al2-analytical-env-emr-ami

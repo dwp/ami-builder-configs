@@ -64,11 +64,10 @@
         {
           "type": "shell",
           {% if 'hcs_compliant' in event and event['hcs_compliant'] %}
-          "execute_command": "sudo -E sh -eux -c 'echo 1 >> hcs_compliant.prom'",
+          "inline": ["sudo -E sh -eux -c 'echo 1 >> hcs_compliant.prom'"]
           {% else %}
-          "execute_command": "sudo -E sh -eux -c 'echo 0 >> hcs_compliant.prom'",
+          "inline": ["sudo -E sh -eux -c 'echo 0 >> hcs_compliant.prom'"]
           {% endif %}
-          "remote_folder": "/tmp"
         }
         ,
     {% if 'provision_script_keys' in event and event['provision_script_keys']|length > 0 %}

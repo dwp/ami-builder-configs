@@ -62,7 +62,6 @@
         ,
     {% endif %}
         {
-          "destination": "/tmp/hcs_compliant.prom",
           "type": "shell",
           {% if 'hcs_compliant' in event and event['hcs_compliant'] %}
           "execute_command": "sudo -E sh -eux -c 'echo 1 >> hcs_compliant.prom'",

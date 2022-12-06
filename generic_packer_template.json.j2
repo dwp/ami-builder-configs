@@ -6,6 +6,9 @@
          {% if 'concourse_version' in event and event['concourse_version']|length > 0  %}
         "CONCOURSE_VERSION": "{{ event['concourse_version'] }}",
         {% endif %}
+        {% if 'hcs_compliant' in event and event['hcs_compliant'] %}
+        "HCS_COMPLIANT": "true",
+        {% endif %}
         "http_proxy": "{% raw %}{{ env `http_proxy` }}{% endraw %}",
         "https_proxy": "{% raw %}{{ env `https_proxy` }}{% endraw %}",
         "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}"
@@ -61,15 +64,6 @@
         }
         ,
     {% endif %}
-        {
-          "type": "shell",
-          {% if 'hcs_compliant' in event and event['hcs_compliant'] %}
-          "inline": ["sudo -E sh -eux -c 'echo 1 >> /tmp/hcs_compliant.prom'"]
-          {% else %}
-          "inline": ["sudo -E sh -eux -c 'echo 0 >> /tmp/hcs_compliant.prom'"]
-          {% endif %}
-        }
-        ,
     {% if 'provision_script_keys' in event and event['provision_script_keys']|length > 0 %}
         {
           "type": "file",
@@ -86,7 +80,8 @@
             "CONCOURSE_VERSION={% raw %}{{ user `CONCOURSE_VERSION` }}{% endraw %}",
             "http_proxy={% raw %}{{ user `http_proxy` }}{% endraw %}",
             "https_proxy={% raw %}{{ user `https_proxy` }}{% endraw %}",
-            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}"
+            "no_proxy={% raw %}{{ user `no_proxy` }}{% endraw %}",
+            "HCS_COMPLIANT={% raw %}{{  user `HCS_COMPLIANT` }}{% endraw %}"
             ],
           "use_env_var_file": true,
           "execute_command": "sudo -E sh -eux -c '{% raw %}. {{.EnvVarFile}} && {{.Path}}{% endraw %}'",

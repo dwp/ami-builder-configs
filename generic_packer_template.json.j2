@@ -3,12 +3,10 @@
         {% if 'artefact_bucket' in event %}
         "ARTEFACT_BUCKET": "{{ event['artefact_bucket'] }}",
         {% endif %}
-         {% if 'concourse_version' in event and event['concourse_version']|length > 0  %}
+        {% if 'concourse_version' in event and event['concourse_version']|length > 0  %}
         "CONCOURSE_VERSION": "{{ event['concourse_version'] }}",
         {% endif %}
-        {% if 'hcs_compliant' in event and event['hcs_compliant'] %}
-        "HCS_COMPLIANT": "true",
-        {% endif %}
+        "HCS_COMPLIANT": "{{ event['hcs_compliant'] }}",
         "http_proxy": "{% raw %}{{ env `http_proxy` }}{% endraw %}",
         "https_proxy": "{% raw %}{{ env `https_proxy` }}{% endraw %}",
         "no_proxy": "{% raw %}{{ env `NO_PROXY` }}{% endraw %}"

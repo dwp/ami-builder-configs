@@ -106,7 +106,7 @@ fi
 if [ -f /etc/hcs_compliant ]; then
   echo "hcs_compliant 1" > /var/node_exporter/metrics/hcs_compliant.prom
 else
-  echo "hcs_compliant 0" > /var/node_exporter/metrics/hcs_compliant.prom  
+  echo "hcs_compliant 0" > /var/node_exporter/metrics/hcs_compliant.prom
 fi
 
 chown -R prometheus:prometheus /var/node_exporter

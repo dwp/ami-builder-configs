@@ -1,28 +1,25 @@
 jobs:
   - name: untested-dw-al2-ecs-ami
     plan:
-      - get: hardened-ami-id
+      - get: base-singlevol-ami-id
         trigger: true
         passed:
-          - dw-al2-test-and-promote-hardened-ami
           - release-and-test-out-of-hours
       - get: dw-al2-ecs-ami-config
         trigger: true
       - get: dw-al2-base-ami-template
         trigger: false
-      - get: dw-al2-hardened-ami-config
-        trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
             AMI_NAME: untested-dw-al2-ecs-ami
-            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
+            SOURCE_AMI_NAME: dw-al2-base-singlevol-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             PROVISION_SCRIPT_KEYS: '["dw-al2-ecs-ami-config/dw-al2-ecs-ami/dw-ecs-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-ecs-ami-config/dw-al2-ecs-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
-          source_config: dw-al2-hardened-ami-config
+          source_config: dw-al2-ecs-ami-config
           source_template: dw-al2-base-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
@@ -81,21 +78,21 @@ jobs:
       - get: dw-al2-ecs-ami-pr
         trigger: true
         version: every
-      - get: dw-al2-base-ami-template
+      - get: dw-al2-base-ami-template-pr
         trigger: false
       - put: dw-al2-ecs-ami-pr
         params:
           path: dw-al2-ecs-ami-pr
           status: pending
-      - .: (( inject meta.plan.get-al2-hardened-ami ))
+      - get: base-singlevol-ami-id
         trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: dw-al2-hardened-ami
+          source_ami: dw-al2-base-singlevol-ami
         config:
           params:
             AMI_NAME: pr-dw-al2-ecs-ami
-            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
+            SOURCE_AMI_NAME: dw-al2-base-singlevol-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-ecs-ami-pr/dw-al2-ecs-ami/dw-ecs-ami-install.sh"]'
@@ -103,7 +100,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-ecs-ami-pr
-          source_template: dw-al2-base-ami-template
+          source_template: dw-al2-base-ami-template-pr
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

@@ -10,6 +10,9 @@ SELINUXTYPE=targeted
 EOF
 #sed -i -e 's/selinux=0/selinux=1 enforcing=0/' /boot/grub/menu.lst
 
+#install pcre tools to provide access to pcregrep
+yum install -y pcre-tools.x86_64
+
 # Relax umask settings and defaults
 sed -i 's/^.*umask 0.*$/umask 002/' /etc/bashrc
 sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile

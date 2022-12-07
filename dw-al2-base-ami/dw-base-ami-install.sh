@@ -97,7 +97,7 @@ rm -f node_exporter-1.0.1.linux-amd64.tar.gz
 chown -R prometheus:prometheus /home/prometheus/node_exporter
 
 # Add node_exporter as systemd service and set HCS Compliance metric
-mkdir -p /etc/systemd/system/ && /var/node_exporter/metrics
+mkdir -p /etc/systemd/system/ && mkdir -p /var/node_exporter/metrics
 
 if [ "${HCS_COMPLIANT}" ]; then
   touch /home/prometheus/hcs_compliant

@@ -100,10 +100,10 @@ chown -R prometheus:prometheus /home/prometheus/node_exporter
 mkdir -p /etc/systemd/system/ && /var/node_exporter/metrics
 
 if [ "${HCS_COMPLIANT}" ]; then
-  touch /home/ec2-user/hcs_compliant
+  touch /home/prometheus/hcs_compliant
 fi
 
-if [ -f "/home/ec2-user/hcs_compliant" ]; then
+if [ -f "/home/prometheus/hcs_compliant" ]; then
   echo "hcs_compliant 1" > /var/node_exporter/metrics/hcs_compliant.prom
 else
   echo "hcs_compliant 0" > /var/node_exporter/metrics/hcs_compliant.prom

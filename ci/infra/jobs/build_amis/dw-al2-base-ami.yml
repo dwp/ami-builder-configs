@@ -1,7 +1,7 @@
 jobs:
   - name: dw-al2-base-ami
     plan:
-      - get: hcs-amzn2-cis2-ami
+      - get: amzn2-ami-hvm
         trigger: true
       - get: dw-al2-base-ami-config
         trigger: true
@@ -15,8 +15,8 @@ jobs:
             AMI_NAME: dw-al2-base-ami
             PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-config/dw-al2-base-ami/dw-base-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami/"
-            SOURCE_AMI_NAME: "AMZN2-AWS-CIS2-2022*"
-            SOURCE_AMI_OWNER: "((dataworks.hcs_aws_account))"
+            SOURCE_AMI_NAME: "amzn2-ami-hvm-*"
+            SOURCE_AMI_OWNER: "137112412989"
             HCS_COMPLIANT: true
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
@@ -58,6 +58,37 @@ jobs:
           inputs:
             - name: dw-al2-base-ami-config
       - put: base-singlevol-ami-id
+        params:
+          file: built-ami/id
+
+  - name: dw-al2-base-dualvol-ami
+    plan:
+      - get: hcs-amzn2-cis2-ami
+        trigger: true
+      - get: dw-al2-base-ami-config
+        trigger: true
+      - get: dw-al2-base-ami-template
+        trigger: true
+      - get: dw-al2-base-ami
+        trigger: false
+      - .: (( inject meta.plan.generate-manifest ))
+        config:
+          params:
+            AMI_NAME: dw-al2-base-dualvol-ami
+            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-config/dw-al2-base-ami/dw-base-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami/"
+            SOURCE_AMI_NAME: "AMZN2-AWS-CIS2-2022*"
+            SOURCE_AMI_OWNER: "((dataworks.hcs_aws_account))"
+            HCS_COMPLIANT: true
+      - .: (( inject meta.plan.packer-bootstrap ))
+        input_mapping:
+          source_config: dw-al2-base-ami-config
+          source_template: dw-al2-base-ami-template
+      - .: (( inject meta.plan.build-ami ))
+        config:
+          inputs:
+            - name: dw-al2-base-ami-config
+      - put: base-dualvol-ami-id
         params:
           file: built-ami/id
 
@@ -138,6 +169,10 @@ jobs:
         trigger: true
         passed:
           - dw-al2-base-singlevol-ami
+      - get: base-dualvol-ami-id
+        trigger: true
+        passed:
+          - dw-al2-base-dualvol-ami
       - get: base-emr-ami-id
         trigger: true
         passed:

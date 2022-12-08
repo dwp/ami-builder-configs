@@ -28,6 +28,18 @@ resources:
         - ci/*
         - aviator.yml
 
+  - name: amzn2-ami-hvm
+    type: ami
+    check_every: 5m
+    source:
+      aws_role_arn: arn:aws:iam::((aws_account.management)):role/ci
+      region: ((dataworks.aws_region))
+      filters:
+        is-public: true
+        state: available
+        name: amzn2-ami-hvm-*
+        architecture: x86_64
+
   - name: hcs-amzn2-cis2-ami
     type: ami
     check_every: 5m
@@ -385,6 +397,9 @@ resources:
     type: file
 
   - name: base-singlevol-ami-id
+    type: file
+
+  - name: base-dualvol-ami-id
     type: file
 
   - name: base-emr-ami-id

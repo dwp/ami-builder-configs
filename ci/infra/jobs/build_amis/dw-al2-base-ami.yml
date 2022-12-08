@@ -30,7 +30,7 @@ jobs:
         params:
           file: built-ami/id
 
-  - name: dw-al2-base-singlevol-ami
+  - name: dw-al2-hcs-backed-singlevol-ami
     plan:
       - get: hcs-amzn2-singlevol-cis2-ami
         trigger: true
@@ -38,12 +38,10 @@ jobs:
         trigger: true
       - get: dw-al2-base-ami-template
         trigger: true
-      - get: dw-al2-base-singlevol-ami
-        trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
-            AMI_NAME: dw-al2-base-singlevol-ami
+            AMI_NAME: dw-al2-hcs-backed-singlevol-ami
             PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-config/dw-al2-base-ami/dw-base-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami/"
             SOURCE_AMI_NAME: "AMZN2-SINGLEVOL-AWS-CIS2-2022*"
@@ -57,11 +55,11 @@ jobs:
         config:
           inputs:
             - name: dw-al2-base-ami-config
-      - put: base-singlevol-ami-id
+      - put: hcs-backed-singlevol-ami-id
         params:
           file: built-ami/id
 
-  - name: dw-al2-base-dualvol-ami
+  - name: dw-al2-hcs-backed-dualvol-ami
     plan:
       - get: hcs-amzn2-cis2-ami
         trigger: true
@@ -69,12 +67,10 @@ jobs:
         trigger: true
       - get: dw-al2-base-ami-template
         trigger: true
-      - get: dw-al2-base-dualvol-ami
-        trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
-            AMI_NAME: dw-al2-base-dualvol-ami
+            AMI_NAME: dw-al2-hcs-backed-dualvol-ami
             PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-config/dw-al2-base-ami/dw-base-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami/"
             SOURCE_AMI_NAME: "AMZN2-AWS-CIS2-2022*"
@@ -88,11 +84,11 @@ jobs:
         config:
           inputs:
             - name: dw-al2-base-ami-config
-      - put: base-dualvol-ami-id
+      - put: hcs-backed-dualvol-ami-id
         params:
           file: built-ami/id
 
-  - name: dw-al2-base-ami-pr
+  - name: dw-al2-hcs-backed-ami-pr
     max_in_flight: 1
     plan:
       - get: hcs-amzn2-cis2-ami
@@ -108,7 +104,7 @@ jobs:
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
-            AMI_NAME: pr-dw-al2-base-ami
+            AMI_NAME: pr-dw-al2-hcs-backed-dualvol-ami
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-pr/dw-al2-base-ami/dw-base-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-pr/dw-al2-base-ami/"
@@ -127,7 +123,7 @@ jobs:
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
-            AMI_NAME: pr-dw-al2-base-singlevol-ami
+            AMI_NAME: pr-dw-al2-hcs-backed-singlevol-ami
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-pr/dw-al2-base-ami/dw-base-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-pr/dw-al2-base-ami/"
@@ -161,18 +157,18 @@ jobs:
         trigger: true
       - get: dw-al2-emr-ami
         trigger: true
-      - get: base-singlevol-ami-id
+      - get: hcs-backed-singlevol-ami-id
         trigger: true
         passed:
-          - dw-al2-base-singlevol-ami
-      - get: base-dualvol-ami-id
+          - dw-al2-hcs-backed-singlevol-ami
+      - get: hcs-backed-dualvol-ami-id
         trigger: true
         passed:
-          - dw-al2-base-dualvol-ami
-      - get: base-emr-ami-id
+          - dw-al2-hcs-backed-dualvol-ami
+      - get: hcs-backed-emr-ami-id
         trigger: true
         passed:
-          - dw-al2-base-emr-ami
+          - dw-al2-hcs-backed-emr-ami
       - get: hardened-ami-id
         trigger: true
         passed:

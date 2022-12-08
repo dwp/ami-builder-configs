@@ -2,9 +2,9 @@ groups:
   - name: al2-amis
     jobs:
       - dw-al2-base-ami
-      - dw-al2-base-singlevol-ami
-      - dw-al2-base-dualvol-ami
-      - dw-al2-base-emr-ami
+      - dw-al2-hcs-backed-singlevol-ami
+      - dw-al2-hcs-backed-dualvol-ami
+      - dw-al2-hcs-backed-emr-ami
       - dw-al2-untested-hardened-ami
       - dw-al2-test-and-promote-hardened-ami
       - release-and-test-out-of-hours
@@ -29,8 +29,8 @@ groups:
 
   - name: pull-requests
     jobs:
-      - dw-al2-base-ami-pr
-      - dw-al2-base-emr-ami-pr
+      - dw-al2-hcs-backed-ami-pr
+      - dw-al2-hcs-backed-emr-ami-pr
       - dw-al2-hardened-ami-pr
       - dw-al2-emr-ami-pr
       - dw-al2-hbase-ami-pr

@@ -185,6 +185,7 @@ meta:
               source /assume-role
               cat packer-config/packer.json
               packer validate packer-config/packer.json
+              packer build -on-error=cleanup packer-config/packer.json 
               AMI_ID="$(packer build -on-error=cleanup packer-config/packer.json | grep "${AWS_DEFAULT_REGION}:" | awk '{print $2}')"
               if [ -z "$AMI_ID" ]; then
                 echo "packer build was failed."

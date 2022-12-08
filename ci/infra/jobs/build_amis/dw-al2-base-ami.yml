@@ -17,7 +17,7 @@ jobs:
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami/"
             SOURCE_AMI_NAME: "amzn2-ami-hvm-*"
             SOURCE_AMI_OWNER: "137112412989"
-            HCS_COMPLIANT: true
+            HCS_COMPLIANT: false
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-base-ami-config

@@ -173,22 +173,6 @@ jobs:
         trigger: true
         passed:
           - dw-al2-base-emr-ami
-      - get: dw-al2-untested-hardened-ami
-        trigger: false
-        passed:
-          - dw-al2-test-and-promote-hardened-ami
-      - get: dw-al2-hardened-ami
-        trigger: false
-        passed:
-          - dw-al2-test-and-promote-hardened-ami
-      - get: aws-management-infrastructure
-        trigger: false
-        passed:
-          - dw-al2-test-and-promote-hardened-ami
-      - get: aws-security-tools
-        trigger: false
-        passed:
-          - dw-al2-test-and-promote-hardened-ami
       - get: hardened-ami-id
         trigger: true
         passed:

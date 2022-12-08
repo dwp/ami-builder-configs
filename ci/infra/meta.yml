@@ -276,7 +276,14 @@ meta:
               LAUNCH_TEMPLATE_ID="$(cat ./terraform-output-management/outputs.json | jq -r .${LAUNCH_TEMPLATE_OUTPUT_NAME}.value.id)"
               LAUNCH_TEMPLATE_NAME="$(cat ./terraform-output-management/outputs.json | jq -r .${LAUNCH_TEMPLATE_OUTPUT_NAME}.value.name)"
               TAG_NAME="$(cat ./terraform-output-management/outputs.json | jq -r '.inspector_test_instance_tag.value.name')"
-              SOURCE_AMI_ID="$(if [ -f ./*-ami-id ]; then cat ./*-ami-id; else cat ./source_ami/id;  fi)"
+              if [[ -f ./*-ami-id ]]; then
+                SOURCE_AMI_ID="$(cat ./*-ami-id)";
+              elif [[ -f source_ami/keyval.properties ]]; then
+                raw_id="$(grep ami- source_ami/keyval.properties)"
+                SOURCE_AMI_ID="${raw_id::-1}"
+              else
+                SOURCE_AMI_ID="$(cat ./source_ami/id)";
+              fi
               SOURCE_TEMPLATE_VERSION=$(aws ec2 describe-launch-templates --filters Name=launch-template-name,Values=${LAUNCH_TEMPLATE_NAME} | jq -r .LaunchTemplates[0].LatestVersionNumber)
               LAUNCH_TEMPLATE_VERSION=$(aws ec2 create-launch-template-version --launch-template-id ${LAUNCH_TEMPLATE_ID} --source-version ${SOURCE_TEMPLATE_VERSION} --launch-template-data "{\"ImageId\":\"${SOURCE_AMI_ID}\"}" | jq -r '.LaunchTemplateVersion.VersionNumber')
               RUNNING_INSTANCE_ID=$(aws ec2 run-instances --launch-template LaunchTemplateId=${LAUNCH_TEMPLATE_ID},Version=${LAUNCH_TEMPLATE_VERSION} --subnet-id ${SUBNET_ID} | jq -r '.Instances[0].InstanceId')

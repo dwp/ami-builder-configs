@@ -100,6 +100,18 @@ resources:
         state: available
         name: dw-al2-base-singlevol-ami-*
 
+  - name: dw-al2-base-dualvol-ami
+    type: ami
+    check_every: 5m
+    source:
+      aws_role_arn: arn:aws:iam::((aws_account.management)):role/ci
+      region: ((dataworks.aws_region))
+      filters:
+        owner-id: ((aws_account.management))
+        is-public: false
+        state: available
+        name: dw-al2-base-dualvol-ami-*
+
   - name: dw-al2-emr-ami
     type: ami
     check_every: 5m

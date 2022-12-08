@@ -69,7 +69,7 @@ jobs:
         trigger: true
       - get: dw-al2-base-ami-template
         trigger: true
-      - get: dw-al2-base-ami
+      - get: dw-al2-base-dualvol-ami
         trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         config:
@@ -161,10 +161,6 @@ jobs:
         trigger: true
       - get: dw-al2-emr-ami
         trigger: true
-      - get: base-ami-id
-        trigger: true
-        passed:
-          - dw-al2-base-ami
       - get: base-singlevol-ami-id
         trigger: true
         passed:

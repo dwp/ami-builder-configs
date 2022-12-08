@@ -3,6 +3,7 @@ groups:
     jobs:
       - dw-al2-base-ami
       - dw-al2-base-singlevol-ami
+      - dw-al2-base-dualvol-ami
       - dw-al2-base-emr-ami
       - dw-al2-untested-hardened-ami
       - dw-al2-test-and-promote-hardened-ami

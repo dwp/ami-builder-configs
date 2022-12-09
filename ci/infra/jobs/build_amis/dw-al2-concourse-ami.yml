@@ -8,7 +8,7 @@ jobs:
           - release-and-test-out-of-hours
       - get: dw-al2-concourse-ami-config
         trigger: true
-      - get: dw-al2-base-ami-template
+      - get: dw-al2-ami-template
         trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         config:
@@ -23,7 +23,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-concourse-ami-config
-          source_template: dw-al2-base-ami-template
+          source_template: dw-al2-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
@@ -71,7 +71,7 @@ jobs:
       - get: dw-al2-concourse-ami-pr
         trigger: true
         version: every
-      - get: dw-al2-base-ami-template
+      - get: dw-al2-ami-template
         trigger: false
       - put: dw-al2-concourse-ami-pr
         params:
@@ -95,7 +95,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-concourse-ami-pr
-          source_template: dw-al2-base-ami-template
+          source_template: dw-al2-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

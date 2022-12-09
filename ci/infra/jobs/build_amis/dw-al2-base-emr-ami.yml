@@ -3,27 +3,27 @@ jobs:
     plan:
       - get: hcs-amzn2emr-cis2-ami
         trigger: true
-      - get: dw-al2-base-ami-config
+      - get: dw-al2-hcs-backed-ami-config
         trigger: true
-      - get: dw-al2-base-ami-template
+      - get: dw-al2-ami-template
         trigger: true
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
             AMI_NAME: dw-al2-hcs-backed-emr-ami
-            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-config/dw-al2-base-ami/dw-base-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami/"
+            PROVISION_SCRIPT_KEYS: '["dw-al2-hcs-backed-ami-config/dw-al2-hcs-backed-ami/dw-hcs-backed-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hcs-backed-ami-config/dw-al2-hcs-backed-ami/"
             SOURCE_AMI_NAME: "AMZN2EMR-AWS-CIS2-2022*"
             SOURCE_AMI_OWNER: "((dataworks.hcs_aws_account))"
             HCS_COMPLIANT: true
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
-          source_config: dw-al2-base-ami-config
-          source_template: dw-al2-base-ami-template
+          source_config: dw-al2-hcs-backed-ami-config
+          source_template: dw-al2-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
-            - name: dw-al2-base-ami-config
+            - name: dw-al2-hcs-backed-ami-config
       - put: hcs-backed-emr-ami-id
         params:
           file: built-ami/id
@@ -33,41 +33,41 @@ jobs:
     plan:
       - get: hcs-amzn2emr-cis2-ami
         trigger: false
-      - get: dw-al2-base-ami-pr
+      - get: dw-al2-hcs-backed-ami-pr
         trigger: true
-      - get: dw-al2-base-ami-template-pr
+      - get: dw-al2-ami-template-pr
         trigger: false
-      - put: dw-al2-base-ami-pr
+      - put: dw-al2-hcs-backed-ami-pr
         params:
-          path: dw-al2-base-ami-pr
+          path: dw-al2-hcs-backed-ami-pr
           status: pending
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
             AMI_NAME: pr-dw-al2-hcs-backed-emr-ami
             AMI_USERS: ((aws_account.development))
-            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-pr/dw-al2-base-ami/dw-base-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-pr/dw-al2-base-ami/"
+            PROVISION_SCRIPT_KEYS: '["dw-al2-hcs-backed-ami-pr/dw-al2-hcs-backed-ami/dw-hcs-backed-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hcs-backed-ami-pr/dw-al2-hcs-backed-ami/"
             SOURCE_AMI_NAME: "AMZN2EMR-AWS-CIS2-2022*"
             SOURCE_AMI_OWNER: "((dataworks.hcs_aws_account))"
             HCS_COMPLIANT: true
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
-          source_config: dw-al2-base-ami-pr
-          source_template: dw-al2-base-ami-template-pr
+          source_config: dw-al2-hcs-backed-ami-pr
+          source_template: dw-al2-ami-template-pr
       - .: (( inject meta.plan.build-ami ))
         config:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           inputs:
-            - name: dw-al2-base-ami-pr
+            - name: dw-al2-hcs-backed-ami-pr
         on_failure:
-          put: dw-al2-base-ami-pr
+          put: dw-al2-hcs-backed-ami-pr
           params:
-            path: dw-al2-base-ami-pr
+            path: dw-al2-hcs-backed-ami-pr
             status: failure
         on_success:
-          put: dw-al2-base-ami-pr
+          put: dw-al2-hcs-backed-ami-pr
           params:
-            path: dw-al2-base-ami-pr
+            path: dw-al2-hcs-backed-ami-pr
             status: success

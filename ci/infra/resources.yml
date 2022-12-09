@@ -9,13 +9,13 @@ resources:
     check_every: 5m
     webhook_token: ((dataworks.concourse_github_webhook_token))
 
-  - name: dw-al2-base-ami-template
+  - name: dw-al2-ami-template
     .: (( inject meta.resources.ami-builder-configs ))
     source:
       paths:
         - generic_packer_template.json.j2
 
-  - name: dw-al2-base-ami-template-pr
+  - name: dw-al2-ami-template-pr
     .: (( inject meta.resources.ami-builder-configs-pr ))
     source:
       paths:
@@ -335,11 +335,26 @@ resources:
         - dw-al2-base-ami/*
         - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
 
-  - name: dw-al2-base-ami-pr
+  # - name: dw-al2-base-ami-pr
+  #   .: (( inject meta.resources.ami-builder-configs-pr ))
+  #   source:
+  #     paths:
+  #       - dw-al2-base-ami/*
+  #       - generic_packer_template.json.j2
+  #       - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
+
+  - name: dw-al2-hcs-backed-ami-config
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - dw-al2-hcs-backed-ami/*
+        - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
+
+  - name: dw-al2-hcs-backed-ami-pr
     .: (( inject meta.resources.ami-builder-configs-pr ))
     source:
       paths:
-        - dw-al2-base-ami/*
+        - dw-al2-hcs-backed-ami/*
         - generic_packer_template.json.j2
         - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
 

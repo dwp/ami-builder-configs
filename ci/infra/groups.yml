@@ -29,6 +29,7 @@ groups:
 
   - name: pull-requests
     jobs:
+      - dw-al2-base-ami-pr
       - dw-al2-hcs-backed-ami-pr
       - dw-al2-hcs-backed-emr-ami-pr
       - dw-al2-hardened-ami-pr

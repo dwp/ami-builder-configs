@@ -88,18 +88,56 @@ jobs:
         params:
           file: built-ami/id
 
-  - name: dw-al2-ami-pr
+  - name: dw-al2-base-ami-pr
     max_in_flight: 1
     plan:
       - get: amzn2-ami-hvm
         trigger: true
+      - get: dw-al2-base-ami-pr
+        trigger: true
+      - get: dw-al2-base-ami-config
+        trigger: true
+      - put: dw-al2-base-ami-pr
+        params:
+          path: dw-al2-base-ami-pr
+          status: pending
+      - .: (( inject meta.plan.generate-manifest ))
+        config:
+          params:
+            AMI_NAME: dw-al2-base-ami
+            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-config/dw-al2-base-ami/dw-base-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami/"
+            SOURCE_AMI_NAME: "amzn2-ami-hvm-*"
+            SOURCE_AMI_OWNER: "137112412989"
+            HCS_COMPLIANT: false
+      - .: (( inject meta.plan.packer-bootstrap ))
+        input_mapping:
+          source_config: dw-al2-base-ami-config
+      - .: (( inject meta.plan.build-ami ))
+        config:
+          params:
+            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
+          inputs:
+            - name: dw-al2-base-ami-config
+        on_failure:
+          put: dw-al2-base-ami-pr
+          params:
+            path: dw-al2-base-ami-pr
+            status: failure
+        on_success:
+          put: dw-al2-base-ami-pr
+          params:
+            path: dw-al2-base-ami-pr
+            status: success
+
+  - name: dw-al2-hcs-backed-ami-pr
+    max_in_flight: 1
+    plan:
       - get: hcs-amzn2-cis2-ami
         trigger: false
       - get: hcs-amzn2-singlevol-cis2-ami
         trigger: false
       - get: dw-al2-hcs-backed-ami-pr
-        trigger: true
-      - get: dw-al2-base-ami-config
         trigger: true
       - put: dw-al2-hcs-backed-ami-pr
         params:
@@ -142,24 +180,6 @@ jobs:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           inputs:
             - name: dw-al2-hcs-backed-ami-pr
-      - .: (( inject meta.plan.generate-manifest ))
-        config:
-          params:
-            AMI_NAME: dw-al2-base-ami
-            PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-config/dw-al2-base-ami/dw-base-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-config/dw-al2-base-ami/"
-            SOURCE_AMI_NAME: "amzn2-ami-hvm-*"
-            SOURCE_AMI_OWNER: "137112412989"
-            HCS_COMPLIANT: false
-      - .: (( inject meta.plan.packer-bootstrap ))
-        input_mapping:
-          source_config: dw-al2-base-ami-config
-      - .: (( inject meta.plan.build-ami ))
-        config:
-          params:
-            AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
-          inputs:
-            - name: dw-al2-base-ami-config
         on_failure:
           put: dw-al2-hcs-backed-ami-pr
           params:
@@ -178,20 +198,20 @@ jobs:
       - get: utc-7pm-trigger
         trigger: true
       - get: dw-al2-emr-ami
-        trigger: true
+        trigger: false
       - get: hcs-backed-singlevol-ami-id
-        trigger: true
+        trigger: false
         passed:
           - dw-al2-hcs-backed-singlevol-ami
       - get: hcs-backed-dualvol-ami-id
-        trigger: true
+        trigger: false
         passed:
           - dw-al2-hcs-backed-dualvol-ami
       - get: hcs-backed-emr-ami-id
-        trigger: true
+        trigger: false
         passed:
           - dw-al2-hcs-backed-emr-ami
       - get: hardened-ami-id
-        trigger: true
+        trigger: false
         passed:
           - dw-al2-test-and-promote-hardened-ami

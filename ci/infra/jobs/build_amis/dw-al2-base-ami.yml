@@ -44,7 +44,7 @@ jobs:
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
-            AMI_NAME: dw-al2-base-ami
+            AMI_NAME: pr-dw-al2-base-ami
             PROVISION_SCRIPT_KEYS: '["dw-al2-base-ami-pr/dw-al2-base-ami/dw-base-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-base-ami-pr/dw-al2-base-ami/"
             SOURCE_AMI_NAME: "amzn2-ami-hvm-*"

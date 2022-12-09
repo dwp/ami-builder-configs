@@ -7,8 +7,6 @@ jobs:
         trigger: true
       - get: dw-al2-ami-template
         trigger: true
-      - get: dw-al2-base-ami
-        trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:

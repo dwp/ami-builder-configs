@@ -34,7 +34,7 @@ jobs:
     max_in_flight: 1
     plan:
       - get: amzn2-ami-hvm
-        trigger: true
+        trigger: false
       - get: dw-al2-base-ami-pr
         trigger: true
       - put: dw-al2-base-ami-pr

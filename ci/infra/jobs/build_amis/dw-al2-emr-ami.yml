@@ -90,11 +90,11 @@ jobs:
         params:
           path: dw-al2-emr-ami-pr
           status: pending
-      - get: hcs-backed-emr-ami-id
+      - get: dw-al2-hcs-backed-emr-ami
         trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: hcs-backed-emr-ami-id
+          source_ami: dw-al2-hcs-backed-emr-ami
         config:
           params:
             AMI_NAME: pr-dw-al2-emr-ami

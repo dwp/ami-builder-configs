@@ -15,12 +15,6 @@ resources:
       paths:
         - generic_packer_template.json.j2
 
-  - name: dw-al2-ami-template-pr
-    .: (( inject meta.resources.ami-builder-configs-pr ))
-    source:
-      paths:
-        - generic_packer_template.json.j2
-
   - name: ami-builder-configs-update-pipeline
     .: (( inject meta.resources.ami-builder-configs ))
     source:

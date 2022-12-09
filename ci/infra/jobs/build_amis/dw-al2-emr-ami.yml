@@ -84,7 +84,7 @@ jobs:
       - get: dw-al2-emr-ami-pr
         trigger: true
         version: every
-      - get: dw-al2-ami-template-pr
+      - get: dw-al2-ami-template
         trigger: false
       - put: dw-al2-emr-ami-pr
         params:
@@ -106,7 +106,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-emr-ami-pr
-          source_template: dw-al2-ami-template-pr
+          source_template: dw-al2-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

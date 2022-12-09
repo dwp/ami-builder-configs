@@ -35,8 +35,6 @@ jobs:
         trigger: false
       - get: dw-al2-hcs-backed-ami-pr
         trigger: true
-      - get: dw-al2-ami-template-pr
-        trigger: false
       - put: dw-al2-hcs-backed-ami-pr
         params:
           path: dw-al2-hcs-backed-ami-pr
@@ -54,7 +52,6 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-hcs-backed-ami-pr
-          source_template: dw-al2-ami-template-pr
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

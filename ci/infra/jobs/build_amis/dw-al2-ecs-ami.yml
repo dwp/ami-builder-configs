@@ -78,13 +78,13 @@ jobs:
       - get: dw-al2-ecs-ami-pr
         trigger: true
         version: every
-      - get: dw-al2-ami-template-pr
+      - get: dw-al2-ami-template
         trigger: false
       - put: dw-al2-ecs-ami-pr
         params:
           path: dw-al2-ecs-ami-pr
           status: pending
-      - get: hcs-backed-singlevol-ami-id
+      - get: dw-al2-hcs-backed-singlevol-ami
         trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
@@ -100,7 +100,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-ecs-ami-pr
-          source_template: dw-al2-ami-template-pr
+          source_template: dw-al2-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

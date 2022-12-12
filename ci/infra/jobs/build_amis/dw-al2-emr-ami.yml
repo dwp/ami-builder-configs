@@ -1,26 +1,26 @@
 jobs:
   - name: untested-dw-al2-emr-ami
     plan:
-      - get: base-emr-ami-id
+      - get: hcs-backed-emr-ami-id
         trigger: true
         passed:
           - release-and-test-out-of-hours
       - get: dw-al2-emr-ami-config
         trigger: true
-      - get: dw-al2-base-ami-template
+      - get: dw-al2-ami-template
         trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
             AMI_NAME: untested-dw-al2-emr-ami
-            SOURCE_AMI_NAME: dw-al2-base-emr-ami-*
+            SOURCE_AMI_NAME: dw-al2-hcs-backed-emr-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             PROVISION_SCRIPT_KEYS: '["dw-al2-emr-ami-config/dw-al2-emr-ami/dw-emr-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-emr-ami-config/dw-al2-emr-ami/"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-emr-ami-config
-          source_template: dw-al2-base-ami-template
+          source_template: dw-al2-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
@@ -84,21 +84,21 @@ jobs:
       - get: dw-al2-emr-ami-pr
         trigger: true
         version: every
-      - get: dw-al2-base-ami-template-pr
+      - get: dw-al2-ami-template
         trigger: false
       - put: dw-al2-emr-ami-pr
         params:
           path: dw-al2-emr-ami-pr
           status: pending
-      - get: base-emr-ami-id
+      - get: dw-al2-hcs-backed-emr-ami
         trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: base-emr-ami-id
+          source_ami: dw-al2-hcs-backed-emr-ami
         config:
           params:
             AMI_NAME: pr-dw-al2-emr-ami
-            SOURCE_AMI_NAME: dw-al2-base-emr-ami-*
+            SOURCE_AMI_NAME: dw-al2-hcs-backed-emr-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-emr-ami-pr/dw-al2-emr-ami/dw-emr-ami-install.sh"]'
@@ -106,7 +106,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-emr-ami-pr
-          source_template: dw-al2-base-ami-template-pr
+          source_template: dw-al2-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

@@ -2,19 +2,19 @@ jobs:
   - name: untested-dw-al2-concourse-ami
     plan:
       - .: (( inject meta.plan.get-concourse-release ))
-      - get: base-singlevol-ami-id
+      - get: hcs-backed-singlevol-ami-id
         trigger: true
         passed:
           - release-and-test-out-of-hours
       - get: dw-al2-concourse-ami-config
         trigger: true
-      - get: dw-al2-base-ami-template
+      - get: dw-al2-ami-template
         trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
             AMI_NAME: untested-dw-al2-concourse-ami
-            SOURCE_AMI_NAME: dw-al2-base-singlevol-ami-*
+            SOURCE_AMI_NAME: dw-al2-hcs-backed-singlevol-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-config/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-concourse-ami-config/dw-al2-concourse-ami/"
@@ -23,7 +23,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-concourse-ami-config
-          source_template: dw-al2-base-ami-template
+          source_template: dw-al2-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
@@ -71,21 +71,21 @@ jobs:
       - get: dw-al2-concourse-ami-pr
         trigger: true
         version: every
-      - get: dw-al2-base-ami-template
+      - get: dw-al2-ami-template
         trigger: false
       - put: dw-al2-concourse-ami-pr
         params:
           path: dw-al2-concourse-ami-pr
           status: pending
-      - get: dw-al2-base-singlevol-ami
+      - get: dw-al2-hcs-backed-singlevol-ami
         trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         input_mapping:
-          source_ami: dw-al2-base-singlevol-ami
+          source_ami: dw-al2-hcs-backed-singlevol-ami
         config:
           params:
             AMI_NAME: pr-dw-al2-concourse-ami
-            SOURCE_AMI_NAME: dw-al2-base-singlevol-ami-*
+            SOURCE_AMI_NAME: dw-al2-hcs-backed-singlevol-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-concourse-ami-pr/dw-al2-concourse-ami/dw-concourse-ami-install.sh"]'
@@ -95,7 +95,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-concourse-ami-pr
-          source_template: dw-al2-base-ami-template
+          source_template: dw-al2-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

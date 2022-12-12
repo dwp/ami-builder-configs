@@ -4,11 +4,10 @@ jobs:
       - get: hardened-ami-id
         trigger: true
         passed:
-          - dw-al2-test-and-promote-hardened-ami
           - release-and-test-out-of-hours
       - get: dw-al2-hbase-ami-config
         trigger: true
-      - get: dw-al2-base-ami-template
+      - get: dw-al2-ami-template
         trigger: false
       - get: dw-al2-hardened-ami-config
         trigger: false
@@ -24,7 +23,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-hardened-ami-config
-          source_template: dw-al2-base-ami-template
+          source_template: dw-al2-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
@@ -70,7 +69,7 @@ jobs:
       - get: dw-al2-hbase-ami-pr
         trigger: true
         version: every
-      - get: dw-al2-base-ami-template
+      - get: dw-al2-ami-template
         trigger: false
       - put: dw-al2-hbase-ami-pr
         params:
@@ -92,7 +91,7 @@ jobs:
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
           source_config: dw-al2-hbase-ami-pr
-          source_template: dw-al2-base-ami-template
+          source_template: dw-al2-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           params:

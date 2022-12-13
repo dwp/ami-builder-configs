@@ -9,20 +9,18 @@ jobs:
         trigger: true
       - get: dw-al2-ami-template
         trigger: false
-      - get: dw-al2-hardened-ami-config
-        trigger: false
       - .: (( inject meta.plan.generate-manifest ))
         config:
           params:
             AMI_NAME: untested-dw-al2-jvm-ami
-            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
+            SOURCE_AMI_NAME: dw-al2-hcs-backed-dualvol-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             PROVISION_SCRIPT_KEYS: '["dw-al2-jvm-ami-config/dw-al2-jvm-ami/dw-jvm-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-jvm-ami-config/dw-al2-jvm-ami/"
 
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
-          source_config: dw-al2-hardened-ami-config
+          source_config: dw-al2-jvm-ami-config
           source_template: dw-al2-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
@@ -93,7 +91,7 @@ jobs:
         config:
           params:
             AMI_NAME: pr-dw-al2-jvm-ami
-            SOURCE_AMI_NAME: dw-al2-hardened-ami-*
+            SOURCE_AMI_NAME: dw-al2-hcs-backed-dualvol-ami-*
             SOURCE_AMI_OWNER: ((aws_account.management))
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-jvm-ami-pr/dw-al2-jvm-ami/dw-jvm-ami-install.sh"]'

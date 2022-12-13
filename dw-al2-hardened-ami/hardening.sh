@@ -328,7 +328,7 @@ echo "Excluded from hardening.sh, added to Userdata in General AMI due to build 
 
 echo "#############################################################"
 echo "2.1.1.3 Ensure chrony is configured"
-sed -i 's/OPTIONS.*/OPTIONS="-u chrony -F 2"/g' /etc/sysconfig/chronyd
+sed -i 's/OPTIONS.*/OPTIONS="-u chrony"/g' /etc/sysconfig/chronyd
 
 echo "#############################################################"
 echo "2.2.1.2 Ensure ntp is configured"

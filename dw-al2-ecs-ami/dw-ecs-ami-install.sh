@@ -40,9 +40,23 @@ cat /etc/yum.repos.d/amzn2-extras.repo
 sudo yum install -y ecs-init
 systemctl enable --now ecs
 
-# Install Sysdig
+# import gpg keys: draios & epel7
+rpm --import https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
 rpm --import https://download.sysdig.com/DRAIOS-GPG-KEY.public
+
+# setup draio & epel repo files
 curl -s -o /etc/yum.repos.d/draios.repo https://download.sysdig.com/stable/rpm/draios.repo
+cat > /etc/yum.repos.d/epel.repo << EPEL
+[epel]
+name=Extra Packages for Enterprise Linux 7 - x86_64
+metalink=https://mirrors.fedoraproject.org/metalink?repo=epel-7&arch=x86_64
+failovermethod=priority
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+EPEL
+
+# install sysdig and s3fs
 yum install -y sysdig s3fs-fuse
 
 # accept anything that wasn't specifically covered
@@ -51,7 +65,7 @@ iptables -P INPUT ACCEPT
 iptables -P FORWARD ACCEPT
 iptables -P OUTPUT ACCEPT
 
-# flushing all rules 
+# flushing all rules
 iptables -F
 
 # presisting rules for next boot

@@ -25,5 +25,3 @@ sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
 
 # clean-up provision files
 rm -rf /home/ec2-user/*
-
-

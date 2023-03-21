@@ -13,6 +13,10 @@ EOF
 #install pcre tools to provide access to pcregrep
 yum install -y pcre-tools.x86_64
 
+# Install Tenable
+yum -y install NessusAgent --disablerepo=* --enablerepo tenable
+/sbin/service nessusagent start  # starts and enables the service
+
 # Relax umask settings and defaults
 sed -i 's/^.*umask 0.*$/umask 002/' /etc/bashrc
 sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile

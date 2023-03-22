@@ -33,7 +33,7 @@ jobs:
   - name: validate-jvm-ami
     plan:
       - get: untested-dw-al2-jvm-ami
-        trigger: true
+        trigger: false
         passed:
           - untested-dw-al2-jvm-ami
       - get: dataworks-aws-ingest-consumers

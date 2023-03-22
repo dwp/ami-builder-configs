@@ -35,7 +35,7 @@ jobs:
   - name: validate-hbase-ami
     plan:
       - get: untested-dw-al2-hbase-ami
-        trigger: true
+        trigger: false
         passed:
           - untested-dw-al2-hbase-ami
       - get: aws-internal-compute-hbase-ami-test

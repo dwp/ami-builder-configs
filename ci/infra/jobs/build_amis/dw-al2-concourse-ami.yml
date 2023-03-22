@@ -36,7 +36,7 @@ jobs:
   - name: validate-concourse-ami
     plan:
       - get: untested-dw-al2-concourse-ami
-        trigger: true
+        trigger: false
         passed:
           - untested-dw-al2-concourse-ami
       - get: concourse

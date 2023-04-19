@@ -59,6 +59,10 @@ EPEL
 # install sysdig and s3fs
 yum install -y sysdig s3fs-fuse
 
+# Install Tenable
+yum -y install NessusAgent --disablerepo=* --enablerepo tenable
+/sbin/service nessusagent start  # starts and enables the service
+
 # accept anything that wasn't specifically covered
 # temp change until we configure iptables to mirror sg
 iptables -P INPUT ACCEPT

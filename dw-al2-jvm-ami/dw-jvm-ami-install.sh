@@ -10,6 +10,10 @@ yum install -y java-1.8.0-openjdk-devel jq rng-tools
 # udpate OpenSSH and vim
 yum update -y openssh vim
 
+# Install Tenable
+yum -y install NessusAgent --disablerepo=* --enablerepo tenable
+/sbin/service nessusagent start  # starts and enables the service
+
 chkconfig rngd on
 
 # Turn down cloud-init logs to prevent false CloudWatch alarms regarding DEBUG logs

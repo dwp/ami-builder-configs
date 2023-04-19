@@ -40,6 +40,10 @@ cat /etc/yum.repos.d/amzn2-extras.repo
 sudo yum install -y ecs-init
 systemctl enable --now ecs
 
+# Install Tenable
+yum -y install NessusAgent --disablerepo=* --enablerepo tenable
+/sbin/service nessusagent start  # starts and enables the service
+
 # import gpg keys: draios & epel7
 rpm --import https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
 rpm --import https://download.sysdig.com/DRAIOS-GPG-KEY.public

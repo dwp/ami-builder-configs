@@ -38,7 +38,7 @@ echo "baseurl=$(cat mirror.list)" >> /etc/yum.repos.d/amzn2-extras.repo && rm -f
 cat /etc/yum.repos.d/amzn2-extras.repo
 
 sudo yum install -y ecs-init
-systemctl enable --now ecs
+systemctl enable --now ecs amazon-ecs-volume-plugin
 
 # import gpg keys: draios & epel7
 rpm --import https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7

@@ -37,7 +37,7 @@ echo "baseurl=$(cat mirror.list)" >> /etc/yum.repos.d/amzn2-extras.repo && rm -f
 
 cat /etc/yum.repos.d/amzn2-extras.repo
 
-sudo yum install -y ecs-init-1.69.0-1.amzn2.x86_64
+sudo yum install -y ecs-init-1.70.0-1.amzn2.x86_64
 systemctl enable --now ecs amazon-ecs-volume-plugin
 
 # import gpg keys: draios & epel7

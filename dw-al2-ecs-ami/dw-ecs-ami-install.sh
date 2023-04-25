@@ -37,7 +37,7 @@ echo "baseurl=$(cat mirror.list)" >> /etc/yum.repos.d/amzn2-extras.repo && rm -f
 
 cat /etc/yum.repos.d/amzn2-extras.repo
 
-sudo yum install -y ecs-init
+sudo yum install -y ecs-init jq
 systemctl enable --now ecs amazon-ecs-volume-plugin
 
 # import gpg keys: draios & epel7

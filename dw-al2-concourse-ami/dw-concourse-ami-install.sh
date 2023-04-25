@@ -17,6 +17,10 @@ sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile
 sed -i 's/^.*umask 0.*$/umask 002/' /etc/profile.d/*.sh
 sed -i 's/^umask 027/umask 002/' /etc/init.d/functions
 
+# Install Tenable
+yum -y install NessusAgent --disablerepo=* --enablerepo tenable
+/sbin/service nessusagent start  # starts and enables the service
+
 # Download and Install Concourse
 CONCOURSE_TARBALL=$(find /tmp -type f -name *.tgz)
 tar -xzf $CONCOURSE_TARBALL -C /usr/local

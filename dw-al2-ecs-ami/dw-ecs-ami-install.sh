@@ -37,6 +37,7 @@ echo "baseurl=$(cat mirror.list)" >> /etc/yum.repos.d/amzn2-extras.repo && rm -f
 
 cat /etc/yum.repos.d/amzn2-extras.repo
 
+
 sudo yum install -y ecs-init-1.68.2-1.amzn2.x86_64 jq
 systemctl enable --now ecs amazon-ecs-volume-plugin
 
@@ -58,6 +59,10 @@ EPEL
 
 # install sysdig and s3fs
 yum install -y sysdig s3fs-fuse
+
+# Install Tenable
+yum -y install NessusAgent --disablerepo=* --enablerepo tenable
+/sbin/service nessusagent start  # starts and enables the service
 
 # accept anything that wasn't specifically covered
 # temp change until we configure iptables to mirror sg

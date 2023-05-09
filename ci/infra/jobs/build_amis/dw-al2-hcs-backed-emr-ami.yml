@@ -46,7 +46,7 @@ jobs:
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-hcs-backed-ami-pr/dw-al2-hcs-backed-ami/dw-hcs-backed-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hcs-backed-ami-pr/dw-al2-hcs-backed-ami/"
-            SOURCE_AMI_NAME: "AMZN2EMR-AWS-CIS2-2022*"
+            SOURCE_AMI_NAME: "AMZN2EMR-AWS-CIS2-20*"
             SOURCE_AMI_OWNER: "((dataworks.hcs_aws_account))"
             HCS_COMPLIANT: true
       - .: (( inject meta.plan.packer-bootstrap ))

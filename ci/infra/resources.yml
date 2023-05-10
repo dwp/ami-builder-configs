@@ -56,7 +56,7 @@ resources:
         owner-id: ((dataworks.hcs_aws_account))
         is-public: false
         state: available
-        name: AMZN2-SINGLEVOL-AWS-CIS2-2022*
+        name: AMZN2-SINGLEVOL-AWS-CIS2-20*
 
   - name: hcs-amzn2emr-cis2-ami
     type: ami

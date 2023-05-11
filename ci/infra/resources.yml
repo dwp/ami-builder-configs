@@ -357,6 +357,7 @@ resources:
         - dw-al2-hcs-backed-ami/*
         - generic_packer_template.json.j2
         - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
+        - dw-al2-hcs-backed-singlevol-ami.yml
 
   - name: dw-al2-concourse-ami-config
     .: (( inject meta.resources.ami-builder-configs ))

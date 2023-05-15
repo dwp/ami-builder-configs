@@ -44,7 +44,7 @@ resources:
         owner-id: ((dataworks.hcs_aws_account))
         is-public: false
         state: available
-        name: AMZN2-AWS-CIS2-2022*
+        name: AMZN2-AWS-CIS2-20*
 
   - name: hcs-amzn2-singlevol-cis2-ami
     type: ami
@@ -357,6 +357,7 @@ resources:
         - dw-al2-hcs-backed-ami/*
         - generic_packer_template.json.j2
         - ci/infra/jobs/build_amis/dw-al2-base-ami.yml
+        - ci/infra/jobs/build_amis/dw-al2-hcs-backed-ami.yml
         - ci/infra/jobs/build_amis/dw-al2-hcs-backed-emr-ami.yml
         - ci/infra/jobs/build_amis/dw-al2-hcs-backed-ami.yml
         - ci/infra/jobs/build_amis/dw-al2-hcs-backed-singlevol-ami.yml

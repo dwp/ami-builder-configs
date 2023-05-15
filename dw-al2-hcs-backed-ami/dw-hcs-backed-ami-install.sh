@@ -4,7 +4,7 @@ set -eEu
 ARCH=$(uname -m)
 
 # disable extra un-necessary repo
-find /etc/yum.repos.d/ -type f -exec sed -i '/enabled.*/enabled = 0/g' {} \;
+yum-config-manager --disable \*
 
 # re-write core repo file with fixed base url
 # this is a temp work around, may need little elegant solution

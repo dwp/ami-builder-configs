@@ -3,7 +3,7 @@ jobs:
     plan:
       - get: hcs-amzn2-singlevol-cis2-ami
         trigger: true
-      - get: dw-al2-hcs-backed-ami-config
+      - get: dw-al2-hcs-singlevol-backed-ami-config
         trigger: true
       - get: dw-al2-ami-template
         trigger: true
@@ -11,19 +11,19 @@ jobs:
         config:
           params:
             AMI_NAME: dw-al2-hcs-backed-singlevol-ami
-            PROVISION_SCRIPT_KEYS: '["dw-al2-hcs-backed-ami-config/dw-al2-hcs-backed-ami/dw-hcs-backed-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hcs-backed-ami-config/dw-al2-hcs-backed-ami/"
-            SOURCE_AMI_NAME: "AMZN2-SINGLEVOL-AWS-CIS2-2022*"
+            PROVISION_SCRIPT_KEYS: '["dw-al2-hcs-singlevol-backed-ami-config/dw-al2-hcs-backed-ami/dw-hcs-backed-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hcs-singlevol-backed-ami-config/dw-al2-hcs-backed-ami/"
+            SOURCE_AMI_NAME: "AMZN2-SINGLEVOL-AWS-CIS2-20*"
             SOURCE_AMI_OWNER: "((dataworks.hcs_aws_account))"
             HCS_COMPLIANT: true
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
-          source_config: dw-al2-hcs-backed-ami-config
+          source_config: dw-al2-hcs-singlevol-backed-ami-config
           source_template: dw-al2-ami-template
       - .: (( inject meta.plan.build-ami ))
         config:
           inputs:
-            - name: dw-al2-hcs-backed-ami-config
+            - name: dw-al2-hcs-singlevol-backed-ami-config
       - put: hcs-backed-singlevol-ami-id
         params:
           file: built-ami/id
@@ -33,11 +33,11 @@ jobs:
     plan:
       - get: hcs-amzn2-singlevol-cis2-ami
         trigger: false
-      - get: dw-al2-hcs-backed-ami-pr
+      - get: dw-al2-hcs-backed-singlevol-ami-pr
         trigger: true
-      - put: dw-al2-hcs-backed-ami-pr
+      - put: dw-al2-hcs-backed-singlevol-ami-pr
         params:
-          path: dw-al2-hcs-backed-ami-pr
+          path: dw-al2-hcs-backed-singlevol-ami-pr
           status: pending
       - .: (( inject meta.plan.generate-manifest ))
         config:
@@ -46,24 +46,24 @@ jobs:
             AMI_USERS: ((aws_account.development))
             PROVISION_SCRIPT_KEYS: '["dw-al2-hcs-backed-ami-pr/dw-al2-hcs-backed-ami/dw-hcs-backed-ami-install.sh"]'
             PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hcs-backed-ami-pr/dw-al2-hcs-backed-ami/"
-            SOURCE_AMI_NAME: "AMZN2-SINGLEVOL-AWS-CIS2-2022*"
+            SOURCE_AMI_NAME: "AMZN2-SINGLEVOL-AWS-CIS2-20*"
             SOURCE_AMI_OWNER: "((dataworks.hcs_aws_account))"
       - .: (( inject meta.plan.packer-bootstrap ))
         input_mapping:
-          source_config: dw-al2-hcs-backed-ami-pr
+          source_config: dw-al2-hcs-backed-singlevol-ami-pr
       - .: (( inject meta.plan.build-ami ))
         config:
           params:
             AWS_ROLE_ARN: arn:aws:iam::((aws_account.management)):role/ci
           inputs:
-            - name: dw-al2-hcs-backed-ami-pr
+            - name: dw-al2-hcs-backed-singlevol-ami-pr
         on_failure:
-          put: dw-al2-hcs-backed-ami-pr
+          put: dw-al2-hcs-backed-singlevol-ami-pr
           params:
-            path: dw-al2-hcs-backed-ami-pr
+            path: dw-al2-hcs-backed-singlevol-ami-pr
             status: failure
         on_success:
-          put: dw-al2-hcs-backed-ami-pr
+          put: dw-al2-hcs-backed-singlevol-ami-pr
           params:
-            path: dw-al2-hcs-backed-ami-pr
+            path: dw-al2-hcs-backed-singlevol-ami-pr
             status: success

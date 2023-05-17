@@ -44,8 +44,8 @@ jobs:
           params:
             AMI_NAME: pr-dw-al2-hcs-backed-singlevol-ami
             AMI_USERS: ((aws_account.development))
-            PROVISION_SCRIPT_KEYS: '["dw-al2-hcs-backed-ami-pr/dw-al2-hcs-backed-ami/dw-hcs-backed-ami-install.sh"]'
-            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hcs-backed-ami-pr/dw-al2-hcs-backed-ami/"
+            PROVISION_SCRIPT_KEYS: '["dw-al2-hcs-backed-singlevol-ami-pr/dw-al2-hcs-backed-ami/dw-hcs-backed-ami-install.sh"]'
+            PROVISIONER_TYPE_FILE_SOURCE: "dw-al2-hcs-backed-singlevol-ami-pr/dw-al2-hcs-backed-ami/"
             SOURCE_AMI_NAME: "AMZN2-SINGLEVOL-AWS-CIS2-20*"
             SOURCE_AMI_OWNER: "((dataworks.hcs_aws_account))"
       - .: (( inject meta.plan.packer-bootstrap ))

@@ -307,6 +307,12 @@ resources:
     source:
       paths:
         - results/orchestration-service.test
+  
+  - name: dataworks-rbac-munge-policies-infra
+    .: (( inject meta.resources.ami-builder-configs ))
+    source:
+      paths:
+        - results/dataworks-rbac-munge-policies-infra.test
 
   - name: s3-object-tagger-infra
     .: (( inject meta.resources.ami-builder-configs ))

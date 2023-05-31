@@ -45,6 +45,8 @@ jobs:
         trigger: true
       - get: s3-object-tagger-infra
         trigger: true
+      - get: dataworks-rbac-munge-policies-infra
+        trigger: true
       - .: (( inject meta.plan.validate-ami ))
         config:
           params:
@@ -56,6 +58,7 @@ jobs:
             - name: data-egress
             - name: orchestration-service
             - name: s3-object-tagger-infra
+            - name: dataworks-rbac-munge-policies-infra
       - put: ecs-ami-id
         params:
           file: tested_ami/id

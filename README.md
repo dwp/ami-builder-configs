@@ -1,3 +1,5 @@
+# DO NOT USE THIS REPO - MIGRATED TO GITLAB
+
 # ami-builder-configs
 Configuration files for building various AMIs using ami-builder
 
